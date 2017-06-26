@@ -1,13 +1,11 @@
 package com.frame.domain.vo;
 
+import com.frame.domain.User;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-
-import com.frame.domain.Team;
-import com.frame.domain.User;
 
 /**
  * @author yefan

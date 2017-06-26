@@ -22,27 +22,12 @@
     </bean>    
        
 
-	<bean id="getPlayGroundInfoFromBaidu" class="com.frame.service.task.GetPlayGroundFromBaidu" />
-	
+
 	<bean id="deletePersonApplyOutDate" class="com.frame.service.task.DeletePersonApplyDate" />
 	
 	
 	
-    <bean id="getPlayGroundInfoFromBaiduTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <!-- 调用的类 -->
-        <property name="targetObject">
-            <ref bean="getPlayGroundInfoFromBaidu" />
-        </property>
-        <!-- 调用类中的方法 -->
-        <property name="targetMethod">
-            <value>work</value>
-        </property>
 
-        <property name="concurrent">
-            <value>false</value>
-        </property>
-    </bean> 
-    
     <bean id="deletePersonApplyOutDateTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <!-- 调用的类 -->
         <property name="targetObject">
@@ -61,17 +46,7 @@
           
 
        
-    <!-- 定义触发时间 -->
-    <bean id="getPlayGroundInfoTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail">
-            <ref bean="getPlayGroundInfoFromBaiduTask" />
-        </property>
-        <!-- cron表达式 -->
-        <property name="cronExpression">
-            <value>${quartz.getPlaygroundInfo.time}</value>
-        </property>
-    </bean>
-    
+
     <!-- 定义触发时间 -->
     <bean id="deletePersionOutDateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
@@ -87,7 +62,6 @@
     <bean id="startQuertz" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="getPlayGroundInfoTrigger"/>
                 <ref bean="deletePersionOutDateTrigger"/>
             </list>
         </property>

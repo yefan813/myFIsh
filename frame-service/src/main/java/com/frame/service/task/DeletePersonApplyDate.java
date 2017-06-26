@@ -1,23 +1,14 @@
 package com.frame.service.task;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.frame.domain.MatchApply;
-import com.frame.domain.base.YnEnum;
-import com.frame.service.MatchApplyService;
 
 public class DeletePersonApplyDate {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeletePersonApplyDate.class);
 
-	@Resource
+	/*@Resource
 	private MatchApplyService matchApplyService;
-	
+
 	
 	public void work() {
 		LOGGER.info("start delete person out date apply");
@@ -42,5 +33,5 @@ public class DeletePersonApplyDate {
 			LOGGER.error("delete person out date apply occur a Exception", e);
 		}
 	}
-	
+	*/
 }
