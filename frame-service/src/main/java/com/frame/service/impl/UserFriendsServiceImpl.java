@@ -1,9 +1,18 @@
 package com.frame.service.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.frame.dao.UserFriendsDao;
+import com.frame.dao.base.BaseDao;
+import com.frame.domain.User;
+import com.frame.domain.UserFriends;
+import com.frame.domain.base.YnEnum;
+import com.frame.domain.common.Page;
+import com.frame.domain.common.RemoteResult;
+import com.frame.domain.enums.BusinessCode;
+import com.frame.service.UserFriendsService;
+import com.frame.service.UserService;
+import com.frame.service.base.BaseServiceImpl;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -12,21 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.frame.dao.UserFriendsDao;
-import com.frame.dao.base.BaseDao;
-import com.frame.domain.User;
-import com.frame.domain.UserFriends;
-import com.frame.domain.UserTeamRelation;
-import com.frame.domain.base.YnEnum;
-import com.frame.domain.common.Page;
-import com.frame.domain.common.RemoteResult;
-import com.frame.domain.enums.BusinessCode;
-import com.frame.service.EasemobAPIService;
-import com.frame.service.UserFriendsService;
-import com.frame.service.UserService;
-import com.frame.service.base.BaseServiceImpl;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+import java.util.List;
 
 
 @Service("userFriendsService")
@@ -36,9 +32,7 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 	@Resource
 	private UserFriendsDao userFriendsDao;
 	
-	@Resource
-	private EasemobAPIService easemobAPIService;
-	
+
 	@Resource
 	private UserService userService;
 	
@@ -194,10 +188,6 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 		if(res < 0){
 			return RemoteResult.failure(BusinessCode.SERVER_INTERNAL_ERROR.getCode(), BusinessCode.SERVER_INTERNAL_ERROR.getValue());
 		}
-		//TODO 调用环信接口
-		User fromeUser = userService.selectEntry(userFriends.getFromUserId());
-		User toUser = userService.selectEntry(userFriends.getToUserId());
-		result = easemobAPIService.deleteFriendSingle(fromeUser.getTel(), toUser.getTel());
 		return result;
 	}
 
@@ -219,14 +209,6 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 		int res = userFriendsDao.changeUserFriendStatus(userFriends);
 		
 		
-		//TODO 调用环信接口
-		User fromUser = userService.selectEntry(fromId);
-		User toUser = userService.selectEntry(toId);
-		
-		result = easemobAPIService.addFriendSingle(fromUser.getTel(), toUser.getTel());
-		if(!"0000".equals(result.getCode())){
-			throw new Exception();
-		}
 		if(res > 0 && "0000".equals(result.getCode())){
 			
 			User froUs = userService.selectEntry(fromId);

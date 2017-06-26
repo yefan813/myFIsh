@@ -55,8 +55,6 @@ public class UserController extends BaseController {
 	@Resource
 	private UserFriendsService userFriendsService;
 	
-	@Resource
-	private EasemobAPIService easemobAPIService;
 
 	@Value("${img.prefix}")
 	private String IMAGEPREFIX;

@@ -1,27 +1,9 @@
 package com.frame.service.impl;
 
-import java.rmi.Remote;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
-import com.frame.chat.comm.body.IMUserBody;
 import com.frame.dao.UserDao;
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.AppSecret;
-import com.frame.domain.MatchApply;
 import com.frame.domain.User;
 import com.frame.domain.UserAuths;
 import com.frame.domain.UserLogin;
@@ -30,13 +12,25 @@ import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.service.AppSecretService;
-import com.frame.service.EasemobAPIService;
 import com.frame.service.UserAuthsService;
 import com.frame.service.UserLoginService;
 import com.frame.service.UserService;
 import com.frame.service.base.BaseServiceImpl;
 import com.frame.service.utils.RandomStrUtils;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service("userService")
@@ -54,9 +48,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 	
 	@Resource
 	private UserLoginService userLoginService;
-	
-	@Resource
-	private EasemobAPIService easemobAPIService;
 	
 	@Resource
 	private UserAuthsService userAuthsService;
@@ -83,12 +74,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		int result = 0;
 		//注册环信用户
 		if( user.getId() == null || StringUtils.isNotEmpty(user.getTel())){
-			RemoteResult remoteResult = easemobAPIService.createNewIMUserSingle(user);
-			if(remoteResult != null && "0000".equals(remoteResult.getCode())){
-				LOGGER.info("用户调用环信借口创建环信用户成功");
-			}
 		}
-		
+
 		//插入用户基本信息
 		if(null != user && user.getId() != null){
 			result = userDao.updateByKey(user);//更新默认用户
@@ -96,29 +83,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			result = userDao.insertEntryCreateId(user);//插入默认用户
 		}
 		user = userDao.selectEntry(user.getId().longValue());
-		
+
 		if(null != user && result <= 0){
 			LOGGER.error("registUser服务器内部错误,插入数据库失败");
 			res = RemoteResult.failure(BusinessCode.SERVER_INTERNAL_ERROR.getCode(),BusinessCode.SERVER_INTERNAL_ERROR.getValue());
 			return res;
 		}
-		
+
 		//生成用户授权信息
 		int userAuthsRes= 0;
 		userAuths.setUserId(user.getId().intValue());
-		
+
 		if(null != userAuths && userAuths.getId() != null){
 			userAuthsRes = UserAuthsService.updateByKey(userAuths);//更新授权信息
 		}else if(null != userAuths && userAuths.getId() == null){
 			userAuthsRes = UserAuthsService.insertEntry(userAuths);//插入授权信息
 		}
-		
+
 		if(userAuthsRes <= 0){
 			LOGGER.error("registUser服务器内部错误,插入数据库失败");
 			res = RemoteResult.failure(BusinessCode.SERVER_INTERNAL_ERROR.getCode(),BusinessCode.SERVER_INTERNAL_ERROR.getValue());
 			return res;
 		}
-		
+
 		//生成用户唯一的appKey 和 secretKey
 		AppSecret appSecret = new AppSecret();
 		appSecret.setYn(YnEnum.Normal.getKey());
@@ -141,12 +128,12 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		secret.setUserId(appSecret.getUserId());
 		secret.setApiKey(appSecret.getApiKey());
 		secret.setSecretKey(appSecret.getSecretKey());
-		
-		
+
+
 		UserLogin condition = new UserLogin();
 		condition.setUserId(appSecret.getUserId());
 		userLoginService.insertEntry(condition);
-		
+
 		if(StringUtils.isEmpty(user.getTel())){
 			res = RemoteResult.result(BusinessCode.NO_TEL_INFO,secret);
 			return res;
@@ -179,19 +166,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		return remoteResult;
 	}
 
-	@Override
-	public List<User> getUserJoinPersionApplyRecord(MatchApply matchApply) {
-		return userDao.getUserJoinPersionApplyRecord(matchApply);
-	}
 
-	@Override
-	public List<User> getTeamUserByTeamId(Long teamId) {
-		return userDao.getTeamUserByTeamId(teamId);
-	}
 
 	@Override
 	public RemoteResult bindTel(User user) {
-		RemoteResult result;
+		RemoteResult result = null;
 		if(null == user || user.getId() == null || user.getTel() == null){
 			LOGGER.info("调用bindTel 传入的参数错误");
 			result = RemoteResult.failure("0001", "传入参数错误");
@@ -199,17 +178,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		}
 		user.setPassword(user.getTel());
 		int res = updateByKey(user);
-		
+
 		if(res > 0){
 			User dataUser = selectEntry(user.getId().longValue());
-			//调用环信创建用户
-			result = easemobAPIService.createNewIMUserSingle(dataUser);
-			if("0000".equals(result.getCode())){
-				result.setData(dataUser);
-			}else{
-				return result;
-			}
-			
 		}else{
 			result = RemoteResult.failure("0001", "绑定失败");
 		}
@@ -342,10 +313,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		if(StringUtils.isNotEmpty(user.getNickName())){
 			if(dBUser == null || StringUtils.isEmpty(dBUser.getTel())){
 				result =  RemoteResult.failure(BusinessCode.NO_TEL_INFO.getCode(), BusinessCode.NO_TEL_INFO.getValue());
-			}
-			result = easemobAPIService.modifyIMUserNickNameWithAdminToken(dBUser.getTel(), user.getNickName());
-			if(result == null || !"0000".equals(result.getCode())){
-				throw new Exception("调用环信modifyIMUserNickNameWithAdminToken借口失败");
 			}
 		}
 		
