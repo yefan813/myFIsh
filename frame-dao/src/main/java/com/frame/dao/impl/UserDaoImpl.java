@@ -1,15 +1,13 @@
 package com.frame.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import com.frame.dao.UserDao;
 import com.frame.dao.base.BaseDaoImpl;
-import com.frame.domain.MatchApply;
 import com.frame.domain.User;
 import com.frame.domain.UserLogin;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository("userDao")
 public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
@@ -44,10 +42,6 @@ public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
 		return select(getNameSpace(GETNEARBYUSERCOUNT), userLogin);
 	}
 
-	@Override
-	public List<User> getUserJoinPersionApplyRecord(MatchApply matchApply) {
-		return selectList(getNameSpace(GETUSERJOINPERSIONAPPLYRECORD), matchApply);
-	}
 
 	@Override
 	public List<User> getTeamUserByTeamId(Long teamId) {
