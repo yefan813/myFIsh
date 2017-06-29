@@ -203,27 +203,9 @@
 	</select>
 	
 	
-	<!-- 其它SQL语句 -->
-	<select id="getUserJoinPersionApplyRecord" parameterType="matchApply" resultType="user">
-		<![CDATA[ select ]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[ where id in
-			(select target_identity_id from tb_match_apply 
-			 where parent_apply_id = #{parentApplyId} 
-			and source_identity_id = #{sourceIdentityId} and type = 1);
-        ]]>
-	</select>
+
 	
-	
-	<!-- 查询,通过条件 -->
-	<select id="selectUserListByTeamId" parameterType="int" resultType="user">
-		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[ where id in (select user_id from user_team_relation where team_id = #{teamId} and yn=1 ) ]]>
-	</select>
-	
+
 	
 		<!-- 查询,通过主键IN(array) -->
 	<select id="queryFriendsByTelOrNickName" parameterType="map" resultType="user">

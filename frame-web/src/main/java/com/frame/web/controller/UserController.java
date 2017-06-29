@@ -12,6 +12,9 @@ import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
 import com.frame.service.*;
 import com.frame.service.utils.RandomStrUtils;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +33,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/user")
+@Api(value="user")
 public class UserController extends BaseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -125,7 +129,11 @@ public class UserController extends BaseController {
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/regist", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody String registUser(String tel, String password, String validCode, Long validDate) {
+	@ApiOperation(value = "注册用户", httpMethod = "GET", response = String.class, notes = "注册用户")
+	public @ResponseBody String registUser(@ApiParam(required = true, name = "tel", value = "电话") String tel,
+										   @ApiParam(required = true, name = "password", value = "电话") String password,
+										   @ApiParam(required = true, name = "validCode", value = "验证码") String validCode,
+										   @ApiParam(required = true, name = "validDate", value = "验证日期") Long validDate) {
 		RemoteResult result = null;
 		try {
 
@@ -220,6 +228,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/getValidCode", method = { RequestMethod.GET, RequestMethod.POST })
+	@ApiOperation(value = "获取验证码", httpMethod = "GET", response = String.class, notes = "获取验证码")
 	public @ResponseBody String getValidCode(HttpServletRequest request, String tel, Long validDate) {
 		RemoteResult result = null;
 		try {

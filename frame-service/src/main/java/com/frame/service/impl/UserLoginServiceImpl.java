@@ -1,20 +1,18 @@
 package com.frame.service.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import com.frame.dao.UserLoginDao;
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.UserLogin;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.service.UserLoginService;
 import com.frame.service.base.BaseServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 
 @Service("userLoginService")
@@ -29,10 +27,6 @@ public class UserLoginServiceImpl extends BaseServiceImpl<UserLogin, Integer> im
 		return userLoginDao;
 	}
 
-	@Override
-	public List<UserLogin> queryUserDeviceTokenByTeamId(Integer teamId) {
-		return userLoginDao.queryUserDeviceTokenByTeamId(teamId);
-	}
 
 	@Override
 	public int registDeviceToken(UserLogin userLogin) {

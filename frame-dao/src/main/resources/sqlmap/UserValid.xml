@@ -56,7 +56,7 @@
 	</sql>
 
 	<!-- 插入team记录 -->
-	<insert id="insertEntry" parameterType="team" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="userValid" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_user_valid (tel,valid_code,valid_date,expire_time,feature,created,modified,yn)
 			VALUES (#{tel},#{validCode},#{validDate},#{expireTime},#{feature},now(),now(),#{yn})

@@ -17,7 +17,7 @@
 	<import resource="spring-config-servlet.xml" />
 	<import resource="spring/spring-config-dao.xml" />
 	<import resource="spring/spring-config-redis.xml" />
-	<import resource="spring/spring-config-scheduler.xml" />
+	<!--<import resource="spring/spring-config-scheduler.xml" />-->
 	<import resource="spring/spring-config-service.xml" />
 	<import resource="spring/spring-config-youpai.xml" />
 	

@@ -58,7 +58,7 @@
 	</sql>
 
 	<!-- 插入team记录 -->
-	<insert id="insertEntry" parameterType="team" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="userAuths" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_user_auths (user_id,identity_type,identifier,credential,verified,feature,created,modified,yn)
 			VALUES (#{userId},#{identityType},#{identifier},#{credential},#{verified},#{feature},now(),now(),#{yn})

@@ -124,15 +124,7 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
-	
-	<!-- 其它SQL语句 -->
-	<select id="selectUserDeviceTokenEntryList" parameterType="int" resultType="userLogin">
-		<![CDATA[SELECT tb_ul.device_token from tb_user_login tb_ul 
-			LEFT JOIN user_team_relation  utr
-			on  tb_ul.user_id = utr.user_id 
-			where utr.team_id = #{teamId}]]>
-	</select>
-	
+
 	<update id="registDeviceToken" parameterType="userLogin">
 		<![CDATA[UPDATE tb_user_login set device_token = #{deviceToken} WHERE user_id = #{userId}]]>
 	</update>

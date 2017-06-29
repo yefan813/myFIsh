@@ -16,8 +16,7 @@ public interface UserDao extends BaseDao<User, Long> {
 	public int getNearByUserCount(UserLogin userLogin);
 	
 
-	public List<User> getTeamUserByTeamId(Long teamId);
-	
+
 	public List<User> queryFriendsByTelOrNickName(Map<String, Object> params);
 
 }

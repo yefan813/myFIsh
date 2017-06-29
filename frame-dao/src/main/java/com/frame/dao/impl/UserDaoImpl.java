@@ -17,9 +17,7 @@ public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
 	private final static String UPDATE_BY_TEL = "updateByTel";
 	private final static String GETNEARBYUSER = "getNearByUser";
 	private final static String GETNEARBYUSERCOUNT = "getNearByUserCount";
-	private final static String GETUSERJOINPERSIONAPPLYRECORD = "getUserJoinPersionApplyRecord";
-	private final static String SELECTUSERLISTBYTEAMID = "selectUserListByTeamId";
-	
+
 	private final static String QUERYFRIENDSBYTELORNICKNAME = "queryFriendsByTelOrNickName";
 
 	@Override
@@ -40,12 +38,6 @@ public class UserDaoImpl extends BaseDaoImpl<User, Long> implements UserDao {
 	@Override
 	public int getNearByUserCount(UserLogin userLogin) {
 		return select(getNameSpace(GETNEARBYUSERCOUNT), userLogin);
-	}
-
-
-	@Override
-	public List<User> getTeamUserByTeamId(Long teamId) {
-		return selectList(getNameSpace(SELECTUSERLISTBYTEAMID), teamId);
 	}
 
 	@Override
