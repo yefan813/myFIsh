@@ -22,7 +22,7 @@ public class SwaggerConfig {
     public Docket buildDocket(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(buildApiInf())
-                .select()       .apis(RequestHandlerSelectors.basePackage("com.frame.web.controller"))//controller路径
+                .select().apis(RequestHandlerSelectors.basePackage("com.frame.web.controller"))//controller路径
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -30,9 +30,9 @@ public class SwaggerConfig {
     private ApiInfo buildApiInf(){
         return new ApiInfoBuilder()
                 .title("Fish")
-                .termsOfServiceUrl("")
-                .description("test")
-                .contact(new Contact("yefan", "", ""))
+                .termsOfServiceUrl("").version("1.0")//版本
+                .description("钓鱼大仙API接口描述及测试")
+                .contact(new Contact("yefan", "394818428@qq.com", ""))
                 .build();
 
     }

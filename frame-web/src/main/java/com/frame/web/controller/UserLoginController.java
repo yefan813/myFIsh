@@ -8,6 +8,8 @@ import com.frame.domain.common.RemoteResult;
 import com.frame.service.UserLoginService;
 import com.frame.service.impl.APNSService;
 import com.google.common.collect.Lists;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/userLogin")
+@Api(value="userLogin")
 public class UserLoginController extends BaseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserLoginController.class);
 
@@ -74,6 +77,7 @@ public class UserLoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/registDeviceToken", method = { RequestMethod.GET, RequestMethod.POST })
+	@ApiOperation(value = "")
 	public @ResponseBody String registDeviceToken(Integer userId, String deviceToken) {
 		RemoteResult result = null;
 		try {

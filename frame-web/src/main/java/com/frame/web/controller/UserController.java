@@ -12,9 +12,7 @@ import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
 import com.frame.service.*;
 import com.frame.service.utils.RandomStrUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +31,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/user")
-@Api(value="user")
+@Api(value="user",description="用户相关接口")
 public class UserController extends BaseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -129,11 +127,15 @@ public class UserController extends BaseController {
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/regist", method = { RequestMethod.GET, RequestMethod.POST })
-	@ApiOperation(value = "注册用户", httpMethod = "GET", response = String.class, notes = "注册用户")
-	public @ResponseBody String registUser(@ApiParam(required = true, name = "tel", value = "电话") String tel,
-										   @ApiParam(required = true, name = "password", value = "电话") String password,
-										   @ApiParam(required = true, name = "validCode", value = "验证码") String validCode,
-										   @ApiParam(required = true, name = "validDate", value = "验证日期") Long validDate) {
+	@ApiOperation(value = "注册用户", httpMethod = "post", response = String.class, notes = "注册用户")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="form", name = "tel", value = "用户电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="form", name = "password", value = "用户密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="form", name = "validCode", value = "验证码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="form", name = "validDate", value = "验证日期", required = true, dataType = "Long")
+
+})
+	public @ResponseBody String registUser(String tel,String password,String validCode,Long validDate) {
 		RemoteResult result = null;
 		try {
 
@@ -191,7 +193,7 @@ public class UserController extends BaseController {
 					result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
 				}
 			} else {
-				result = RemoteResult.failure("0001", "验证失败");
+				result = RemoteResult.failure("0001", "验证失败,验证码正确，或验证码已失效");
 			}
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);

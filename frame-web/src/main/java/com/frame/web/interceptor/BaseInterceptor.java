@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -38,6 +40,9 @@ public class BaseInterceptor implements HandlerInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(BaseInterceptor.class);
 	private String key; // 与passport系统交换公钥
 
+	@Value("${DEV_MODE}")
+	private String devMode;
+
 	@Resource
 	private AppSecretService appSecretService;
 
@@ -51,7 +56,11 @@ public class BaseInterceptor implements HandlerInterceptor {
 		
 		response.setHeader("Content-type", "text/html;charset=UTF-8");  
 		//这句话的意思，是告诉servlet用UTF-8转码，而不是用默认的ISO8859  
-		response.setCharacterEncoding("UTF-8");  
+		response.setCharacterEncoding("UTF-8");
+
+		if("DEBUG".equals(devMode)){
+			return true;
+		}
 		
 		RemoteResult result = null;
 		String apiKey = request.getParameter("apiKey");
@@ -112,7 +121,6 @@ public class BaseInterceptor implements HandlerInterceptor {
 				return false;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			if(writer != null){

@@ -39,7 +39,7 @@
 		</property>
 	</bean>
 
-<!--  	<mvc:interceptors>
+ 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/user/**" />
 			<mvc:exclude-mapping path="/out-ifs/**" />
@@ -50,13 +50,11 @@
 			<mvc:exclude-mapping path="/user/regist" />
 			<mvc:exclude-mapping path="/api-docs" />
 			<mvc:exclude-mapping path="/swagger-ui.html" />
-			<mvc:exclude-mapping path="/swagger-ui.html" />
-
 			<bean class="com.frame.web.interceptor.BaseInterceptor">
 				<property name="key" value="${wm.passport.token.public_key}" />
 			</bean>
 		</mvc:interceptor>
-	</mvc:interceptors>-->
+	</mvc:interceptors>
 
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<context:annotation-config />
