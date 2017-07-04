@@ -33,7 +33,10 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.taobao.sdk</groupId>
+			<artifactId>tao-sms</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
