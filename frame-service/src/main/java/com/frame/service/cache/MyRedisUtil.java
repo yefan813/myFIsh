@@ -1,18 +1,16 @@
 package com.frame.service.cache;
 
+import com.frame.dao.util.RedisUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.frame.dao.util.RedisUtil;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.ShardedJedisPool;
 
 public class MyRedisUtil extends RedisUtil {
 	private static final Logger log = LoggerFactory.getLogger(MyRedisUtil.class);
@@ -21,7 +19,7 @@ public class MyRedisUtil extends RedisUtil {
 	 /**
      * CMS系统redis前缀
      */
-    public static final String REDIS_PREFIX_LANQIU="lanqiu:";
+    public static final String REDIS_PREFIX_FISH ="fish:";
     
 	public void setTheShardedJedisPool(ShardedJedisPool theShardedJedisPool) {
 		this.theShardedJedisPool = theShardedJedisPool;

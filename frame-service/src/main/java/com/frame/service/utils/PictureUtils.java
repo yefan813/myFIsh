@@ -1,14 +1,14 @@
 package com.frame.service.utils;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,8 +41,8 @@ public class PictureUtils {
 	}
 
 	// 运行前先设置好以下三个参数
-	private static final String OPERATOR_NAME = "sichuanzhenrui01";
-	private static final String OPERATOR_PWD = "lanqiupai";
+	private static final String OPERATOR_NAME = "dioayudaxian01";
+	private static final String OPERATOR_PWD = "fish888";
 
 	/** 根目录 */
 	private static final String DIR_ROOT = "/";

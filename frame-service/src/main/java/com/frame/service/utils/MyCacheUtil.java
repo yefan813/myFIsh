@@ -29,7 +29,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 		if(StringUtils.isNotBlank(key)){
 			key = key.replace(":", "#");
 		}
-		String cachekey = myRedisUtil.REDIS_PREFIX_LANQIU + key;
+		String cachekey = myRedisUtil.REDIS_PREFIX_FISH + key;
 		try {
 			if (count != null) {
 				// 第3个参数，false，表示不设置缓存过期时间，永久有效
@@ -45,7 +45,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 		if(StringUtils.isNotBlank(key)){
 			key = key.replace(":", "#");
 		}
-		String cachekey = myRedisUtil.REDIS_PREFIX_LANQIU + key;
+		String cachekey = myRedisUtil.REDIS_PREFIX_FISH + key;
 		try {
 			String value = myRedisUtil.get(cachekey);
 			int count = 0;
@@ -70,7 +70,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 			if(StringUtils.isNotBlank(string)){
 				newKey = string.replace(":", "#");
 			}
-			String key = myRedisUtil.REDIS_PREFIX_LANQIU + newKey;
+			String key = myRedisUtil.REDIS_PREFIX_FISH + newKey;
 			String value = myRedisUtil.get(key);
 			if (StringUtils.isNotBlank(value)) {
 				maps.put(string, value);
@@ -86,7 +86,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 	 * @param actLuaVO
 	 */
 	public static void setMatchStaticsHTML(Long matchId, String data) {
-		String key = myRedisUtil.REDIS_PREFIX_LANQIU + matchId;
+		String key = myRedisUtil.REDIS_PREFIX_FISH + matchId;
 		try {
 			if (data != null) {
 				// 第3个参数，false，表示不设置缓存过期时间，永久有效
@@ -100,7 +100,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 
 	public static void clearMatchStaticsHTML(Long matchId) {
 		try {
-			String key = myRedisUtil.REDIS_PREFIX_LANQIU + matchId;
+			String key = myRedisUtil.REDIS_PREFIX_FISH + matchId;
 			LOGGER.info("清空活动【" + matchId + "】的统计数据。");
 			myRedisUtil.deleteByKey(key);
 		} catch (Exception e) {
@@ -116,7 +116,7 @@ public class MyCacheUtil implements ApplicationContextAware {
 	 */
 	public static String getMatchStaticsHTML(Long matchId) {
 		try {
-			String key = myRedisUtil.REDIS_PREFIX_LANQIU + matchId;
+			String key = myRedisUtil.REDIS_PREFIX_FISH + matchId;
 			String value = myRedisUtil.get(key);
 			if (StringUtils.isNotBlank(value)) {
 				return value;

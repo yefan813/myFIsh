@@ -83,7 +83,7 @@ public class UserController extends BaseController {
 				if (imgFile.getBytes() != null && imgFile.getBytes().length > 0) {
 					Result r = ImageValidate.validate4Upload(imgFile);
 					if (r.isSuccess()) {
-						ImgDealMsg re = imgSysService.uploadByteImg(imgFile.getBytes(), "lanqiupai");
+						ImgDealMsg re = imgSysService.uploadByteImg(imgFile.getBytes(), "fish");
 						if (re != null && re.isSuccess()) {
 							// 上传成功
 							String imgUrl = (String) re.getMsg();
