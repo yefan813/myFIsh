@@ -126,7 +126,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/regist", method = {RequestMethod.POST})
-	@ApiOperation(value = "注册用户", httpMethod = "post", response = String.class, notes = "注册用户")
+	@ApiOperation(value = "注册用户", httpMethod = "POST", response = String.class, notes = "注册用户")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="form", name = "tel", value = "用户电话", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="form", name = "password", value = "用户密码", required = true, dataType = "String"),
@@ -229,7 +229,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
-	@ApiOperation(value = "获取验证码", httpMethod = "GET", response = String.class, notes = "获取验证码")
+	@ApiOperation(value = "获取验证码", httpMethod = "POST", response = String.class, notes = "获取验证码")
 	public @ResponseBody String getValidCode(HttpServletRequest request, String tel, Long validDate) {
 		RemoteResult result = null;
 		try {

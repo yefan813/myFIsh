@@ -77,7 +77,7 @@ public class UserLoginController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/registDeviceToken", method = {  RequestMethod.POST })
-	@ApiOperation(value = "")
+	@ApiOperation(value = "注册设备信息",httpMethod = "POST", response = String.class, notes = "注册设备信息")
 	public @ResponseBody String registDeviceToken(Integer userId, String deviceToken) {
 		RemoteResult result = null;
 		try {
