@@ -68,8 +68,7 @@ public class UserController extends BaseController {
 	 * @param imgFile
 	 * @return
 	 */
-	@RequestMapping(value = "/editUserInfo", method = { RequestMethod.GET,
-			RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/editUserInfo", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
 	public @ResponseBody String editUserInfo(User user,
 			@RequestParam(value = "imgFile", required = false) MultipartFile imgFile) {
 		RemoteResult result = null;
@@ -126,7 +125,7 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/regist", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/regist", method = {RequestMethod.POST})
 	@ApiOperation(value = "注册用户", httpMethod = "post", response = String.class, notes = "注册用户")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="form", name = "tel", value = "用户电话", required = true, dataType = "String"),
@@ -229,7 +228,7 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/getValidCode", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
 	@ApiOperation(value = "获取验证码", httpMethod = "GET", response = String.class, notes = "获取验证码")
 	public @ResponseBody String getValidCode(HttpServletRequest request, String tel, Long validDate) {
 		RemoteResult result = null;
@@ -253,7 +252,7 @@ public class UserController extends BaseController {
 	 * @param userAuths
 	 * @return
 	 */
-	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/login", method = {RequestMethod.POST})
 	public @ResponseBody String login(UserAuths userAuths, String nickName) {
 		RemoteResult result = null;
 		try {
@@ -271,7 +270,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 
-	@RequestMapping(value = "/bindTel", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/bindTel", method = {RequestMethod.POST})
 	public @ResponseBody String bindTel(User user) {
 		RemoteResult result = null;
 		if(null == user || user.getId() == null || user.getTel() == null){
@@ -283,14 +282,14 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/logout", method = {RequestMethod.POST})
 	public @ResponseBody String logout(User user) {
 		RemoteResult result = null;
 
 		return null;
 	}
 
-	@RequestMapping(value = "/getNearByUser", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/getNearByUser", method = {RequestMethod.POST})
 	public @ResponseBody String getNearByUser(Page<User> page, UserLogin userLogin) {
 		RemoteResult result = null;
 		try {
@@ -309,7 +308,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/applyFriend", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/applyFriend", method = {RequestMethod.POST})
 	public @ResponseBody String applyFriend(UserFriends userFriends) {
 		RemoteResult result = null;
 		try {
@@ -326,7 +325,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/getPendingFriends", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/getPendingFriends", method = {RequestMethod.POST})
 	public @ResponseBody String getPendingFriends(Page<User> page, Long userId) {
 		RemoteResult result = null;
 		try {
@@ -344,7 +343,7 @@ public class UserController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value = "/getFriendsList", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/getFriendsList", method = {RequestMethod.POST})
 	public @ResponseBody String getFriendsList(Page<User> page, Long userId) {
 		RemoteResult result = null;
 		try {
@@ -362,7 +361,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/queryFriends", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/queryFriends", method = {RequestMethod.POST})
 	public @ResponseBody String queryFriends(Page<User> page, Long userId, String query) {
 		RemoteResult result = null;
 		try {
@@ -379,7 +378,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/deleteFriends", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/deleteFriends", method = {RequestMethod.POST})
 	public @ResponseBody String deleteFriends(UserFriends userFriends) {
 		RemoteResult result = null;
 		try {
@@ -398,7 +397,7 @@ public class UserController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value = "/agreeApplyFriends", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/agreeApplyFriends", method = {RequestMethod.POST})
 	public @ResponseBody String agreeApplyFriends(UserFriends userFriends) {
 		RemoteResult result = null;
 		try {
@@ -416,7 +415,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/refuseInvitation", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/refuseInvitation", method = { RequestMethod.POST })
 	public @ResponseBody String refuseInvitation(UserFriends userFriends) {
 		RemoteResult result = null;
 		try {
@@ -434,7 +433,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 	
-	@RequestMapping(value = "/isFriend", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/isFriend", method = {  RequestMethod.POST })
 	public @ResponseBody String isFriend(UserFriends userFriends) {
 		RemoteResult result = null;
 		try {
@@ -458,7 +457,7 @@ public class UserController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value = "/getUserInfo", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/getUserInfo", method = {  RequestMethod.POST })
 	public @ResponseBody String getUserInfoById(User user) {
 		RemoteResult result = null;
 		try {

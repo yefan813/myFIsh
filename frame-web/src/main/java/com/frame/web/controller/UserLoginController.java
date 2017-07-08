@@ -38,7 +38,7 @@ public class UserLoginController extends BaseController {
 	 * @param userLogin
 	 * @return
 	 */
-	@RequestMapping(value = "/saveUserLoginInfo", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/saveUserLoginInfo", method = {  RequestMethod.POST })
 	public @ResponseBody String saveUserLoginInfo(UserLogin userLogin) {
 		RemoteResult result = null;
 		try {
@@ -76,7 +76,7 @@ public class UserLoginController extends BaseController {
 	 * @param deviceToken
 	 * @return
 	 */
-	@RequestMapping(value = "/registDeviceToken", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/registDeviceToken", method = {  RequestMethod.POST })
 	@ApiOperation(value = "")
 	public @ResponseBody String registDeviceToken(Integer userId, String deviceToken) {
 		RemoteResult result = null;
@@ -110,7 +110,7 @@ public class UserLoginController extends BaseController {
 	 * @param deviceToken
 	 * @return
 	 */
-	@RequestMapping(value = "/sendNotifi", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/sendNotifi", method = {  RequestMethod.POST })
 	public @ResponseBody String sendNotifi(String msg, String deviceToken) {
 		RemoteResult result = null;
 		try {
