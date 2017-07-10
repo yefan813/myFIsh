@@ -20,6 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     @Value("${host.prefix}")
+    private String HOST;
 
     @Bean
     public Docket buildDocket(){
@@ -27,7 +28,7 @@ public class SwaggerConfig {
                 .apiInfo(buildApiInf())
                 .select().apis(RequestHandlerSelectors.basePackage("com.frame.web.controller"))//controller路径
                 .paths(PathSelectors.any())
-                .build().host("");
+                .build().host(HOST);
     }
 
     private ApiInfo buildApiInf(){
