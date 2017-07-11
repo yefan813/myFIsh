@@ -8,6 +8,7 @@
 		<![CDATA[
 			id,
 			tel,
+			valid_type as validType,
 			valid_code as validCode,
 			valid_date as validDate,
 			expire_time as expireTime,
@@ -26,6 +27,7 @@
 		<where>
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="tel != null"><![CDATA[AND tel = #{tel}]]></if>
+			<if test="validType != null"><![CDATA[AND valid_type = #{validType}]]></if>
 			<if test="validCode != null"><![CDATA[AND valid_code = #{validCode}]]></if>
 			<if test="validDate != null"><![CDATA[AND valid_date = #{validDate}]]></if>
 			<if test="expireTime != null"><![CDATA[AND expire_time = #{expireTime}]]></if>
@@ -46,6 +48,7 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 			<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+			<if test="validType != null"><![CDATA[valid_type = #{validType},]]></if>
 			<if test="validCode != null"><![CDATA[valid_code = #{validCode},]]></if>
 			<if test="validDate != null"><![CDATA[valid_date = #{validDate},]]></if>
 			<if test="expireTime != null"><![CDATA[expire_time = #{expireTime},]]></if>
@@ -58,8 +61,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="userValid" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_user_valid (tel,valid_code,valid_date,expire_time,feature,created,modified,yn)
-			VALUES (#{tel},#{validCode},#{validDate},#{expireTime},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_user_valid (tel,valid_type,valid_code,valid_date,expire_time,feature,created,modified,yn)
+			VALUES (#{tel},#{validType},#{validCode},#{validDate},#{expireTime},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	

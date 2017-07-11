@@ -8,20 +8,16 @@
 		<![CDATA[
 			id,
 			name,
-			status,
 			sex,
 			role,
 			address,
 			password,
-			nickname as nickName,
+			nick_name as nickName,
 			point,
 			avatar_url as avatarUrl,
 			email,
-			tel,
-			height,
-			weight,
-			position,
 			level,
+			tel,
 			feature,
 			created,
 			modified,
@@ -32,19 +28,15 @@
 			<![CDATA[
 				user1.id,
 				user1.name,
-				user1.status,
 				user1.sex,
 				user1.role,
 				user1.address,
 				user1.password,
-				user1.nickname as nickName,
+				user1.nick_name as nickName,
 				user1.point,
 				user1.avatar_url as avatarUrl,
 				user1.email,
 				user1.tel,
-				user1.height,
-				user1.weight,
-				user1.position,
 				user1.level,
 			]]>
 		</sql>
@@ -56,19 +48,15 @@
 		<where>
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="name != null"><![CDATA[AND name = #{name}]]></if>
-			<if test="status != null"><![CDATA[AND status = #{status}]]></if>
 			<if test="sex != null"><![CDATA[AND sex = #{sex}]]></if>
 			<if test="role != null"><![CDATA[AND role = #{role}]]></if>
 			<if test="address != null"><![CDATA[AND address = #{address}]]></if>
 			<if test="password != null"><![CDATA[AND password = #{password}]]></if>
-			<if test="nickName != null"><![CDATA[AND nickname = #{nickName}]]></if>
+			<if test="nickName != null"><![CDATA[AND nick_name = #{nickName}]]></if>
 			<if test="point != null"><![CDATA[AND point = #{point}]]></if>
 			<if test="avatarUrl != null"><![CDATA[AND avatar_url = #{avatarUrl}]]></if>
 			<if test="email != null"><![CDATA[AND email = #{email}]]></if>
 			<if test="tel != null"><![CDATA[AND tel = #{tel}]]></if>
-			<if test="height != null"><![CDATA[AND height = #{tel}]]></if>
-			<if test="weight != null"><![CDATA[AND weight = #{weight}]]></if>
-			<if test="position != null"><![CDATA[AND position = #{tel}]]></if>
 			<if test="level != null"><![CDATA[AND level = #{level}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
@@ -87,20 +75,16 @@
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 			<if test="name != null"><![CDATA[name = #{name},]]></if>
-			<if test="status != null"><![CDATA[status = #{status},]]></if>
 			<if test="role != null"><![CDATA[role = #{role},]]></if>
 			<if test="address != null"><![CDATA[address = #{address},]]></if>
 			<if test="password != null"><![CDATA[password = #{password},]]></if>
 			<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
-			<if test="nickName != null"><![CDATA[nickname = #{nickName},]]></if>
+			<if test="nickName != null"><![CDATA[nick_name = #{nickName},]]></if>
 			<if test="point != null"><![CDATA[point = #{point},]]></if>
 			<if test="level != null"><![CDATA[level = #{level},]]></if>
 			<if test="avatarUrl != null"><![CDATA[avatar_url = #{avatarUrl},]]></if>
 			<if test="email != null"><![CDATA[email = #{email},]]></if>
 			<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
-			<if test="height != null"><![CDATA[height = #{height},]]></if>
-			<if test="weight != null"><![CDATA[weight = #{weight},]]></if>
-			<if test="position != null"><![CDATA[position = #{position},]]></if>
 			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
@@ -110,8 +94,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="user" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_user (name,role,status,address,password,sex,nickname,point,avatar_url,email,tel,height,weight,position,level,feature,created,modified,yn)
-			VALUES (#{name},#{role},#{status},#{address},#{password},#{sex},#{nickName},#{point},#{avatarUrl},#{email},#{tel},#{height},#{weight},#{position},#{level},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_user (name,role,address,password,sex,nick_name,point,avatar_url,email,tel,level,feature,created,modified,yn)
+			VALUES (#{name},#{role},#{address},#{password},#{sex},#{nickName},#{point},#{avatarUrl},#{email},#{tel},#{level},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	

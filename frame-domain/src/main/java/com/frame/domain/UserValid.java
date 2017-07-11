@@ -1,11 +1,10 @@
 package com.frame.domain;
 
 
-import java.util.Date;
-
+import com.frame.domain.base.BaseDomain;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com.frame.domain.base.BaseDomain;
+import java.util.Date;
 
 /**
  * Created by garnett on 2015/11/18.
@@ -15,6 +14,8 @@ public class UserValid extends BaseDomain {
 	private static final long serialVersionUID = 6723005414893784943L;
 
 	private String tel; // 姓名
+
+	private Integer validType; //验证码类型
 
 	private String validCode; // 验证码
 
@@ -46,6 +47,14 @@ public class UserValid extends BaseDomain {
 		this.expireTime = expireTime;
 	}
 
+	public Integer getValidType() {
+		return validType;
+	}
+
+	public void setValidType(Integer validType) {
+		this.validType = validType;
+	}
+
 	public Date getValidDate() {
 		return validDate;
 	}
@@ -53,6 +62,8 @@ public class UserValid extends BaseDomain {
 	public void setValidDate(Date validDate) {
 		this.validDate = validDate;
 	}
+
+
 
 	@Override
 	public String toString() {

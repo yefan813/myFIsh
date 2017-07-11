@@ -22,13 +22,23 @@ public class SwaggerConfig {
     @Value("${host.prefix}")
     private String HOST;
 
+    @Value("${DEV_MODE}")
+    private String devMode;
+
     @Bean
     public Docket buildDocket(){
-        return new Docket(DocumentationType.SWAGGER_2)
+
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(buildApiInf())
                 .select().apis(RequestHandlerSelectors.basePackage("com.frame.web.controller"))//controller路径
                 .paths(PathSelectors.any())
-                .build().host(HOST);
+                .build();
+
+        if("DEBUG".equals(devMode)){
+            return docket;
+        }
+
+        return docket.host(HOST);
     }
 
     private ApiInfo buildApiInf(){

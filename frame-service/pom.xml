@@ -34,8 +34,13 @@
 			<artifactId>dubbo</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.taobao.sdk</groupId>
-			<artifactId>tao-sms</artifactId>
+			<groupId>com.aliyun.sms</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aliyun.sms</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>

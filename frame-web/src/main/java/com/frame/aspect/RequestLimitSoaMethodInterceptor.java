@@ -1,24 +1,23 @@
 package com.frame.aspect;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.cusAnnotion.RequestLimit;
 import com.frame.service.utils.MyCacheUtil;
 import com.frame.web.utils.NetworkUtil;
+import org.apache.commons.lang.StringUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 作者 E-mail:
@@ -27,7 +26,15 @@ import com.frame.web.utils.NetworkUtil;
 public class RequestLimitSoaMethodInterceptor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MyCacheUtil.class);
 
+	@Value("${DEV_MODE}")
+	private String devMode;
+
 	public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
+
+		if("DEBUG".equals(devMode)){
+			return pjp.proceed();
+		}
+
 		Object reslut = null;
 		// 拦截的实体类
 		Object target = pjp.getTarget();

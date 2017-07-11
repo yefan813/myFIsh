@@ -9,5 +9,5 @@ public interface TaoBaoSmsService {
 	 * @param validDate
 	 * @return
 	 */
-	public RemoteResult sendValidSMS(String phoneNum, Long validDate);
+	public RemoteResult sendValidSMS(String phoneNum, Long validDate, Integer validType);
 }

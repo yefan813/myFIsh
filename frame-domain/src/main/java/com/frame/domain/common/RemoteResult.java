@@ -7,7 +7,7 @@ import com.frame.domain.enums.BusinessCode;
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class RemoteResult {
 	
-	private static final String SUCCESS_CODE = "0000";
+	private static final String SUCCESS_CODE = "1000";
 	
 	private String code;
 	private String msg;
