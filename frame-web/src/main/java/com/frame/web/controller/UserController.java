@@ -149,8 +149,14 @@ public class UserController extends BaseController {
 						validDate);
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
-			// 判断用户是否已经注册
-		}
+				// 判断用户是否已经注册
+			}
+
+			if(tel.length() != 11){
+				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				return JSON.toJSONString(result);
+			}
+
 			User query = new User();
 			query.setTel(tel);
 			query.setYn(YnEnum.Normal.getKey());
@@ -253,6 +259,12 @@ public class UserController extends BaseController {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
+
+			if(tel.length() != 11){
+				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				return JSON.toJSONString(result);
+			}
+
 			result = taoBaoSmsService.sendValidSMS(tel, validDate, SendSMSTypeEnum.REGIST_USER.getKey());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
@@ -274,6 +286,11 @@ public class UserController extends BaseController {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
+			if(tel.length() != 11){
+				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				return JSON.toJSONString(result);
+			}
+
 			User user = new User();
 			user.setTel(tel);
 			user.setYn(YnEnum.Normal.getKey());

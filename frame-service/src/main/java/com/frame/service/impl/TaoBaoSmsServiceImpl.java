@@ -94,7 +94,7 @@ public class TaoBaoSmsServiceImpl implements TaoBaoSmsService {
 				SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 				if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
 					LOGGER.info("调用sendValidSMS 发送短信成功 发送的手机号码为[{}],验证码为[{}]", phoneNum, validCode);
-					msg = RemoteResult.success();
+					msg = RemoteResult.success("发送成功");
 				}else{
 					LOGGER.info("调用阿里大鱼发送短息失败:", sendSmsResponse.getMessage());
 					throw new AppException("发送注册验证码失败");
