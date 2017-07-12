@@ -16,7 +16,6 @@ import com.frame.service.UserAuthsService;
 import com.frame.service.UserLoginService;
 import com.frame.service.UserService;
 import com.frame.service.base.BaseServiceImpl;
-import com.frame.service.utils.RandomStrUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -106,7 +105,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			return res;
 		}
 
-		//生成用户唯一的appKey 和 secretKey
+		/*//生成用户唯一的appKey 和 secretKey
 		AppSecret appSecret = new AppSecret();
 		appSecret.setYn(YnEnum.Normal.getKey());
 		appSecret.setUserId(user.getId().intValue());
@@ -128,17 +127,17 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		secret.setUserId(appSecret.getUserId());
 		secret.setApiKey(appSecret.getApiKey());
 		secret.setSecretKey(appSecret.getSecretKey());
-
+*/
 
 		UserLogin condition = new UserLogin();
-		condition.setUserId(appSecret.getUserId());
+		condition.setUserId(user.getId().intValue());
 		userLoginService.insertEntry(condition);
 
 		if(StringUtils.isEmpty(user.getTel())){
-			res = RemoteResult.result(BusinessCode.NO_TEL_INFO,secret);
+			res = RemoteResult.result(BusinessCode.NO_TEL_INFO,condition);
 			return res;
 		}
-		res = RemoteResult.success(secret);
+		res = RemoteResult.success("注册成功");
 		return res;
 	}
 	@Override
