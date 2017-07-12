@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -134,7 +135,7 @@ public class UserController extends BaseController {
 
 
 	})
-	public @ResponseBody String registUser(@RequestParam(value = "tel", required = true) String tel,
+	public @ResponseBody String registUser(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
 										   @RequestParam(value = "password", required = true) String password,
 										   @RequestParam(value = "validCode", required = true) String validCode,
 										   @RequestParam(value = "validDate", required = true) Long validDate,
@@ -245,7 +246,7 @@ public class UserController extends BaseController {
 			@ApiImplicitParam(paramType="query", name = "validDate", value = "验证时间", required = true, dataType = "Long"),
 
 	})
-	public @ResponseBody String getValidCode(@RequestParam(value = "tel", required = true) String tel,@RequestParam(value = "validDate" , required = true) Long validDate) {
+	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel,@RequestParam(value = "validDate" , required = true) Long validDate) {
 		RemoteResult result = null;
 		try {
 			if (StringUtils.isEmpty(tel) || (validDate == null || validDate <= 0)) {
@@ -259,6 +260,38 @@ public class UserController extends BaseController {
 		}
 		return JSON.toJSONString(result);
 	}
+
+	@RequestLimit
+	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.POST})
+	@ApiOperation(value = "验证手机是否注册", httpMethod = "POST", response = String.class, notes = "验证手机是否注册")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String")
+	})
+	public @ResponseBody String validTelIsExist(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
+		RemoteResult result = null;
+		try {
+			if (StringUtils.isEmpty(tel)) {
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			User user = new User();
+			user.setTel(tel);
+			user.setYn(YnEnum.Normal.getKey());
+			List<User> users = userService.selectEntryList(user);
+			if(CollectionUtils.isEmpty(users)){
+				result = RemoteResult.failure("1000", "此电话号码未注册");
+				return JSON.toJSONString(result);
+			}else{
+				result = RemoteResult.failure("0001", "此电话号码已注册");
+				return JSON.toJSONString(result);
+			}
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
 
 	/**
 	 * 
