@@ -7,7 +7,6 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.frame.common.exception.AppException;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
@@ -97,7 +96,7 @@ public class TaoBaoSmsServiceImpl implements TaoBaoSmsService {
 					msg = RemoteResult.success("发送成功");
 				}else{
 					LOGGER.info("调用阿里大鱼发送短息失败:", sendSmsResponse.getMessage());
-					throw new AppException("发送注册验证码失败");
+					msg = RemoteResult.failure("0001","触发业务级流控限制");
 				}
 			} else {
 				LOGGER.info("生成验证码 存入数据库 失败");
