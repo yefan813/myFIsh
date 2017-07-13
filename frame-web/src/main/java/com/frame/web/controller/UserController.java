@@ -1,15 +1,17 @@
 package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.frame.domain.User;
 import com.frame.domain.UserAuths;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.cusAnnotion.RequestLimit;
+import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.enums.SendSMSTypeEnum;
+import com.frame.domain.vo.UserAuthsParam;
 import com.frame.service.*;
-import com.frame.service.utils.RandomStrUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -20,10 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -120,7 +119,6 @@ public class UserController extends BaseController {
 	 * @param tel
 	 * @param password
 	 * @param validCode
-	 * @param validDate
 	 * @return
 	 */
 	@RequestLimit
@@ -130,7 +128,6 @@ public class UserController extends BaseController {
 			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="query", name = "validCode", value = "验证码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "validDate", value = "验证日期", required = true, dataType = "Long"),
 			@ApiImplicitParam(paramType="query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
 
 
@@ -138,22 +135,19 @@ public class UserController extends BaseController {
 	public @ResponseBody String registUser(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
 										   @RequestParam(value = "password", required = true) String password,
 										   @RequestParam(value = "validCode", required = true) String validCode,
-										   @RequestParam(value = "validDate", required = true) Long validDate,
 										   @RequestParam(value = "inviteCode", required = false) String inviteCode) {
 		RemoteResult result = null;
 		try {
 
-			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password) || StringUtils.isEmpty(validCode)
-					|| (null == validDate || validDate.longValue() <= 0)) {
-				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}],验证时间【{}】", tel, password, validCode,
-						validDate);
-				result = RemoteResult.failure("0001", "传入参数错误");
+			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password) || StringUtils.isEmpty(validCode)) {
+				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 				// 判断用户是否已经注册
 			}
 
 			if(tel.length() != 11){
-				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
@@ -163,7 +157,7 @@ public class UserController extends BaseController {
 			List<User> users = userService.selectEntryList(query);
 			if (CollectionUtils.isNotEmpty(users)) {
 				LOGGER.info("该用户已经注册，手机号为【{}】", tel);
-				result = RemoteResult.failure("0001", "该手机号已经注册");
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
 				return JSON.toJSONString(result);
 			}
 
@@ -177,7 +171,7 @@ public class UserController extends BaseController {
 			if (CollectionUtils.isNotEmpty(valids)) {
 				boolean res = false;
 				for (UserValid userValid : valids) {
-					res = validUserRegist(userValid, validCode, validDate);
+					res = validUserRegist(userValid, validCode, System.currentTimeMillis());
 					if (res) {
 						break;
 					}
@@ -187,7 +181,6 @@ public class UserController extends BaseController {
 					User defaultUser = new User();
 					defaultUser.setTel(tel);
 					defaultUser.setPassword(password);
-					defaultUser.setNickName(RandomStrUtils.getUniqueString(6));
 					defaultUser.setYn(YnEnum.Normal.getKey());
 
 					UserAuths userAuths = new UserAuths();
@@ -241,21 +234,19 @@ public class UserController extends BaseController {
 	 * 获取验证码
 	 * 
 	 * @param tel
-	 * @param validDate
 	 * @return
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
-	@ApiOperation(value = "注册获取验证码", httpMethod = "POST", response = String.class, notes = "注册获取验证码")
+	@ApiOperation(value = "注册获取验证		码", httpMethod = "POST", response = String.class, notes = "注册获取验证码")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "validDate", value = "验证时间", required = true, dataType = "Long"),
 
 	})
-	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel,@RequestParam(value = "validDate" , required = true) Long validDate) {
+	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel) || (validDate == null || validDate <= 0)) {
+			if (StringUtils.isEmpty(tel) ) {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
@@ -265,7 +256,7 @@ public class UserController extends BaseController {
 				return JSON.toJSONString(result);
 			}
 
-			result = taoBaoSmsService.sendValidSMS(tel, validDate, SendSMSTypeEnum.REGIST_USER.getKey());
+			result = taoBaoSmsService.sendValidSMS(tel, System.currentTimeMillis(), SendSMSTypeEnum.REGIST_USER.getKey());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -295,11 +286,15 @@ public class UserController extends BaseController {
 			user.setTel(tel);
 			user.setYn(YnEnum.Normal.getKey());
 			List<User> users = userService.selectEntryList(user);
+
+			JSONObject object = new JSONObject();
 			if(CollectionUtils.isEmpty(users)){
-				result = RemoteResult.failure("1000", "此电话号码未注册");
+				object.put("registered",BusinessCode.IS_EXIST_NO.getKey());
+				result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(), "此电话号码未注册",object);
 				return JSON.toJSONString(result);
 			}else{
-				result = RemoteResult.failure("0001", "此电话号码已注册");
+				object.put("registered",BusinessCode.IS_EXIST_YES.getKey());
+				result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(), "此电话号码已注册", object);
 				return JSON.toJSONString(result);
 			}
 		} catch (Exception e) {
@@ -317,8 +312,9 @@ public class UserController extends BaseController {
 	 * @param userAuths
 	 * @return
 	 */
-	/*@RequestMapping(value = "/login", method = {RequestMethod.POST})
-	public @ResponseBody String login(UserAuths userAuths, String nickName) {
+	@RequestMapping(value = "/login", method = {RequestMethod.POST})
+	@ApiOperation(value = "用户的登录借口", httpMethod = "POST", response = String.class, notes = "用户的登录借口")
+	public @ResponseBody String login(@RequestBody UserAuthsParam userAuths, String nickName) {
 		RemoteResult result = null;
 		try {
 			if (null == userAuths || userAuths.getIdentityType() == null) {
@@ -327,13 +323,19 @@ public class UserController extends BaseController {
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
-			result = userService.login(userAuths, nickName);
+
+			UserAuths auths = new UserAuths();
+			auths.setIdentifier(userAuths.getIdentifier());
+			auths.setIdentityType(userAuths.getIdentityType());
+			auths.setCredential(userAuths.getCredential());
+
+			result = userService.login(auths, nickName);
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 		}
 		return JSON.toJSONString(result);
-	}*/
+	}
 
 	/*@RequestMapping(value = "/bindTel", method = {RequestMethod.POST})
 	public @ResponseBody String bindTel(User user) {

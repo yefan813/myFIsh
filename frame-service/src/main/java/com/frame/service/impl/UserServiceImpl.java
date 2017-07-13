@@ -3,7 +3,6 @@ package com.frame.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.frame.dao.UserDao;
 import com.frame.dao.base.BaseDao;
-import com.frame.domain.AppSecret;
 import com.frame.domain.User;
 import com.frame.domain.UserAuths;
 import com.frame.domain.UserLogin;
@@ -11,12 +10,14 @@ import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
+import com.frame.domain.vo.UserVO;
 import com.frame.service.AppSecretService;
 import com.frame.service.UserAuthsService;
 import com.frame.service.UserLoginService;
 import com.frame.service.UserService;
 import com.frame.service.base.BaseServiceImpl;
 import com.google.common.collect.Lists;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,9 +73,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		RemoteResult res = null;
 		int appRes = 0;
 		int result = 0;
-		//注册环信用户
-		if( user.getId() == null || StringUtils.isNotEmpty(user.getTel())){
-		}
 
 		//插入用户基本信息
 		if(null != user && user.getId() != null){
@@ -134,10 +133,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		userLoginService.insertEntry(condition);
 
 		if(StringUtils.isEmpty(user.getTel())){
-			res = RemoteResult.result(BusinessCode.NO_TEL_INFO,condition);
+			res = RemoteResult.result(BusinessCode.PARAMETERS_ERROR,condition);
 			return res;
 		}
-		res = RemoteResult.success("注册成功");
+
+		res = RemoteResult.success(convertUser2UserVO(user));
 		return res;
 	}
 	@Override
@@ -147,14 +147,13 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		userLogin.setEndIndex(page.getEndIndex());
 		
 		List<User> res = userDao.getNearByUser(userLogin);
-		//TODO image 加入前缀
 		if(CollectionUtils.isNotEmpty(res)){
 			for (User user : res) {
 				user.setAvatarUrl(IMAGEPREFIX + user.getAvatarUrl());
 			}
 			remoteResult = RemoteResult.success(res);
 		}else{
-			remoteResult = RemoteResult.failure(BusinessCode.NO_RESULTS.getCode(), BusinessCode.NO_RESULTS.getValue());
+			remoteResult = RemoteResult.success(Lists.newArrayList(0));
 			return remoteResult;
 		}
 		int total = userDao.getNearByUserCount(userLogin);
@@ -172,7 +171,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		RemoteResult result = null;
 		if(null == user || user.getId() == null || user.getTel() == null){
 			LOGGER.info("调用bindTel 传入的参数错误");
-			result = RemoteResult.failure("0001", "传入参数错误");
+			result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 			return result;
 		}
 		user.setPassword(user.getTel());
@@ -213,10 +212,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			con.setYn(YnEnum.Normal.getKey());
 			List<UserAuths> resList = userAuthsService.selectEntryList(con);
 			if (CollectionUtils.isNotEmpty(resList)) {
-				LOGGER.info("调用登陆方法找到用户，返回appkey secret");
+				LOGGER.info("调用登陆方法找到用户，返回用户信息");
 				UserAuths oldData = resList.get(0);
 
-				AppSecret query = new AppSecret();
+				User user = selectEntry(oldData.getUserId().longValue());
+
+				result = RemoteResult.success(convertUser2UserVO(user));
+				return result;
+
+				/*AppSecret query = new AppSecret();
 				query.setUserId(oldData.getUserId());
 				query.setYn(YnEnum.Normal.getKey());
 				List<AppSecret> appSecrets = appSecretService.selectEntryList(query);
@@ -230,15 +234,15 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 					condition.setUserId(appSecrets.get(0).getUserId());
 					userLoginService.insertEntry(condition);
 
-					result = RemoteResult.success(secret);
+					result = RemoteResult.success();
 					return result;
 				} else {
 					LOGGER.error("站内 调用login找不到相关的蜜月信息");
 					result = RemoteResult.failure("0001", "找不到相关的密钥信息，请联系管理员");
 					return result;
-				}
+				}*/
 			}else{
-				result = RemoteResult.failure(BusinessCode.NO_REGIST.getCode(),BusinessCode.NO_REGIST.getValue());
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "未找到当前用户记录");
 				return result;
 			}
 		}
@@ -311,7 +315,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		
 		if(StringUtils.isNotEmpty(user.getNickName())){
 			if(dBUser == null || StringUtils.isEmpty(dBUser.getTel())){
-				result =  RemoteResult.failure(BusinessCode.NO_TEL_INFO.getCode(), BusinessCode.NO_TEL_INFO.getValue());
+				result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 			}
 		}
 		
@@ -327,6 +331,22 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			result = RemoteResult.failure("0001", "用户编辑失败，服务器异常");
 		}
 		return result;
+	}
+
+	public static UserVO convertUser2UserVO(User user){
+		if(null == user){
+			return null;
+		}
+		UserVO userVO = new UserVO();
+		try {
+			BeanUtils.copyProperties(userVO,user);
+		} catch (IllegalAccessException e) {
+			LOGGER.error("对象相同字段赋值异常", e);
+		} catch (InvocationTargetException e) {
+			LOGGER.error("对象相同字段赋值异常", e);
+		}
+		return userVO;
+
 	}
 
 }

@@ -71,6 +71,10 @@ public class RemoteResult {
 	public static RemoteResult failure(String code, String msg){
 		return new RemoteResult(code, msg);
 	}
+
+	public static RemoteResult failure(String code, String msg,Object data){
+		return new RemoteResult(code, msg, data);
+	}
 	
 	public static RemoteResult success(){
 		return new RemoteResult(SUCCESS_CODE);

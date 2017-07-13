@@ -12,7 +12,6 @@ import java.util.Date;
 public class BaseDomain extends BaseQuery {
 	
 	private static final long serialVersionUID = -2671530029171920798L;
-	
 	private Integer id;
 	private String feature;
 	private Date created;

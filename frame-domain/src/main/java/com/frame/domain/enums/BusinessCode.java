@@ -1,18 +1,21 @@
 package com.frame.domain.enums;
 
 public enum BusinessCode {
-	FAILED("999", 999, "获取数据失败", null),
-	SUCCESS("0000", 10000, "取数据成功", null),
-	SERVER_INTERNAL_ERROR("0001", 10001, "服务器内部错误", null),
-	PARAMETERS_ERROR("0002", 10002, "传递参数错误", null),
-	NO_TEL_INFO("0004", 10004, "没有电话号码不能注册环信", null),
-	NO_REGIST("0006", 10006, "此用户没有注册", null),
-	NO_FRIEND("0005", 10005, "两人不是好友关系", null),
-	IS_FRIEND("0007", 10007, "两人是好友关系", null),
-	NO_RESULTS("0003", 10003, "无返回数据", null),
-	NO_MATCH_DATA("0008", 10008, "未找到匹配的数据", null);
-	
-	
+	FAILED("999", 999, "调用接口失败", null),
+	MUTIL_LOGIN("9999", 9999, "用户在其他手机上登录", null),
+	SUCCESS("1000", 1000, "调用接口成功", null),
+	SERVER_INTERNAL_ERROR("0001", 0001, "服务器内部错误", null),
+	PARAMETERS_ERROR("0002", 0002, "传递参数错误", null),
+
+	IS_CORRECT_YES("1001", 1, "判断正确", null),
+	IS_CORRECT_NO("1002", 0, "判断失败", null),
+
+	IS_EXIST_YES("1003", 1, "记录存在", null),
+	IS_EXIST_NO("1004", 0, "记录不存在", null),
+
+	IS_WRITE_YES("1005", 1, "写入成功", null),
+	IS_WRITE_NO("1006", 0, "写入失败", null);
+
 	private String code;
 	private int key;
 	private String value;
