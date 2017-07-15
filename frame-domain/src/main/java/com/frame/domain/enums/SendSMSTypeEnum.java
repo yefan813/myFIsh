@@ -2,7 +2,7 @@ package com.frame.domain.enums;
 
 public enum SendSMSTypeEnum {
 	REGIST_USER(1, "注册用户验证码"),
-	FIND_BACK(2, "找回密码验证码");
+	FORGET_PWD(2, "找回密码验证码");
 
 
 	private Integer key;

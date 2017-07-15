@@ -26,7 +26,7 @@ public interface UserService extends BaseService<User, Long> {
 	 * @return
 	 * @throws Exception
 	 */
-	public RemoteResult registUser(User user, UserAuths userAuths) throws Exception;
+	public RemoteResult registOrUpdateUser(User user, UserAuths userAuths) throws Exception;
 
 	/**
 	 * 查找附近用户

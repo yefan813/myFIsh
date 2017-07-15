@@ -54,6 +54,9 @@ public class UserController extends BaseController {
 	
 	@Resource
 	private UserFriendsService userFriendsService;
+
+	@Resource
+	private UserAuthsService userAuthsService;
 	
 
 	@Value("${img.prefix}")
@@ -113,6 +116,86 @@ public class UserController extends BaseController {
 	}*/
 
 	/**
+	 *
+	 * 忘记密码
+	 * @param tel
+	 * @param password
+	 * @param validCode
+	 * @return
+	 */
+	@RequestLimit
+	@RequestMapping(value = "/forgetPwd", method = {RequestMethod.POST})
+	@ApiOperation(value = "忘记密码", httpMethod = "POST", response = String.class, notes = "忘记密码")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "validCode", value = "验证码", required = true, dataType = "String")
+	})
+	public @ResponseBody String forgetPwd(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
+										   @RequestParam(value = "password", required = true) String password,
+										   @RequestParam(value = "validCode", required = true) String validCode) {
+		RemoteResult result = null;
+		try {
+			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password) || StringUtils.isEmpty(validCode)) {
+				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
+				return JSON.toJSONString(result);
+				// 判断用户是否已经注册
+			}
+
+			if(tel.length() != 11){
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
+				return JSON.toJSONString(result);
+			}
+
+			boolean existTel = IsExistTel(tel);
+			if (!existTel) {
+				LOGGER.warn("未找到此电话号码，手机号为[{}]", tel);
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "未找到此电话号码" + tel);
+				return JSON.toJSONString(result);
+			}
+
+			// 判断出入的validCode 是否是发送时的code
+			boolean res = isCorrectValidCode(tel, validCode, SendSMSTypeEnum.FORGET_PWD.getKey());
+			if(res){
+				if (res) {
+					UserAuths con = new UserAuths();
+					con.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+					con.setIdentifier(tel);
+					con.setYn(YnEnum.Normal.getKey());
+					List<UserAuths> authses = userAuthsService.selectEntryList(con);
+					if(CollectionUtils.isEmpty(authses)){
+						result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
+						return JSON.toJSONString(result);
+					}
+
+					// 验证成功向数据库写入一条默认数据
+					User defaultUser = new User();
+					defaultUser.setId(authses.get(0).getUserId());
+
+					UserAuths userAuths = new UserAuths();
+					userAuths.setUserId(authses.get(0).getUserId());
+					userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+					userAuths.setIdentifier(tel);
+					userAuths.setCredential(password);
+					userAuths.setVerified(1);// 已验证
+					userAuths.setYn(YnEnum.Normal.getKey());
+
+					result = userService.registOrUpdateUser(defaultUser, userAuths);
+				} else {
+					result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
+				}
+			}
+
+		}catch (Exception e){
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+
+	/**
 	 * 
 	 * 用户注册接口
 	 * 
@@ -151,53 +234,31 @@ public class UserController extends BaseController {
 				return JSON.toJSONString(result);
 			}
 
-			User query = new User();
-			query.setTel(tel);
-			query.setYn(YnEnum.Normal.getKey());
-			List<User> users = userService.selectEntryList(query);
-			if (CollectionUtils.isNotEmpty(users)) {
+			boolean existTel = IsExistTel(tel);
+			if (existTel) {
 				LOGGER.info("该用户已经注册，手机号为【{}】", tel);
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
 				return JSON.toJSONString(result);
 			}
 
 			// 判断出入的validCode 是否是发送时的code
-			UserValid condtion = new UserValid();
-			condtion.setTel(tel);
-			condtion.setValidType(SendSMSTypeEnum.REGIST_USER.getKey());
-			condtion.setYn(YnEnum.Normal.getKey());
-			List<UserValid> valids = userValidService.selectEntryList(condtion);
+			boolean res = isCorrectValidCode(tel,validCode,SendSMSTypeEnum.REGIST_USER.getKey());
+			if (res) {
+				// 验证成功向数据库写入一条默认数据
+				User defaultUser = new User();
+				defaultUser.setTel(tel);
+				defaultUser.setYn(YnEnum.Normal.getKey());
 
-			if (CollectionUtils.isNotEmpty(valids)) {
-				boolean res = false;
-				for (UserValid userValid : valids) {
-					res = validUserRegist(userValid, validCode, System.currentTimeMillis());
-					if (res) {
-						break;
-					}
-				}
-				if (res) {
-					// 验证成功向数据库写入一条默认数据
-					User defaultUser = new User();
-					defaultUser.setTel(tel);
-					defaultUser.setPassword(password);
-					defaultUser.setYn(YnEnum.Normal.getKey());
+				UserAuths userAuths = new UserAuths();
+				userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+				userAuths.setIdentifier(tel);
+				userAuths.setCredential(password);
+				userAuths.setVerified(1);// 已验证
+				userAuths.setYn(YnEnum.Normal.getKey());
 
-					UserAuths userAuths = new UserAuths();
-					userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-					userAuths.setIdentifier(tel);
-					userAuths.setCredential(password);
-					userAuths.setVerified(1);// 已验证
-					userAuths.setYn(YnEnum.Normal.getKey());
-
-					result = userService.registUser(defaultUser, userAuths);
-					
-					
-				} else {
-					result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
-				}
+				result = userService.registOrUpdateUser(defaultUser, userAuths);
 			} else {
-				result = RemoteResult.failure("0001", "验证失败,验证码正确，或验证码已失效");
+				result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
 			}
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
@@ -206,33 +267,45 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 
-	/**
-	 * 验证调用接口的时间是否超时
-	 * 
-	 * @param userValid
-	 * @param validCode
-	 * @param validDate
-	 * @return
-	 */
-	private boolean validUserRegist(UserValid userValid, String validCode, Long validDate) {
-		boolean result = false;
-		long from = userValid.getValidDate().getTime() + 60 * 1000;
-		long to = validDate;
-		if (from > 0 && from > to && validCode.equals(userValid.getValidCode())) {
-			result = true;
+	private boolean isCorrectValidCode(String tel, String validCode, Integer validType) {
+		boolean isValid = false;
 
-			UserValid valid = new UserValid();
-			valid.setId(userValid.getId());
-			valid.setYn(YnEnum.Deleted.getKey());
-			userValidService.updateByKey(valid);
+		UserValid condtion = new UserValid();
+		condtion.setTel(tel);
+		condtion.setValidType(validType);
+		List<UserValid> valids = userValidService.selectEntryList(condtion);
+		if (CollectionUtils.isNotEmpty(valids)) {
+			for (UserValid userValid : valids) {
+				isValid = validUserRegist(userValid, validCode, System.currentTimeMillis());
+				if (isValid) {
+					break;
+				}
+			}
+		}else{
+			LOGGER.warn("未找到tel={},validCode={}，注册的验证码", tel, validCode);
+		}
+
+		return isValid;
+	}
+
+	private boolean IsExistTel(String tel) {
+		boolean result = false;
+
+		User query = new User();
+		query.setTel(tel);
+		query.setYn(YnEnum.Normal.getKey());
+		List<User> users = userService.selectEntryList(query);
+		if (CollectionUtils.isNotEmpty(users)) {
+			LOGGER.info("该用户已经注册，手机号为【{}】", tel);
+			result = true;
 		}
 		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * 获取验证码
-	 * 
+	 *
 	 * @param tel
 	 * @return
 	 */
@@ -262,6 +335,65 @@ public class UserController extends BaseController {
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 		}
 		return JSON.toJSONString(result);
+	}
+
+
+	/**
+	 *
+	 * 获取忘记密码验证码
+	 *
+	 * @param tel
+	 * @return
+	 */
+	@RequestLimit
+	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
+	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
+	})
+	public @ResponseBody String getValidCodeforgetPassword(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
+		RemoteResult result = null;
+		try {
+			if (StringUtils.isEmpty(tel) ) {
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+
+			if(tel.length() != 11){
+				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				return JSON.toJSONString(result);
+			}
+
+			result = taoBaoSmsService.sendValidSMS(tel, System.currentTimeMillis(), SendSMSTypeEnum.FORGET_PWD.getKey());
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+
+	/**
+	 * 验证调用接口的时间是否超时
+	 *
+	 * @param userValid
+	 * @param validCode
+	 * @param validDate
+	 * @return
+	 */
+	private boolean validUserRegist(UserValid userValid, String validCode, Long validDate) {
+		boolean result = false;
+		long from = userValid.getValidDate().getTime() + 60 * 1000;
+		long to = validDate;
+		if (from > 0 && from > to && validCode.equals(userValid.getValidCode())) {
+			result = true;
+
+			UserValid valid = new UserValid();
+			valid.setId(userValid.getId());
+			valid.setYn(YnEnum.Deleted.getKey());
+			userValidService.updateByKey(valid);
+		}
+		return result;
 	}
 
 	@RequestLimit
@@ -330,6 +462,63 @@ public class UserController extends BaseController {
 			auths.setCredential(userAuths.getCredential());
 
 			result = userService.login(auths, nickName);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+
+
+	/**
+	 *
+	 * change pwd
+	 *
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/changePwd", method = {RequestMethod.POST})
+	@ApiOperation(value = "修改密码", httpMethod = "POST", response = String.class, notes = "修改密码")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "id", value = "user ID", required = true, dataType = "Integer"),
+			@ApiImplicitParam(paramType="query", name = "oldPwd", value = "旧密码", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "newPwd", value = "新密码", required = true, dataType = "String"),
+	})
+	public @ResponseBody String changePwd(HttpServletRequest request ,@RequestParam(value = "id", required = true) Integer id,
+										  @RequestParam(value = "oldPwd", required = true) String oldPwd,
+										  @RequestParam(value = "newPwd", required = true) String newPwd) {
+		RemoteResult result = null;
+		try {
+			if (null == id || StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
+				LOGGER.error("changePwd 传入的参数错误 id【{}】,oldPwd【{}】,newPwd【{}】", id, oldPwd, newPwd);
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+						BusinessCode.PARAMETERS_ERROR.getValue());
+				return JSON.toJSONString(result);
+			}
+			UserAuths condition = new UserAuths();
+			condition.setUserId(id);
+			condition.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+			condition.setCredential(oldPwd);
+			List<UserAuths> authses = userAuthsService.selectEntryList(condition);
+			if(CollectionUtils.isEmpty(authses)){
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "输入的老密码不正确");
+				return JSON.toJSONString(result);
+			}
+
+
+			UserAuths auths = new UserAuths();
+			auths.setId(authses.get(0).getId());
+			auths.setCredential(newPwd);
+			int res = userAuthsService.updateByKey(auths);
+			if(res > 0){
+				result = RemoteResult.success("修改密码成功");
+				return JSON.toJSONString(result);
+			}else{
+				result = RemoteResult.failure("修改密码失败");
+				return JSON.toJSONString(result);
+			}
+
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());

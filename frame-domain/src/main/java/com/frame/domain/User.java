@@ -19,7 +19,6 @@ public class User extends BaseDomain {
 	
 	private String address; //地址
 	
-	private String password; // 密码
 
 	private String point; // 积分
 
@@ -90,14 +89,6 @@ public class User extends BaseDomain {
 
 	public void setLevel(Integer level) {
 		this.level = level;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public Integer getSex() {

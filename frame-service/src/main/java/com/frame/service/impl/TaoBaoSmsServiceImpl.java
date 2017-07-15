@@ -10,6 +10,7 @@ import com.aliyuncs.profile.IClientProfile;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
+import com.frame.domain.enums.SendSMSTypeEnum;
 import com.frame.service.TaoBaoSmsService;
 import com.frame.service.UserValidService;
 import org.apache.commons.lang.StringUtils;
@@ -83,7 +84,12 @@ public class TaoBaoSmsServiceImpl implements TaoBaoSmsService {
 				//必填:短信签名-可在短信控制台中找到
 				request.setSignName("钓鱼大仙");
 				//必填:短信模板-可在短信控制台中找到
-				request.setTemplateCode("SMS_77085005");
+				if(SendSMSTypeEnum.REGIST_USER.getKey().equals(validType)){
+					request.setTemplateCode("SMS_77085005");
+				}else{
+					request.setTemplateCode("SMS_76990005");
+				}
+
 				//可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
 				request.setTemplateParam("{\"code\":\""+ validCode +"\", \"phone\":\"" + phoneNum.substring(phoneNum.length() - 4) + "\"}");
 				//可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者

@@ -43,10 +43,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 	
 	@Resource
 	private AppSecretService appSecretService;
-	
-	@Resource
-	private UserAuthsService UserAuthsService;
-	
+
 	@Resource
 	private UserLoginService userLoginService;
 	
@@ -69,7 +66,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
 	@Override
 	@Transactional(rollbackFor={Exception.class})
-	public RemoteResult registUser(User user, UserAuths userAuths) throws Exception {
+	public RemoteResult registOrUpdateUser(User user, UserAuths userAuths) throws Exception {
 		RemoteResult res = null;
 		int appRes = 0;
 		int result = 0;
@@ -93,9 +90,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		userAuths.setUserId(user.getId().intValue());
 
 		if(null != userAuths && userAuths.getId() != null){
-			userAuthsRes = UserAuthsService.updateByKey(userAuths);//更新授权信息
+			userAuthsRes = userAuthsService.updateByKey(userAuths);//更新授权信息
 		}else if(null != userAuths && userAuths.getId() == null){
-			userAuthsRes = UserAuthsService.insertEntry(userAuths);//插入授权信息
+			userAuthsRes = userAuthsService.insertEntry(userAuths);//插入授权信息
 		}
 
 		if(userAuthsRes <= 0){
@@ -174,7 +171,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 			return result;
 		}
-		user.setPassword(user.getTel());
 		int res = updateByKey(user);
 
 		if(res > 0){
@@ -269,7 +265,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				User user = new User();
 				user.setId(oldData.getUserId());
 				user.setNickName(nickName);
-				result = registUser(user, oldData);
+				result = registOrUpdateUser(user, oldData);
 			} else {
 				User defaultUser = new User();
 				defaultUser.setNickName(nickName);
@@ -281,7 +277,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				newData.setCredential(userAuths.getCredential());
 				newData.setVerified(1);// 已验证
 				newData.setYn(YnEnum.Normal.getKey());
-				result = registUser(defaultUser, newData);
+				result = registOrUpdateUser(defaultUser, newData);
 			}
 		}
 		return result;
