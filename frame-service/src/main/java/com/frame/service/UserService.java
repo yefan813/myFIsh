@@ -45,7 +45,9 @@ public interface UserService extends BaseService<User, Long> {
 	public RemoteResult bindTel(User user);
 	
 	
-	public RemoteResult login(UserAuths userAuths, String nickName) throws Exception;
+	public RemoteResult login4Tel(UserAuths userAuths) throws Exception;
+
+	public RemoteResult login4ThirdPart(UserAuths userAuths, User user) throws Exception;
 	
 	public List<User> queryFriendsByTelOrNickName(List<Long> userIds, String query );
 

@@ -3,6 +3,8 @@ package com.frame.domain;
 import com.frame.domain.base.BaseDomain;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.util.Date;
+
 /**
  * Created by garnett on 2015/11/18.
  */
@@ -18,9 +20,10 @@ public class User extends BaseDomain {
 	private Integer role; //角色
 	
 	private String address; //地址
-	
 
-	private String point; // 积分
+	private Date birthday;
+
+	private Long point; // 积分
 
 	private String email; // email
 
@@ -59,11 +62,11 @@ public class User extends BaseDomain {
 		this.name = name;
 	}
 
-	public String getPoint() {
+	public Long getPoint() {
 		return point;
 	}
 
-	public void setPoint(String point) {
+	public void setPoint(Long point) {
 		this.point = point;
 	}
 
@@ -99,7 +102,13 @@ public class User extends BaseDomain {
 		this.sex = sex;
 	}
 
+	public Date getBirthday() {
+		return birthday;
+	}
 
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
 
 	public Integer getRole() {
 		return role;

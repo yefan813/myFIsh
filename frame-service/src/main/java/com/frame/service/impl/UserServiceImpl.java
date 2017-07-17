@@ -129,11 +129,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		condition.setUserId(user.getId().intValue());
 		userLoginService.insertEntry(condition);
 
-		if(StringUtils.isEmpty(user.getTel())){
-			res = RemoteResult.result(BusinessCode.PARAMETERS_ERROR,condition);
-			return res;
-		}
-
 		res = RemoteResult.success(convertUser2UserVO(user));
 		return res;
 	}
@@ -183,7 +178,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
 	@Override
 	@Transactional
-	public RemoteResult login(UserAuths userAuths, String nickName) throws Exception {
+	public RemoteResult login4Tel(UserAuths userAuths) throws Exception {
 		RemoteResult result = null;
 		if (null == userAuths || userAuths.getIdentityType() == null) {
 			LOGGER.error("调用login 传入的参数错误 登陆类型【{}】", userAuths.getIdentityType());
@@ -202,11 +197,8 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				return result;
 			}
 			// 第三方登录直接更新或者新建一条记录
-			UserAuths con = new UserAuths();
-			con.setIdentityType(userAuths.getIdentityType());
-			con.setIdentifier(userAuths.getIdentifier());
-			con.setYn(YnEnum.Normal.getKey());
-			List<UserAuths> resList = userAuthsService.selectEntryList(con);
+			userAuths.setYn(YnEnum.Normal.getKey());
+			List<UserAuths> resList = userAuthsService.selectEntryList(userAuths);
 			if (CollectionUtils.isNotEmpty(resList)) {
 				LOGGER.info("调用登陆方法找到用户，返回用户信息");
 				UserAuths oldData = resList.get(0);
@@ -215,38 +207,29 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
 				result = RemoteResult.success(convertUser2UserVO(user));
 				return result;
-
-				/*AppSecret query = new AppSecret();
-				query.setUserId(oldData.getUserId());
-				query.setYn(YnEnum.Normal.getKey());
-				List<AppSecret> appSecrets = appSecretService.selectEntryList(query);
-				if (CollectionUtils.isNotEmpty(appSecrets)) {
-					AppSecret secret = new AppSecret();
-					secret.setUserId(appSecrets.get(0).getUserId());
-					secret.setApiKey(appSecrets.get(0).getApiKey());
-					secret.setSecretKey(appSecrets.get(0).getSecretKey());
-
-					UserLogin condition = new UserLogin();
-					condition.setUserId(appSecrets.get(0).getUserId());
-					userLoginService.insertEntry(condition);
-
-					result = RemoteResult.success();
-					return result;
-				} else {
-					LOGGER.error("站内 调用login找不到相关的蜜月信息");
-					result = RemoteResult.failure("0001", "找不到相关的密钥信息，请联系管理员");
-					return result;
-				}*/
 			}else{
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "未找到当前用户记录");
 				return result;
 			}
 		}
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public RemoteResult login4ThirdPart(UserAuths userAuths, User user) throws Exception {
+		RemoteResult result = null;
+		if (null == userAuths || userAuths.getIdentityType() == null) {
+			LOGGER.error("调用login 传入的参数错误 登陆类型【{}】", userAuths.getIdentityType());
+			result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+					BusinessCode.PARAMETERS_ERROR.getValue());
+			return result;
+		}
 
 		if (userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_QQ
 				|| userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_WEICHAT
 				|| userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_WEIBO) {
-			if (userAuths.getIdentifier() == null || StringUtils.isEmpty(nickName)) {
+			if (userAuths.getIdentifier() == null) {
 				LOGGER.error("第三方登录调用login 传入的参数错误，无用户第三方唯一标识");
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
@@ -262,14 +245,10 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				UserAuths oldData = resList.get(0);
 				oldData.setCredential(userAuths.getCredential());
 
-				User user = new User();
 				user.setId(oldData.getUserId());
-				user.setNickName(nickName);
 				result = registOrUpdateUser(user, oldData);
 			} else {
-				User defaultUser = new User();
-				defaultUser.setNickName(nickName);
-				defaultUser.setYn(YnEnum.Normal.getKey());
+				user.setYn(YnEnum.Normal.getKey());
 
 				UserAuths newData = new UserAuths();
 				newData.setIdentityType(userAuths.getIdentityType());
@@ -277,7 +256,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				newData.setCredential(userAuths.getCredential());
 				newData.setVerified(1);// 已验证
 				newData.setYn(YnEnum.Normal.getKey());
-				result = registOrUpdateUser(defaultUser, newData);
+				result = registOrUpdateUser(user, newData);
 			}
 		}
 		return result;

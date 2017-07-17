@@ -10,6 +10,7 @@ import com.aliyuncs.profile.IClientProfile;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
+import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.enums.SendSMSTypeEnum;
 import com.frame.service.TaoBaoSmsService;
 import com.frame.service.UserValidService;
@@ -99,7 +100,7 @@ public class TaoBaoSmsServiceImpl implements TaoBaoSmsService {
 				SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 				if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
 					LOGGER.info("调用sendValidSMS 发送短信成功 发送的手机号码为[{}],验证码为[{}]", phoneNum, validCode);
-					msg = RemoteResult.success("发送成功");
+					msg = RemoteResult.result(BusinessCode.SUCCESS);
 				}else{
 					LOGGER.info("调用阿里大鱼发送短息失败:", sendSmsResponse.getMessage());
 					msg = RemoteResult.failure("0001","触发业务级流控限制");

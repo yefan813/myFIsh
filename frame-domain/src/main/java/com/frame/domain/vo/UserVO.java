@@ -17,10 +17,11 @@ public class UserVO implements Serializable{
 
 	private Integer sex; //性别
 	
-	private Integer role; //角色
+	private Integer role; //角色 1 男 2 女
 	
 	private String address; //地址
 	
+	private Long birthday;
 
 	private String point; // 积分
 
@@ -97,6 +98,13 @@ public class UserVO implements Serializable{
 		this.level = level;
 	}
 
+	public Long getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Long birthday) {
+		this.birthday = birthday;
+	}
 
 	public Integer getSex() {
 		return sex;

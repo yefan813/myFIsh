@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by garnett on 2015/11/18.
@@ -23,6 +24,18 @@ public class UserAuthsParam implements Serializable{
 
 	@ApiModelProperty(value = "登录类型手机号登录时传入此字段")
 	private String credential; // 密码
+
+	@ApiModelProperty(value = "第三放登录时传入此字段")
+	private String avartar;
+
+	@ApiModelProperty(value = "第三放登录时传入此字段")
+	private String nickName;
+
+	@ApiModelProperty(value = "第三放登录时传入此字段")
+	private Date birthday;
+
+	@ApiModelProperty(value = "第三放登时传入此字段")
+	private Integer sex;
 
 
 	public Integer getIdentityType() {
@@ -47,6 +60,38 @@ public class UserAuthsParam implements Serializable{
 
 	public void setCredential(String credential) {
 		this.credential = credential;
+	}
+
+	public Integer getSex() {
+		return sex;
+	}
+
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+
+	public String getAvartar() {
+		return avartar;
+	}
+
+	public void setAvartar(String avartar) {
+		this.avartar = avartar;
+	}
+
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 	@Override

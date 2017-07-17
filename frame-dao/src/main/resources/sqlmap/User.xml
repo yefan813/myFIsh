@@ -15,6 +15,7 @@
 			point,
 			avatar_url as avatarUrl,
 			email,
+			birthday,
 			level,
 			tel,
 			feature,
@@ -34,6 +35,7 @@
 				user1.point,
 				user1.avatar_url as avatarUrl,
 				user1.email,
+				user1.birthday,
 				user1.tel,
 				user1.level,
 			]]>
@@ -53,6 +55,7 @@
 			<if test="point != null"><![CDATA[AND point = #{point}]]></if>
 			<if test="avatarUrl != null"><![CDATA[AND avatar_url = #{avatarUrl}]]></if>
 			<if test="email != null"><![CDATA[AND email = #{email}]]></if>
+			<if test="birthday != null"><![CDATA[AND birthday = #{birthday}]]></if>
 			<if test="tel != null"><![CDATA[AND tel = #{tel}]]></if>
 			<if test="level != null"><![CDATA[AND level = #{level}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
@@ -80,6 +83,7 @@
 			<if test="level != null"><![CDATA[level = #{level},]]></if>
 			<if test="avatarUrl != null"><![CDATA[avatar_url = #{avatarUrl},]]></if>
 			<if test="email != null"><![CDATA[email = #{email},]]></if>
+			<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
 			<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
 			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
 			<![CDATA[modified = now(),]]>
@@ -90,8 +94,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="user" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_user (name,role,address,sex,nick_name,point,avatar_url,email,tel,level,feature,created,modified,yn)
-			VALUES (#{name},#{role},#{address},#{sex},#{nickName},#{point},#{avatarUrl},#{email},#{tel},#{level},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_user (name,role,address,sex,nick_name,point,avatar_url,email,birthday,tel,level,feature,created,modified,yn)
+			VALUES (#{name},#{role},#{address},#{sex},#{nickName},#{point},#{avatarUrl},#{email},#{birthday},#{tel},#{level},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	

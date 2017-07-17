@@ -157,34 +157,39 @@ public class UserController extends BaseController {
 
 			// 判断出入的validCode 是否是发送时的code
 			boolean res = isCorrectValidCode(tel, validCode, SendSMSTypeEnum.FORGET_PWD.getKey());
-			if(res){
-				if (res) {
-					UserAuths con = new UserAuths();
-					con.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-					con.setIdentifier(tel);
-					con.setYn(YnEnum.Normal.getKey());
-					List<UserAuths> authses = userAuthsService.selectEntryList(con);
-					if(CollectionUtils.isEmpty(authses)){
-						result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
-						return JSON.toJSONString(result);
-					}
 
-					// 验证成功向数据库写入一条默认数据
-					User defaultUser = new User();
-					defaultUser.setId(authses.get(0).getUserId());
-
-					UserAuths userAuths = new UserAuths();
-					userAuths.setUserId(authses.get(0).getUserId());
-					userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-					userAuths.setIdentifier(tel);
-					userAuths.setCredential(password);
-					userAuths.setVerified(1);// 已验证
-					userAuths.setYn(YnEnum.Normal.getKey());
-
-					result = userService.registOrUpdateUser(defaultUser, userAuths);
-				} else {
-					result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
+			if(!res){
+				LOGGER.warn("验证码失效，请重新获取, tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "验证码失效" + tel);
+				return JSON.toJSONString(result);
+			}
+			if (res) {
+				UserAuths con = new UserAuths();
+				con.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+				con.setIdentifier(tel);
+				con.setYn(YnEnum.Normal.getKey());
+				List<UserAuths> authses = userAuthsService.selectEntryList(con);
+				if(CollectionUtils.isEmpty(authses)){
+					result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
+					return JSON.toJSONString(result);
 				}
+
+				// 验证成功向数据库写入一条默认数据
+				User defaultUser = new User();
+				defaultUser.setId(authses.get(0).getUserId());
+
+				UserAuths userAuths = new UserAuths();
+				userAuths.setId(authses.get(0).getId());
+				userAuths.setUserId(authses.get(0).getUserId());
+				userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+				userAuths.setIdentifier(tel);
+				userAuths.setCredential(password);
+				userAuths.setVerified(1);// 已验证
+				userAuths.setYn(YnEnum.Normal.getKey());
+
+				result = userService.registOrUpdateUser(defaultUser, userAuths);
+			} else {
+				result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
 			}
 
 		}catch (Exception e){
@@ -247,6 +252,8 @@ public class UserController extends BaseController {
 				// 验证成功向数据库写入一条默认数据
 				User defaultUser = new User();
 				defaultUser.setTel(tel);
+				defaultUser.setLevel(0);
+				defaultUser.setPoint(0l);
 				defaultUser.setYn(YnEnum.Normal.getKey());
 
 				UserAuths userAuths = new UserAuths();
@@ -329,6 +336,13 @@ public class UserController extends BaseController {
 				return JSON.toJSONString(result);
 			}
 
+			boolean existTel = IsExistTel(tel);
+			if (existTel) {
+				LOGGER.info("该用户已经注册，手机号为【{}】", tel);
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
+				return JSON.toJSONString(result);
+			}
+
 			result = taoBaoSmsService.sendValidSMS(tel, System.currentTimeMillis(), SendSMSTypeEnum.REGIST_USER.getKey());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
@@ -361,6 +375,13 @@ public class UserController extends BaseController {
 
 			if(tel.length() != 11){
 				result = RemoteResult.failure("0001", "请传入正确的电话号码");
+				return JSON.toJSONString(result);
+			}
+
+			boolean existTel = IsExistTel(tel);
+			if (!existTel) {
+				LOGGER.info("该用户未注册，手机号为【{}】", tel);
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户未注册");
 				return JSON.toJSONString(result);
 			}
 
@@ -439,29 +460,77 @@ public class UserController extends BaseController {
 
 	/**
 	 * 
-	 * 用户登录接口
+	 * 用户的电话号码登录借口
 	 * 
-	 * @param userAuths
+	 * @param tel
+	 * @param password
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/login", method = {RequestMethod.POST})
-	@ApiOperation(value = "用户的登录借口", httpMethod = "POST", response = String.class, notes = "用户的登录借口")
-	public @ResponseBody String login(@RequestBody UserAuthsParam userAuths, String nickName) {
+	@RequestMapping(value = "/login4Tel", method = {RequestMethod.POST})
+	@ApiOperation(value = "用户的电话号码登录借口", httpMethod = "POST", response = String.class, notes = "用户的电话号码登录借口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
+
+	})
+	public @ResponseBody String login4Tel(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel,
+										  @RequestParam(value = "password", required = true) String password) {
 		RemoteResult result = null;
 		try {
-			if (null == userAuths || userAuths.getIdentityType() == null) {
-				LOGGER.error("调用login 传入的参数错误 登陆类型【{}】", userAuths.getIdentityType());
+			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password)) {
+				LOGGER.error("调用login 传入的参数错误 tel【{}】, password=[{}]", tel, password);
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
 			UserAuths auths = new UserAuths();
-			auths.setIdentifier(userAuths.getIdentifier());
-			auths.setIdentityType(userAuths.getIdentityType());
-			auths.setCredential(userAuths.getCredential());
+			auths.setIdentifier(tel);
+			auths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+			auths.setCredential(password);
 
-			result = userService.login(auths, nickName);
+			result = userService.login4Tel(auths);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+
+	/**
+	 *
+	 * 第三方登录借口
+	 *
+	 * @param userAuthsParam
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST})
+	@ApiOperation(value = "第三方登录借口", httpMethod = "POST", response = String.class, notes = "第三方登录借口")
+	public @ResponseBody String login4ThirdPart(HttpServletRequest request ,@RequestBody UserAuthsParam userAuthsParam) {
+		RemoteResult result = null;
+		try {
+			if (null == userAuthsParam) {
+				LOGGER.error("调用login 传入的参数错误 tel[{}]", JSONObject.toJSONString(userAuthsParam));
+				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+						BusinessCode.PARAMETERS_ERROR.getValue());
+				return JSON.toJSONString(result);
+			}
+
+			UserAuths auths = new UserAuths();
+			auths.setIdentifier(userAuthsParam.getIdentifier());
+			auths.setIdentityType(userAuthsParam.getIdentityType());
+			auths.setCredential(userAuthsParam.getCredential());
+
+			User user = new User();
+			user.setAvatarUrl(userAuthsParam.getAvartar());
+			user.setNickName(userAuthsParam.getNickName());
+			user.setSex(userAuthsParam.getSex());
+			user.setBirthday(userAuthsParam.getBirthday());
+
+			result = userService.login4ThirdPart(auths, user);
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -499,8 +568,15 @@ public class UserController extends BaseController {
 			UserAuths condition = new UserAuths();
 			condition.setUserId(id);
 			condition.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-			condition.setCredential(oldPwd);
+
 			List<UserAuths> authses = userAuthsService.selectEntryList(condition);
+			if(CollectionUtils.isEmpty(authses)){
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "第三方登录账号不能修改密码");
+				return JSON.toJSONString(result);
+			}
+
+			condition.setCredential(oldPwd);
+			authses = userAuthsService.selectEntryList(condition);
 			if(CollectionUtils.isEmpty(authses)){
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "输入的老密码不正确");
 				return JSON.toJSONString(result);
