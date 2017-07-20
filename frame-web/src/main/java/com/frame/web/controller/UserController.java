@@ -10,12 +10,12 @@ import com.frame.domain.common.RemoteResult;
 import com.frame.domain.cusAnnotion.RequestLimit;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.enums.SendSMSTypeEnum;
+import com.frame.domain.img.ImageValidate;
+import com.frame.domain.img.ImgDealMsg;
+import com.frame.domain.img.Result;
 import com.frame.domain.vo.UserAuthsParam;
 import com.frame.service.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -23,9 +23,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -65,55 +67,78 @@ public class UserController extends BaseController {
 	/**
 	 * 编辑用户信息接口
 	 * 
-	 * @param user
 	 * @param imgFile
 	 * @return
 	 */
-	/*@RequestMapping(value = "/editUserInfo", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-	public @ResponseBody String editUserInfo(User user,
-			@RequestParam(value = "imgFile", required = false) MultipartFile imgFile) {
+	@RequestMapping(value = "/editUserInfo", method = {RequestMethod.POST})
+	@ApiOperation(value = "编辑用户信息接口", httpMethod = "POST", response = String.class, notes = "编辑用户信息接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "id", value = "用户id", required = true, dataType = "Integer"),
+			@ApiImplicitParam(paramType="query", name = "nikeName", value = "用户nikeName", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "sex", value = "用户sex", required = false, dataType = "Integer"),
+			@ApiImplicitParam(paramType="query", name = "avatarUrl", value = "用户头像", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "address", value = "用户地址", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "birthday", value = "用户生日", required = false, dataType = "Long"),
+	})
+	public @ResponseBody String editUserInfo(HttpServletRequest request ,
+											 @RequestParam(value = "id", required = true) Integer id,
+											 @RequestParam(value = "nikeName", required = false) String nikeName,
+											 @RequestParam(value = "sex", required = false) Integer sex,
+											 @RequestParam(value = "avatarUrl", required = false) String avatarUrl,
+											 @RequestParam(value = "address", required = false) String address,
+											 @RequestParam(value = "birthday", required = false) Long birthday,
+											 @ApiParam(value = "imgFile", required = false) MultipartFile imgFile) {
 		RemoteResult result = null;
 		try{
-		if (null == user || user.getId() == null) {
-			LOGGER.info("调用editUserInfo 传入的参数错误");
-			result = RemoteResult.failure("0001", "传入参数错误");
-			return JSON.toJSONString(result);
-		}
-		if (imgFile != null && imgFile.getSize() > 0) {
-			try {
-				if (imgFile.getBytes() != null && imgFile.getBytes().length > 0) {
-					Result r = ImageValidate.validate4Upload(imgFile);
-					if (r.isSuccess()) {
-						ImgDealMsg re = imgSysService.uploadByteImg(imgFile.getBytes(), "fish");
-						if (re != null && re.isSuccess()) {
-							// 上传成功
-							String imgUrl = (String) re.getMsg();
-							// 上传成功设置template 图片路径
-							user.setAvatarUrl(imgUrl);
+			String imgUrl = null;
+			if (null == id) {
+				LOGGER.info("调用editUserInfo 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			if (imgFile != null && imgFile.getSize() > 0) {
+				try {
+					if (imgFile.getBytes() != null && imgFile.getBytes().length > 0) {
+						Result r = ImageValidate.validate4Upload(imgFile);
+						if (r.isSuccess()) {
+							ImgDealMsg re = imgSysService.uploadByteImg(imgFile.getBytes(), "fish");
+							if (re != null && re.isSuccess()) {
+								// 上传成功
+								imgUrl = (String) re.getMsg();
+								// 上传成功设置template 图片路径
+							} else {
+								// 上传文件失败，在页面提示
+								result = RemoteResult.failure("0001", "头像上传失败！");
+								return dealJosnP("", result);
+							}
 						} else {
-							// 上传文件失败，在页面提示
-							result = RemoteResult.failure("0001", "头像上传失败！");
+							result = RemoteResult.failure("0001", r.getResultCode());
 							return dealJosnP("", result);
 						}
-					} else {
-						result = RemoteResult.failure("0001", r.getResultCode());
-						return dealJosnP("", result);
 					}
+				} catch (Exception e) {
+					LOGGER.error("失败:" + e.getMessage(), e);
+					result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 				}
-			} catch (Exception e) {
-				LOGGER.error("失败:" + e.getMessage(), e);
-				result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 			}
-		}
-		
-		result = userService.editUserInfo(user);
+			User user = new User();
+			user.setId(id);
+			user.setAvatarUrl(imgUrl);
+			user.setNickName(nikeName);
+			user.setSex(sex);
+			if(null != birthday){
+				user.setBirthday(new Date(birthday));
+			}
+			user.setAddress(address);
+
+			result = userService.editUserInfo(user);
 		
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 		}
 		return JSON.toJSONString(result);
-	}*/
+	}
 
 	/**
 	 *

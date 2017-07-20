@@ -1,5 +1,7 @@
 package com.frame.domain.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.io.Serializable;
@@ -7,36 +9,51 @@ import java.io.Serializable;
 /**
  * Created by garnett on 2015/11/18.
  */
+@ApiModel(value = "UserVO")
 public class UserVO implements Serializable{
 
 	private static final long serialVersionUID = 6723005414893784943L;
 
+	@ApiModelProperty(value = "用户名id")
 	private Integer id;
 
+	@ApiModelProperty(hidden = true)
 	private String name; // 姓名
 
-	private Integer sex; //性别
-	
-	private Integer role; //角色 1 男 2 女
-	
+	@ApiModelProperty(value = "性别")
+	private Integer sex; //性别1 男 2 女
+
+	@ApiModelProperty(hidden = true)
+	private Integer role; //角色
+
+	@ApiModelProperty(value = "地址")
 	private String address; //地址
-	
+
+	@ApiModelProperty(value = "生日")
 	private Long birthday;
 
+	@ApiModelProperty(hidden = true)
 	private String point; // 积分
 
+	@ApiModelProperty(hidden = true)
 	private String email; // email
 
+	@ApiModelProperty(hidden = true)
 	private String tel; // 用户电话
 
+	@ApiModelProperty(hidden = true)
 	private Integer level; // 用户等级
 
+	@ApiModelProperty(value = "用户昵称")
 	private String nickName; // 用户昵称
 
+	@ApiModelProperty(value = "用户头像URL")
 	private String avatarUrl; // 用户头像URL
 
+	@ApiModelProperty(hidden = true)
 	private Long fans;  //粉丝
 
+	@ApiModelProperty(hidden = true)
 	private Long focuses; //关注数
 	
 
