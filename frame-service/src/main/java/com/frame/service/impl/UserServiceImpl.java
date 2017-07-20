@@ -225,8 +225,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 					BusinessCode.PARAMETERS_ERROR.getValue());
 			return result;
 		}
-
-		if (userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_QQ
+		if(userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_QQ
 				|| userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_WEICHAT
 				|| userAuths.getIdentityType() == UserAuths.IDENTITY_RYPE_WEIBO) {
 			if (userAuths.getIdentifier() == null) {
@@ -235,29 +234,36 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return result;
 			}
-			// 第三方登录直接更新或者新建一条记录
-			UserAuths query = new UserAuths();
-			query.setIdentityType(userAuths.getIdentityType());
-			query.setIdentifier(userAuths.getIdentifier());
-			query.setYn(YnEnum.Normal.getKey());
-			List<UserAuths> resList = userAuthsService.selectEntryList(query);
-			if (CollectionUtils.isNotEmpty(resList)) {
-				UserAuths oldData = resList.get(0);
-				oldData.setCredential(userAuths.getCredential());
+		}
 
-				user.setId(oldData.getUserId());
-				result = registOrUpdateUser(user, oldData);
-			} else {
-				user.setYn(YnEnum.Normal.getKey());
+		if (userAuths.getIdentifier() == null) {
+			LOGGER.error("第三方登录调用login 传入的参数错误，无用户第三方唯一标识");
+			result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+					BusinessCode.PARAMETERS_ERROR.getValue());
+			return result;
+		}
+		// 第三方登录直接更新或者新建一条记录
+		UserAuths query = new UserAuths();
+		query.setIdentityType(userAuths.getIdentityType());
+		query.setIdentifier(userAuths.getIdentifier());
+		query.setYn(YnEnum.Normal.getKey());
+		List<UserAuths> resList = userAuthsService.selectEntryList(query);
+		if (CollectionUtils.isNotEmpty(resList)) {
+			UserAuths oldData = resList.get(0);
+			oldData.setCredential(userAuths.getCredential());
 
-				UserAuths newData = new UserAuths();
-				newData.setIdentityType(userAuths.getIdentityType());
-				newData.setIdentifier(userAuths.getIdentifier());
-				newData.setCredential(userAuths.getCredential());
-				newData.setVerified(1);// 已验证
-				newData.setYn(YnEnum.Normal.getKey());
-				result = registOrUpdateUser(user, newData);
-			}
+			user.setId(oldData.getUserId());
+			result = registOrUpdateUser(user, oldData);
+		} else {
+			user.setYn(YnEnum.Normal.getKey());
+
+			UserAuths newData = new UserAuths();
+			newData.setIdentityType(userAuths.getIdentityType());
+			newData.setIdentifier(userAuths.getIdentifier());
+			newData.setCredential(userAuths.getCredential());
+			newData.setVerified(1);// 已验证
+			newData.setYn(YnEnum.Normal.getKey());
+			result = registOrUpdateUser(user, newData);
 		}
 		return result;
 	}
