@@ -242,8 +242,6 @@ public class UserController extends BaseController {
 			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="query", name = "validCode", value = "验证码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
-
-
 	})
 	public @ResponseBody String registUser(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
 										   @RequestParam(value = "password", required = true) String password,
@@ -532,28 +530,48 @@ public class UserController extends BaseController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST})
+	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST},consumes="application/json")
 	@ApiOperation(value = "第三方登录借口", httpMethod = "POST", response = String.class, notes = "第三方登录借口")
-	public @ResponseBody String login4ThirdPart(HttpServletRequest request ,@RequestBody UserAuthsParam userAuthsParam) {
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType="query", name = "avartar", value = "用户avartar", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "birthday", value = "用户birthday", required = false, dataType = "Long"),
+			@ApiImplicitParam(paramType="query", name = "credential", value = "用户credential", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "identifier", value = "用户identifier", required = true, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "identityType", value = "用户identityType", required = true, dataType = "Integer"),
+			@ApiImplicitParam(paramType="query", name = "nickName", value = "用户nickName", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType="query", name = "sex", value = "用户sex", required = false, dataType = "Integer"),
+
+	})
+	public @ResponseBody String login4ThirdPart(HttpServletRequest request ,
+												@RequestParam(value = "avartar", required = false) String avartar,
+												@RequestParam(value = "birthday", required = false) Long birthday,
+												@RequestParam(value = "credential", required = false) String credential,
+												@RequestParam(value = "identifier", required = true) String identifier,
+												@RequestParam(value = "identityType", required = true) Integer identityType,
+												@RequestParam(value = "nickName", required = false) String nickName,
+												@RequestParam(value = "sex", required = false) Integer sex
+												) {
 		RemoteResult result = null;
 		try {
-			if (null == userAuthsParam) {
-				LOGGER.error("调用login 传入的参数错误 tel[{}]", JSONObject.toJSONString(userAuthsParam));
+			if (null == identityType) {
+				LOGGER.error("调用login 传入的参数错误 tel[{}]", identityType);
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
 			UserAuths auths = new UserAuths();
-			auths.setIdentifier(userAuthsParam.getIdentifier());
-			auths.setIdentityType(userAuthsParam.getIdentityType());
-			auths.setCredential(userAuthsParam.getCredential());
+			auths.setIdentifier(identifier);
+			auths.setIdentityType(identityType);
+			auths.setCredential(credential);
 
 			User user = new User();
-			user.setAvatarUrl(userAuthsParam.getAvartar());
-			user.setNickName(userAuthsParam.getNickName());
-			user.setSex(userAuthsParam.getSex());
-			user.setBirthday(userAuthsParam.getBirthday());
+			user.setAvatarUrl(avartar);
+			user.setNickName(nickName);
+			user.setSex(sex);
+			if(null != birthday){
+				user.setBirthday(new Date(birthday));
+			}
 
 			result = userService.login4ThirdPart(auths, user);
 		} catch (Exception e) {
