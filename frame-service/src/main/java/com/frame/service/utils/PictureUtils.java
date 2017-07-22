@@ -42,7 +42,7 @@ public class PictureUtils {
 
 	// 运行前先设置好以下三个参数
 	private static final String OPERATOR_NAME = "dioayudaxian01";
-	private static final String OPERATOR_PWD = "fish888";
+	private static final String OPERATOR_PWD = "fish8888";
 
 	/** 根目录 */
 	private static final String DIR_ROOT = "/";

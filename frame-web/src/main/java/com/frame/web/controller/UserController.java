@@ -13,7 +13,6 @@ import com.frame.domain.enums.SendSMSTypeEnum;
 import com.frame.domain.img.ImageValidate;
 import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
-import com.frame.domain.vo.UserAuthsParam;
 import com.frame.service.*;
 import io.swagger.annotations.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,7 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -525,9 +527,6 @@ public class UserController extends BaseController {
 	/**
 	 *
 	 * 第三方登录借口
-	 *
-	 * @param userAuthsParam
-	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST},consumes="application/json")

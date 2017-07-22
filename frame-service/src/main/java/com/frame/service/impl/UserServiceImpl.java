@@ -309,7 +309,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			result.setData(user);
 		} else {
 			LOGGER.info("用户编辑失败,传入的参数为：[{}]", JSON.toJSONString(user));
-			result = RemoteResult.failure("0001", "用户编辑失败");
+			result = RemoteResult.failure("0001", "用户编辑失败,传入的参数为无效");
 		}
 		return result;
 	}
