@@ -18,6 +18,8 @@
 	<!-- 全局别名设置，在映射文件中只需写别名，而不必写出整个类路径 -->
 	<typeAliases>
 		<typeAlias type="com.frame.domain.User" alias="user"/>
+		<typeAlias type="com.frame.domain.Artical" alias="artical"/>
+
 		<typeAlias type="com.frame.domain.UserValid" alias="userValid"/>
 		<typeAlias type="com.frame.domain.UserAuths" alias="userAuths"/>
 		<typeAlias type="com.frame.domain.AppSecret" alias="appSecret"/>
@@ -36,6 +38,7 @@
 		<mapper resource="sqlmap/AppSecret.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />
 		<mapper resource="sqlmap/UserFriends.xml" />
+		<mapper resource="sqlmap/Artical.xml" />
 		
 	</mappers>
 </configuration>

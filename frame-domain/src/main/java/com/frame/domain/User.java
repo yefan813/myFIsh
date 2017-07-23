@@ -34,7 +34,8 @@ public class User extends BaseDomain {
 	private String nickName; // 用户昵称
 
 	private String avatarUrl; // 用户头像URL
-	
+
+	private Integer source; // user from source
 
 
 
