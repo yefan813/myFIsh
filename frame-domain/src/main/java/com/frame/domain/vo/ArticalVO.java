@@ -1,18 +1,25 @@
-package com.frame.domain;
+package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
 
 /**
  * Created by yefan on 2017/7/23.
  */
-public class Artical extends BaseDomain {
+public class ArticalVO extends BaseDomain {
 
     private Long userId;
     private String title;
-    private String img;
+
     private  Integer articleType;
-    private Integer isPublish;
-    private String content;
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public Integer getArticleType() {
         return articleType;
@@ -38,27 +45,4 @@ public class Artical extends BaseDomain {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getIsPublish() {
-        return isPublish;
-    }
-
-    public void setIsPublish(Integer isPublish) {
-        this.isPublish = isPublish;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
 }

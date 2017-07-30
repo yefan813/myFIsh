@@ -1,15 +1,12 @@
-package com.frame.domain;
-
-import com.frame.domain.base.BaseDomain;
+package com.frame.domain.vo;
 
 /**
  * Created by yefan on 2017/7/23.
  */
-public class FishSite extends BaseDomain {
+public class FishSiteVO{
     private Long userId;
     private String title;
     private  String introduce;
-    private Integer isPublish;
     private String content;
     private String pic0;
     private String pic1;
@@ -49,14 +46,6 @@ public class FishSite extends BaseDomain {
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
-    }
-
-    public Integer getIsPublish() {
-        return isPublish;
-    }
-
-    public void setIsPublish(Integer isPublish) {
-        this.isPublish = isPublish;
     }
 
     public String getContent() {

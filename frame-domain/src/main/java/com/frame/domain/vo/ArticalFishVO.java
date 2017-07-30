@@ -1,19 +1,14 @@
-package com.frame.domain;
+package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/23.
  */
-public class ArticalFish extends BaseDomain {
+public class ArticalFishVO{
 
     private Long userId;
     private String title;
-    private Date time;
     private  Integer waterType;
     private Integer bait;
     private  Integer fishType;
@@ -25,10 +20,8 @@ public class ArticalFish extends BaseDomain {
     private String lng;
     private  String locationAddress;
     private  Integer articleType;
-    private Integer isPublish;
-    private String content;
-    private String img;
 
+    private String img;
 
     public String getImg() {
         return img;
@@ -62,13 +55,6 @@ public class ArticalFish extends BaseDomain {
         this.title = title;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public Integer getWaterType() {
         return waterType;
@@ -148,21 +134,5 @@ public class ArticalFish extends BaseDomain {
 
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getIsPublish() {
-        return isPublish;
-    }
-
-    public void setIsPublish(Integer isPublish) {
-        this.isPublish = isPublish;
     }
 }

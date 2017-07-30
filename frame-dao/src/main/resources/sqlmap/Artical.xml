@@ -9,6 +9,7 @@
 			id,
 			user_id as userId,
 			title,
+			img,
 			article_type as articleType,
 			is_publish as isPublish,
 			content,
@@ -27,6 +28,7 @@
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND title = #{title}]]></if>
+			<if test="img != null and img != ''"><![CDATA[AND img = #{img}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
 			<if test="content != null and content != ''"><![CDATA[AND content = #{content}]]></if>
@@ -47,6 +49,7 @@
 		<set>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
 			<if test="title != null"><![CDATA[title = #{title},]]></if>
+			<if test="img != null and img != ''"><![CDATA[img = #{img},]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[ articleType = #{articleType},]]></if>
 			<if test="isPublish != null"><![CDATA[is_publish = #{isPublish},]]></if>
 			<if test="content != null and content != ''"><![CDATA[content = #{content},]]></if>
@@ -59,8 +62,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical (user_id,title,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_artical (user_id,title,img,article_type,is_publish,content,feature,created,modified,yn)
+			VALUES (#{userId},#{title},#{img},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	

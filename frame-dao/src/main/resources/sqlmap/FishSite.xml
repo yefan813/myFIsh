@@ -25,7 +25,6 @@
 			can_night as canNight,
 			can_eat as canEat,
 			can_hotel as canHotel,
-			content,
 			feature,
 			created,
 			modified,
@@ -33,7 +32,7 @@
 		]]>
 	</sql>
 	<!-- groupon 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_fish_site]]></sql>
 	
 	<!-- 全部条件(更多功能可以通过queryData扩展实现)  -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -107,7 +106,7 @@
 											feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},
 											#{pic2},#{pic3},#{lng},#{lat},#{address},#{siteType},
-											#{siteFeeType},#{siteFishType},#{sitePhone},#{canPark},#{canNight},#{canEat},canHotel,
+											#{siteFeeType},#{siteFishType},#{sitePhone},#{canPark},#{canNight},#{canEat},#{canHotel},
 											#{feature},now(),now(),#{yn})
 		]]>
 	</insert>

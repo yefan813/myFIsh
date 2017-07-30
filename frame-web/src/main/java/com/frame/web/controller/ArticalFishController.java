@@ -2,24 +2,26 @@ package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.frame.domain.ArticalFish;
+import com.frame.domain.User;
 import com.frame.domain.base.YnEnum;
+import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.img.ImageValidate;
 import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
-import com.frame.service.ArticalService;
+import com.frame.domain.vo.ArticalFishVO;
+import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
+import com.frame.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -31,20 +33,86 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
-@RequestMapping(value = "/artical")
-@Api(value = "artical", description = "发文章相关接口")
-public class ArticalController extends BaseController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+@RequestMapping(value = "/articalFish")
+@Api(value = "articalFish", description = "渔获文章相关接口")
+public class ArticalFishController extends BaseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticalFishController.class);
 
     @Resource
     private ImgSysService imgSysService;
 
     @Resource
-    private ArticalService articalService;
+    private ArticalFishService articalFishService;
 
+    @Resource
+    private UserService userService;
 
     @Value("${img.prefix}")
     private String IMAGEPREFIX;
+
+
+    @RequestMapping(value = "/articalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "渔获列表", httpMethod = "POST", response = String.class, notes = "渔获列表")
+    @ResponseBody
+    public String getArticalFishList(HttpServletRequest request, @ApiParam(value="currrentPage",required = true)@RequestParam(value = "currrentPage", required = true)Integer currrentPage ,@ModelAttribute ArticalFishVO articalFishVO){
+        RemoteResult result = null;
+        try {
+            if (null == articalFishVO) {
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】");
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+
+
+            Page<ArticalFish> page = new Page<ArticalFish>();
+            page.setCurrentPage(currrentPage);
+
+
+            ArticalFish articalFish = new ArticalFish();
+            BeanUtils.copyProperties(articalFish, articalFishVO);
+
+            articalFish.setOrderField("modified");
+            articalFish.setOrderFieldType("DESC");
+
+            Page<ArticalFish> res = articalFishService.selectPage(articalFish, page);
+            result = RemoteResult.success(res);
+            return JSON.toJSONString(result);
+        }catch (Exception e) {
+            LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
+    @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "渔获文章详细", httpMethod = "POST", response = String.class, notes = "渔获文章详细")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "articalId", value = "articalId", required = true, dataType = "Integer"),
+    })
+    @ResponseBody
+    public String getArticalFishDetail(HttpServletRequest request,  @RequestParam(value = "articalId", required = true)Long articalId){
+
+        RemoteResult result = null;
+        if (null == articalId) {
+            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    BusinessCode.PARAMETERS_ERROR.getValue());
+            return JSON.toJSONString(result);
+        }
+
+        ArticalFish articalFish = articalFishService.selectEntry(articalId);
+        if(null == articalFish){
+            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    BusinessCode.PARAMETERS_ERROR.getValue());
+            return JSON.toJSONString(result);
+        }
+        result = RemoteResult.success(articalFish);
+        return JSON.toJSONString(result);
+    }
+
+
 
     /**
      * upload image
@@ -56,7 +124,7 @@ public class ArticalController extends BaseController {
     @ApiOperation(value = "图片上传", httpMethod = "POST", response = String.class, notes = "图片上传")
     public
     @ResponseBody
-    String uploadImgFile(@ApiParam(value = "imgFile", required = false) MultipartFile imgFile) {
+    String uploadImgFile(HttpServletRequest request, @ApiParam(value = "imgFile", required = false) MultipartFile imgFile) {
         RemoteResult result = null;
         try {
             String imagePath = null;
@@ -112,7 +180,7 @@ public class ArticalController extends BaseController {
             @ApiImplicitParam(paramType="query", name = "lng", value = "lng", required = false, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "locationAddress", value = "locationAddress", required = true, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "articleType", value = "articleType", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType="query", name = "is publish", value = "isPublish", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType="query", name = "isPublish", value = "isPublish", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "content", value = "content", required = false, dataType = "String"),
     })
     public  @ResponseBody String publish(HttpServletRequest request,
@@ -146,6 +214,15 @@ public class ArticalController extends BaseController {
             return JSON.toJSONString(result);
         }
 
+        //valid user is valid
+        User user = userService.selectEntry(userId);
+        if(null == user){
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    "此用户不存在");
+            return JSON.toJSONString(result);
+        }
+
+
         ArticalFish articalFish = new ArticalFish();
         articalFish.setUserId(userId);
         articalFish.setTitle(title);
@@ -163,7 +240,7 @@ public class ArticalController extends BaseController {
         articalFish.setLocationAddress(locationAddress);
         articalFish.setArticleType(articleType);
         articalFish.setYn(YnEnum.Normal.getKey());
-       int res = articalService.insertEntry(articalFish);
+       int res = articalFishService.insertEntry(articalFish);
         if(res <= 0 ){
             result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
         }

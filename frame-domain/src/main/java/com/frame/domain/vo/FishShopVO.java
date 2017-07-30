@@ -1,15 +1,14 @@
-package com.frame.domain;
-
-import com.frame.domain.base.BaseDomain;
+package com.frame.domain.vo;
 
 /**
  * Created by yefan on 2017/7/23.
  */
-public class FishSite extends BaseDomain {
+public class FishShopVO{
+
+
     private Long userId;
     private String title;
     private  String introduce;
-    private Integer isPublish;
     private String content;
     private String pic0;
     private String pic1;
@@ -18,14 +17,7 @@ public class FishSite extends BaseDomain {
     private String lng;
     private String lat;
     private String address;
-    private Integer siteType;
-    private Integer siteFeeType;
-    private Integer siteFishType;
     private String sitePhone;
-    private Boolean canPark;
-    private Boolean canNight;
-    private Boolean canEat;
-    private Boolean canHotel;
 
     public Long getUserId() {
         return userId;
@@ -49,14 +41,6 @@ public class FishSite extends BaseDomain {
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
-    }
-
-    public Integer getIsPublish() {
-        return isPublish;
-    }
-
-    public void setIsPublish(Integer isPublish) {
-        this.isPublish = isPublish;
     }
 
     public String getContent() {
@@ -123,30 +107,6 @@ public class FishSite extends BaseDomain {
         this.address = address;
     }
 
-    public Integer getSiteType() {
-        return siteType;
-    }
-
-    public void setSiteType(Integer siteType) {
-        this.siteType = siteType;
-    }
-
-    public Integer getSiteFeeType() {
-        return siteFeeType;
-    }
-
-    public void setSiteFeeType(Integer siteFeeType) {
-        this.siteFeeType = siteFeeType;
-    }
-
-    public Integer getSiteFishType() {
-        return siteFishType;
-    }
-
-    public void setSiteFishType(Integer siteFishType) {
-        this.siteFishType = siteFishType;
-    }
-
     public String getSitePhone() {
         return sitePhone;
     }
@@ -155,35 +115,4 @@ public class FishSite extends BaseDomain {
         this.sitePhone = sitePhone;
     }
 
-    public Boolean getCanPark() {
-        return canPark;
-    }
-
-    public void setCanPark(Boolean canPark) {
-        this.canPark = canPark;
-    }
-
-    public Boolean getCanNight() {
-        return canNight;
-    }
-
-    public void setCanNight(Boolean canNight) {
-        this.canNight = canNight;
-    }
-
-    public Boolean getCanEat() {
-        return canEat;
-    }
-
-    public void setCanEat(Boolean canEat) {
-        this.canEat = canEat;
-    }
-
-    public Boolean getCanHotel() {
-        return canHotel;
-    }
-
-    public void setCanHotel(Boolean canHotel) {
-        this.canHotel = canHotel;
-    }
 }

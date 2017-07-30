@@ -9,6 +9,7 @@
 			id,
 			user_id as userId,
 			title,
+			img,
 			water_type as waterType,
 			bait,
 			fish_type as fishType,
@@ -35,7 +36,7 @@
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND title = #{title}]]></if>
-			<if test="time != null"><![CDATA[AND time = #{time}]]></if>
+			<if test="img != null and img != ''"><![CDATA[AND img = #{img}]]></if>
 			<if test="waterType != null"><![CDATA[AND water_type = #{waterType}]]></if>
 			<if test="bait != null"><![CDATA[AND bait = #{bait}]]></if>
 			<if test="fishType != null"><![CDATA[AND fish_type = #{fishType}]]></if>
@@ -66,6 +67,7 @@
 		<set>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
 			<if test="title != null"><![CDATA[title = #{title},]]></if>
+			<if test="img != null and img != ''"><![CDATA[img = #{img},]]></if>
 			<if test="waterType != null"><![CDATA[ water_type = #{waterType},]]></if>
 			<if test="bait != null"><![CDATA[bait = #{bait},]]></if>
 			<if test="fishType != null"><![CDATA[ fish_type = #{fishType},]]></if>
@@ -88,8 +90,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical_fish (user_id,title,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_artical_fish (user_id,title,img,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
+			VALUES (#{userId},#{title},#{img},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	
