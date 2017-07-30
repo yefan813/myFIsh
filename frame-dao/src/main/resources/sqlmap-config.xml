@@ -18,13 +18,15 @@
 	<!-- 全局别名设置，在映射文件中只需写别名，而不必写出整个类路径 -->
 	<typeAliases>
 		<typeAlias type="com.frame.domain.User" alias="user"/>
+		<typeAlias type="com.frame.domain.ArticalFish" alias="articalFish"/>
 		<typeAlias type="com.frame.domain.Artical" alias="artical"/>
-
 		<typeAlias type="com.frame.domain.UserValid" alias="userValid"/>
 		<typeAlias type="com.frame.domain.UserAuths" alias="userAuths"/>
 		<typeAlias type="com.frame.domain.AppSecret" alias="appSecret"/>
 		<typeAlias type="com.frame.domain.UserLogin" alias="userLogin"/>
 		<typeAlias type="com.frame.domain.UserFriends" alias="userFriends"/>
+		<typeAlias type="com.frame.domain.FishSite" alias="fishSite"/>
+		<typeAlias type="com.frame.domain.FishShop" alias="fishShop"/>
 		
 		
 		
@@ -38,7 +40,10 @@
 		<mapper resource="sqlmap/AppSecret.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />
 		<mapper resource="sqlmap/UserFriends.xml" />
+		<mapper resource="sqlmap/ArticalFish.xml" />
 		<mapper resource="sqlmap/Artical.xml" />
+		<mapper resource="sqlmap/FishShop.xml" />
+		<mapper resource="sqlmap/FishSite.xml" />
 		
 	</mappers>
 </configuration>

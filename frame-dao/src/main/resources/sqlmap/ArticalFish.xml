@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.frame.dao.ArticalDao">
+<mapper namespace="com.frame.dao.ArticalFishDao">
 
 	<!-- groupon 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
@@ -9,6 +9,14 @@
 			id,
 			user_id as userId,
 			title,
+			water_type as waterType,
+			bait,
+			fish_type as fishType,
+			fishing_func as fishingFunc,
+			fish_lines as fishLines,
+			fish_pole_length as fishPoleLength,
+			fish_pole_brand as fishPoleBrand,
+			location_address as locationAddress,
 			article_type as articleType,
 			is_publish as isPublish,
 			content,
@@ -19,7 +27,7 @@
 		]]>
 	</sql>
 	<!-- groupon 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical_fish]]></sql>
 	
 	<!-- 全部条件(更多功能可以通过queryData扩展实现)  -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -27,6 +35,17 @@
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND title = #{title}]]></if>
+			<if test="time != null"><![CDATA[AND time = #{time}]]></if>
+			<if test="waterType != null"><![CDATA[AND water_type = #{waterType}]]></if>
+			<if test="bait != null"><![CDATA[AND bait = #{bait}]]></if>
+			<if test="fishType != null"><![CDATA[AND fish_type = #{fishType}]]></if>
+			<if test="fishingFunc != null"><![CDATA[AND fishing_func = #{fishingFunc}]]></if>
+			<if test="fishLines != null"><![CDATA[AND fish_lines = #{fishLines}]]></if>
+			<if test="fishPoleLength != null"><![CDATA[AND fish_pole_length = #{fishPoleLength}]]></if>
+			<if test="fishPoleBrand != null"><![CDATA[AND fish_pole_brand = #{fishPoleBrand}]]></if>
+			<if test="lat != null"><![CDATA[AND lat = #{lat}]]></if>
+			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
+			<if test="locationAddress != null and locationAddress != ''"><![CDATA[AND location_address = #{locationAddress}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
 			<if test="content != null and content != ''"><![CDATA[AND content = #{content}]]></if>
@@ -47,6 +66,16 @@
 		<set>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
 			<if test="title != null"><![CDATA[title = #{title},]]></if>
+			<if test="waterType != null"><![CDATA[ water_type = #{waterType},]]></if>
+			<if test="bait != null"><![CDATA[bait = #{bait},]]></if>
+			<if test="fishType != null"><![CDATA[ fish_type = #{fishType},]]></if>
+			<if test="fishingFunc != null"><![CDATA[ fishing_func = #{fishingFunc},]]></if>
+			<if test="fishLines != null"><![CDATA[fish_lines = #{fishLines},]]></if>
+			<if test="fishPoleLength != null"><![CDATA[fish_pole_length = #{fishPoleLength},]]></if>
+			<if test="fishPoleBrand != null"><![CDATA[fish_pole_brand = #{fishPoleBrand},]]></if>
+			<if test="lat != null"><![CDATA[lat = #{lat},]]></if>
+			<if test="lng != null and lng != ''"><![CDATA[ lng = #{lng},]]></if>
+			<if test="locationAddress != null and locationAddress != ''"><![CDATA[location_address = #{locationAddress},]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[ articleType = #{articleType},]]></if>
 			<if test="isPublish != null"><![CDATA[is_publish = #{isPublish},]]></if>
 			<if test="content != null and content != ''"><![CDATA[content = #{content},]]></if>
@@ -59,8 +88,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical (user_id,title,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_artical_fish (user_id,title,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
+			VALUES (#{userId},#{title},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	
@@ -76,13 +105,13 @@
 	</delete>
 
 	<!-- 删除,通过条件 -->
-	<update id="deleteByCondtion" parameterType="artical" >
+	<update id="deleteByCondtion" parameterType="articalFish" >
 		<![CDATA[DELETE FROM tb_artical_fish]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</update>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateByKey" parameterType="artical" >
+	<update id="updateByKey" parameterType="articalFish" >
 		<![CDATA[UPDATE tb_artical_fish]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
@@ -90,7 +119,7 @@
 	
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="artical">
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="articalFish">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -101,7 +130,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectEntryList" parameterType="artical" resultType="artical">
+	<select id="selectEntryList" parameterType="articalFish" resultType="articalFish">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -110,7 +139,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectEntryListCount" parameterType="artical" resultType="int">
+	<select id="selectEntryListCount" parameterType="articalFish" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

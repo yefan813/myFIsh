@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.frame.dao.ArticalDao">
+<mapper namespace="com.frame.dao.FishShopDao">
 
 	<!-- groupon 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
@@ -9,8 +9,15 @@
 			id,
 			user_id as userId,
 			title,
-			article_type as articleType,
-			is_publish as isPublish,
+			introduce,
+			pic0,
+			pic1,
+			pic2,
+			pic3,
+			lng,
+			lat,
+			address,
+			site_phone as sitePhone,
 			content,
 			feature,
 			created,
@@ -26,10 +33,17 @@
 		<where>
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND user_id = #{userId}]]></if>
-			<if test="title != null"><![CDATA[AND title = #{title}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
-			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
-			<if test="content != null and content != ''"><![CDATA[AND content = #{content}]]></if>
+			<if test="title != null and feature != ''"><![CDATA[AND title = #{title}]]></if>
+			<if test="introduce != null and feature != '' "><![CDATA[AND introduce = #{introduce}]]></if>
+			<if test="pic0 != null and pic0 != ''"><![CDATA[AND pic0 = #{pic0}]]></if>
+			<if test="pic2 != null and pic2 != ''"><![CDATA[AND pic2 = #{pic2}]]></if>
+			<if test="pic3 != null and pic3 != ''"><![CDATA[AND pic3 = #{pic3}]]></if>
+			<if test="pic1 != null and pic1 != ''"><![CDATA[AND pic1 = #{pic1}]]></if>
+			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
+			<if test="lat != null and lat != ''"><![CDATA[AND lat = #{lat}]]></if>
+			<if test="address != null and address != ''"><![CDATA[AND address = #{address}]]></if>
+			<if test="sitePhone != null"><![CDATA[AND site_phone = #{sitePhone}]]></if>
+			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
 			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
@@ -47,20 +61,31 @@
 		<set>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
 			<if test="title != null"><![CDATA[title = #{title},]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[ articleType = #{articleType},]]></if>
-			<if test="isPublish != null"><![CDATA[is_publish = #{isPublish},]]></if>
-			<if test="content != null and content != ''"><![CDATA[content = #{content},]]></if>
-			<if test="created != null and created != ''"><![CDATA[created = #{created},]]></if>
+			<if test="introduce != null and feature != '' "><![CDATA[introduce = #{introduce},]]></if>
+			<if test="pic0 != null and pic0 != ''"><![CDATA[ pic0 = #{pic0},]]></if>
+			<if test="pic2 != null and pic2 != ''"><![CDATA[pic2 = #{pic2},]]></if>
+			<if test="pic3 != null and pic3 != ''"><![CDATA[pic3 = #{pic3},]]></if>
+			<if test="pic1 != null and pic1 != ''"><![CDATA[pic1 = #{pic1},]]></if>
+			<if test="lng != null and lng != ''"><![CDATA[ lng = #{lng},]]></if>
+			<if test="lat != null and lat != ''"><![CDATA[ lat = #{lat},]]></if>
+			<if test="address != null and address != ''"><![CDATA[ address = #{address},]]></if>
+			<if test="sitePhone != null"><![CDATA[ site_phone = #{sitePhone},]]></if>
+			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
+			<if test="created != null lng created != ''"><![CDATA[created = #{created},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
 		</set>
 	</sql>
 
 	<!-- 插入team记录 -->
-	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="fishShop" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical (user_id,title,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_fish_shop (user_id,title,introduce,pic0,pic1,
+											pic2,pic3,lng,lat,address,site_phone,
+											feature,created,modified,yn)
+			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},
+											#{pic2},#{pic3},#{lng},#{lat},#{address},
+											#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	
@@ -69,28 +94,28 @@
 
 	<!-- 删除记录,主键IN(array) -->
 	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array" >
-		<![CDATA[DELETE FROM tb_artical_fish WHERE id IN]]>
+		<![CDATA[DELETE FROM tb_fish_shop WHERE id IN]]>
 		<foreach collection="array" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>
 		</foreach>
 	</delete>
 
 	<!-- 删除,通过条件 -->
-	<update id="deleteByCondtion" parameterType="artical" >
-		<![CDATA[DELETE FROM tb_artical_fish]]>
+	<update id="deleteByCondtion" parameterType="fishShop" >
+		<![CDATA[DELETE FROM tb_fish_shop]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</update>
 
 	<!-- 修改记录通过主键 -->
-	<update id="updateByKey" parameterType="artical" >
-		<![CDATA[UPDATE tb_artical_fish]]>
+	<update id="updateByKey" parameterType="fishShop" >
+		<![CDATA[UPDATE tb_fish_shop]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>
 	
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="artical">
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="fishShop">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -101,7 +126,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectEntryList" parameterType="artical" resultType="artical">
+	<select id="selectEntryList" parameterType="fishShop" resultType="fishShop">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -110,7 +135,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件 -->
-	<select id="selectEntryListCount" parameterType="artical" resultType="int">
+	<select id="selectEntryListCount" parameterType="fishShop" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

@@ -1,7 +1,7 @@
 package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.frame.domain.Artical;
+import com.frame.domain.ArticalFish;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
@@ -146,24 +146,24 @@ public class ArticalController extends BaseController {
             return JSON.toJSONString(result);
         }
 
-        Artical artical = new Artical();
-        artical.setUserId(userId);
-        artical.setTitle(title);
-        artical.setWaterType(waterType);
-        artical.setBait(bait);
-        artical.setFishType(fishType);
-        artical.setFishingFunc(fishingFunc);
-        artical.setFishLines(fishLines);
-        artical.setFishPoleBrand(fishPoleBrand);
-        artical.setFishPoleLength(fishPoleLength);
-        artical.setLat(lat);
-        artical.setLng(lng);
-        artical.setContent(content);
-        artical.setIsPublish(isPublish);
-        artical.setLocationAddress(locationAddress);
-        artical.setArticleType(articleType);
-        artical.setYn(YnEnum.Normal.getKey());
-       int res = articalService.insertEntry(artical);
+        ArticalFish articalFish = new ArticalFish();
+        articalFish.setUserId(userId);
+        articalFish.setTitle(title);
+        articalFish.setWaterType(waterType);
+        articalFish.setBait(bait);
+        articalFish.setFishType(fishType);
+        articalFish.setFishingFunc(fishingFunc);
+        articalFish.setFishLines(fishLines);
+        articalFish.setFishPoleBrand(fishPoleBrand);
+        articalFish.setFishPoleLength(fishPoleLength);
+        articalFish.setLat(lat);
+        articalFish.setLng(lng);
+        articalFish.setContent(content);
+        articalFish.setIsPublish(isPublish);
+        articalFish.setLocationAddress(locationAddress);
+        articalFish.setArticleType(articleType);
+        articalFish.setYn(YnEnum.Normal.getKey());
+       int res = articalService.insertEntry(articalFish);
         if(res <= 0 ){
             result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
         }
