@@ -66,7 +66,7 @@ public class FishShopController extends BaseController {
 
             FishShop fishShop = new FishShop();
             BeanUtils.copyProperties(fishShop,fishShopVO);
-
+            fishShop.setYn(YnEnum.Normal.getKey());
             Page<FishShop> res = fishShopService.selectPage(fishShop,page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);

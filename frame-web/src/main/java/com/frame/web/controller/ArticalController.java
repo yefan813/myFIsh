@@ -69,7 +69,7 @@ public class ArticalController extends BaseController {
 
             Artical artical = new Artical();
             BeanUtils.copyProperties(artical, articalVO);
-
+            artical.setYn(YnEnum.Normal.getKey());
             artical.setOrderField("modified");
             artical.setOrderFieldType("DESC");
 

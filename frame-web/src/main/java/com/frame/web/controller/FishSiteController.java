@@ -60,7 +60,7 @@ public class FishSiteController extends BaseController {
 
             FishSite fishSite = new FishSite();
             BeanUtils.copyProperties(fishSite, fishSiteVO);
-
+            fishSite.setYn(YnEnum.Normal.getKey());
             Page<FishSite> res = fishSiteService.selectPage(fishSite, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);

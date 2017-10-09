@@ -73,7 +73,7 @@ public class ArticalFishController extends BaseController {
 
             ArticalFish articalFish = new ArticalFish();
             BeanUtils.copyProperties(articalFish, articalFishVO);
-
+            articalFish.setYn(YnEnum.Normal.getKey());
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
 
