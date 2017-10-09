@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by yefan on 2017/7/18.
+ *
+ *
  */
 
 
@@ -104,8 +106,8 @@ public class ArticalFishController extends BaseController {
         ArticalFish articalFish = articalFishService.selectEntry(articalId);
         if(null == articalFish){
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
-            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                    BusinessCode.PARAMETERS_ERROR.getValue());
+            result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(),
+                    BusinessCode.SUCCESS.getValue());
             return JSON.toJSONString(result);
         }
         result = RemoteResult.success(articalFish);
@@ -243,9 +245,9 @@ public class ArticalFishController extends BaseController {
        int res = articalFishService.insertEntry(articalFish);
         if(res <= 0 ){
             result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
+        }else{
+            result = RemoteResult.success();
         }
-
-        result = RemoteResult.success();
         return JSON.toJSONString(result);
     }
 }

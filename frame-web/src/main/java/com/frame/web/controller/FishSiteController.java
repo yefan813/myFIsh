@@ -130,8 +130,6 @@ public class FishSiteController extends BaseController {
             }else{
                 result = RemoteResult.success();
             }
-
-
             return JSON.toJSONString(result);
         }catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);

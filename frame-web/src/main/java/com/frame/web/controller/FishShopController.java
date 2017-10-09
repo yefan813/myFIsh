@@ -137,7 +137,6 @@ public class FishShopController extends BaseController {
                 result = RemoteResult.success();
             }
 
-
             return JSON.toJSONString(result);
         }catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
