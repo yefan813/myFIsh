@@ -1,18 +1,30 @@
 package com.frame.web.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.frame.domain.UserLogin;
+import com.frame.domain.base.YnEnum;
+import com.frame.domain.common.RemoteResult;
 import com.frame.service.UserLoginService;
 import com.frame.service.impl.APNSService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/userLogin")
-@Api(value="userLogin")
+@Api(value="userLogin", description = "登录后上传相关数据接口")
 public class UserLoginController extends BaseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserLoginController.class);
 
@@ -28,8 +40,10 @@ public class UserLoginController extends BaseController {
 	 * @param userLogin
 	 * @return
 	 */
-	/*@RequestMapping(value = "/saveUserLoginInfo", method = {  RequestMethod.POST })
-	public @ResponseBody String saveUserLoginInfo(UserLogin userLogin) {
+	@RequestMapping(value = "/saveUserLoginInfo", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+	@ApiOperation(value = "用户登录上创登陆信息", httpMethod = "POST", response = String.class, notes = "用户登录上创登陆信息")
+	public @ResponseBody
+	String saveUserLoginInfo(HttpServletRequest request, @ModelAttribute UserLogin userLogin) {
 		RemoteResult result = null;
 		try {
 			if (userLogin == null || userLogin.getUserId() == null
@@ -57,7 +71,7 @@ public class UserLoginController extends BaseController {
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 		}
 		return JSON.toJSONString(result);
-	}*/
+	}
 
 	/**
 	 * 注册用户deviceToken接口
@@ -66,7 +80,7 @@ public class UserLoginController extends BaseController {
 	 * @param deviceToken
 	 * @return
 	 */
-	/*@RequestMapping(value = "/registDeviceToken", method = {  RequestMethod.POST })
+	@RequestMapping(value = "/registDeviceToken", method = {  RequestMethod.POST })
 	@ApiOperation(value = "注册设备信息",httpMethod = "POST", response = String.class, notes = "注册设备信息")
 	public @ResponseBody String registDeviceToken(Integer userId, String deviceToken) {
 		RemoteResult result = null;
@@ -91,7 +105,7 @@ public class UserLoginController extends BaseController {
 			LOGGER.info("调用registDeviceToken异常", e);
 		}
 		return JSON.toJSONString(result);
-	}*/
+	}
 
 	/**
 	 * 发送推送消息接口
@@ -100,7 +114,7 @@ public class UserLoginController extends BaseController {
 	 * @param deviceToken
 	 * @return
 	 */
-	/*@RequestMapping(value = "/sendNotifi", method = {  RequestMethod.POST })
+	@RequestMapping(value = "/sendNotifi", method = {  RequestMethod.POST })
 	public @ResponseBody String sendNotifi(String msg, String deviceToken) {
 		RemoteResult result = null;
 		try {
@@ -112,5 +126,5 @@ public class UserLoginController extends BaseController {
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
 		}
 		return JSON.toJSONString(result);
-	}*/
+	}
 }
