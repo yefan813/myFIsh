@@ -9,6 +9,7 @@ import java.util.Date;
 /**
  * Created by yefan on 2017/7/23.
  */
+
 public class ArticalFish extends BaseDomain {
 
     private Long userId;
@@ -28,7 +29,15 @@ public class ArticalFish extends BaseDomain {
     private Integer isPublish;
     private String content;
     private String img;
+    private Date fishTime;
 
+    public Date getFishTime() {
+        return fishTime;
+    }
+
+    public void setFishTime(Date fishTime) {
+        this.fishTime = fishTime;
+    }
 
     public String getImg() {
         return img;

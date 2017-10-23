@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/18.
@@ -124,6 +125,8 @@ public class FishSiteController extends BaseController {
             BeanUtils.copyProperties(fishSite,fishSiteVO);
 
             fishSite.setYn(YnEnum.Normal.getKey());
+            fishSite.setCreated(new Date());
+            fishSite.setModified(new Date());
            int res = fishSiteService.insertEntry(fishSite);
             if(res <= 0 ){
                 result = RemoteResult.failure("0002", "artical publish is failed,server internal error");

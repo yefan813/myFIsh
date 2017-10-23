@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/18.
@@ -171,6 +172,7 @@ public class ArticalFishController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType="query", name = "title", value = "title", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "fishTime", value = "fishTime", required = true, dataType = "Long"),
             @ApiImplicitParam(paramType="query", name = "waterType", value = "waterType", required = false, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "bait", value = "bait", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "fishType", value = "fishType", required = true, dataType = "Integer"),
@@ -188,11 +190,12 @@ public class ArticalFishController extends BaseController {
     public  @ResponseBody String publish(HttpServletRequest request,
                                          @RequestParam(value = "userId", required = true) Long userId,
                                          @RequestParam(value = "title", required = true)String title,
-                                         @RequestParam(value = "waterType", required = true)Integer waterType,
+                                         @RequestParam(value = "fishTime", required = true)Long fishTime,
+                                         @RequestParam(value = "waterType", required = false)Integer waterType,
                                          @RequestParam(value = "bait", required = true) Integer bait,
                                          @RequestParam(value = "fishType", required = true)Integer fishType,
                                          @RequestParam(value = "fishingFunc", required = true) Integer fishingFunc,
-                                         @RequestParam(value = "fishLines", required = true) Double fishLines,
+                                         @RequestParam(value = "fishLines", required = false) Double fishLines,
                                          @RequestParam(value = "fishPoleLength", required = true) Double fishPoleLength,
                                          @RequestParam(value = "fishPoleBrand", required = true)String fishPoleBrand,
                                          @RequestParam(value = "lat", required = true)String lat,
@@ -233,6 +236,7 @@ public class ArticalFishController extends BaseController {
         articalFish.setFishType(fishType);
         articalFish.setFishingFunc(fishingFunc);
         articalFish.setFishLines(fishLines);
+        articalFish.setFishTime(new Date(fishTime));
         articalFish.setFishPoleBrand(fishPoleBrand);
         articalFish.setFishPoleLength(fishPoleLength);
         articalFish.setLat(lat);
