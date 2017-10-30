@@ -30,9 +30,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 
-@Controller
-@RequestMapping(value = "/artical")
-@Api(value = "artical", description = "普通文章发帖相关接口")
+//@Controller
+//@RequestMapping(value = "/artical")
+@Deprecated
 public class ArticalController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticalController.class);
 

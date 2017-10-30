@@ -27,9 +27,12 @@
 		<typeAlias type="com.frame.domain.UserFriends" alias="userFriends"/>
 		<typeAlias type="com.frame.domain.FishSite" alias="fishSite"/>
 		<typeAlias type="com.frame.domain.FishShop" alias="fishShop"/>
-		
-		
-		
+		<typeAlias type="com.frame.domain.Comment" alias="comment"/>
+		<typeAlias type="com.frame.domain.Reply" alias="reply"/>
+
+
+
+
 	</typeAliases>
 
 	<!-- 映射文件路径 -->
@@ -44,6 +47,9 @@
 		<mapper resource="sqlmap/Artical.xml" />
 		<mapper resource="sqlmap/FishShop.xml" />
 		<mapper resource="sqlmap/FishSite.xml" />
-		
+		<mapper resource="sqlmap/Comment.xml" />
+		<mapper resource="sqlmap/Reply.xml" />
+
+
 	</mappers>
 </configuration>

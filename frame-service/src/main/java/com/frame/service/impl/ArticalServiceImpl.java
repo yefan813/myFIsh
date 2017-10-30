@@ -15,14 +15,14 @@ import javax.annotation.Resource;
 
 
 @Service("articalService")
+@Deprecated
 public class ArticalServiceImpl extends BaseServiceImpl<Artical, Long> implements ArticalService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArticalServiceImpl.class);
-
 	@Resource
 	private ArticalDao articalDao;
 
 	@Resource
-	private UserService UuerService;
+	private UserService uerService;
 
 	@Value("${img.prefix}")
 	private String IMAGEPREFIX;

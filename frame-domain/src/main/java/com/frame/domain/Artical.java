@@ -5,6 +5,7 @@ import com.frame.domain.base.BaseDomain;
 /**
  * Created by yefan on 2017/7/23.
  */
+@Deprecated
 public class Artical extends BaseDomain {
 
     private Long userId;

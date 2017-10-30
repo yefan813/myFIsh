@@ -9,9 +9,10 @@ public class Comment extends BaseDomain {
     private Integer topicId;
     private Integer topicType;
     private String content;
-    private Integer fromUserId;
+    private Long fromUserId;
     private String fromUserName;
     private String fromUserAvtor;
+    private Boolean isReView;
 
     public Integer getTopicId() {
         return topicId;
@@ -37,11 +38,11 @@ public class Comment extends BaseDomain {
         this.content = content;
     }
 
-    public Integer getFromUserId() {
+    public Long getFromUserId() {
         return fromUserId;
     }
 
-    public void setFromUserId(Integer fromUserId) {
+    public void setFromUserId(Long fromUserId) {
         this.fromUserId = fromUserId;
     }
 
@@ -59,5 +60,13 @@ public class Comment extends BaseDomain {
 
     public void setFromUserAvtor(String fromUserAvtor) {
         this.fromUserAvtor = fromUserAvtor;
+    }
+
+    public Boolean getReView() {
+        return isReView;
+    }
+
+    public void setReView(Boolean reView) {
+        isReView = reView;
     }
 }
