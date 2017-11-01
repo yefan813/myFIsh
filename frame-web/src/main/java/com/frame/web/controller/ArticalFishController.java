@@ -185,7 +185,7 @@ public class ArticalFishController extends BaseController {
             @ApiImplicitParam(paramType="query", name = "locationAddress", value = "locationAddress", required = false, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "articleType", value = "articleType", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "isPublish", value = "isPublish", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType="query", name = "content", value = "content", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "content", value = "content", required = true, dataType = "String"),
     })
     public  @ResponseBody String publish(HttpServletRequest request,
                                          @RequestParam(value = "userId", required = true) Long userId,
@@ -205,14 +205,14 @@ public class ArticalFishController extends BaseController {
                                          @RequestParam(value = "isPublish", required = true)Integer isPublish,
                                          @RequestParam(value = "content", required = true)String content) {
         RemoteResult result = null;
-        if (null == userId || StringUtils.isEmpty(title) ||
+        if (articleType == 1 && (null == userId || StringUtils.isEmpty(title) ||
                 null == waterType ||
                 bait == null || null == fishType ||
                 fishingFunc == null || null == fishingFunc ||
                 fishLines == null || fishPoleLength == null ||
                 StringUtils.isEmpty(fishPoleBrand) || StringUtils.isEmpty(lat) ||
                 StringUtils.isEmpty(lng) || StringUtils.isEmpty(locationAddress) ||
-                null == articleType || StringUtils.isEmpty(content)) {
+                null == articleType || StringUtils.isEmpty(content))) {
             LOGGER.error("publish artical 传入的参数错误 userId【{}】,title【{}】", userId, title);
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
@@ -236,7 +236,9 @@ public class ArticalFishController extends BaseController {
         articalFish.setFishType(fishType);
         articalFish.setFishingFunc(fishingFunc);
         articalFish.setFishLines(fishLines);
-        articalFish.setFishTime(new Date(fishTime));
+        if(null != fishTime){
+            articalFish.setFishTime(new Date(fishTime));
+        }
         articalFish.setFishPoleBrand(fishPoleBrand);
         articalFish.setFishPoleLength(fishPoleLength);
         articalFish.setLat(lat);
