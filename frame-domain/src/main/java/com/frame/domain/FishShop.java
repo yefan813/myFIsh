@@ -21,6 +21,23 @@ public class FishShop extends BaseDomain {
     private String address;
     private String sitePhone;
     private Boolean isPublish;
+    private Integer publishType;
+
+    public Boolean getPublish() {
+        return isPublish;
+    }
+
+    public void setPublish(Boolean publish) {
+        isPublish = publish;
+    }
+
+    public Integer getPublishType() {
+        return publishType;
+    }
+
+    public void setPublishType(Integer publishType) {
+        this.publishType = publishType;
+    }
 
     public Long getUserId() {
         return userId;
