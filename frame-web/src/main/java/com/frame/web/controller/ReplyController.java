@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value = "reply")
+@Deprecated
 @Api(value = "reply", description = "回复评论相关接口")
 public class ReplyController extends  BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReplyController.class);
@@ -40,25 +41,14 @@ public class ReplyController extends  BaseController {
     @Value("${img.prefix}")
     private String IMAGEPREFIX;
 
-    @RequestMapping(value = "/getComment", method = {RequestMethod.POST})
-    @ApiOperation(value = "获取comment", httpMethod = "POST", response = String.class, notes = "获取comment")
-    public @ResponseBody String getCommentByArticalId(HttpServletRequest request,@ModelAttribute Reply reply){
-        RemoteResult result = null;
-        try{
 
-        }catch (Exception e){
-
-        }
-        return JSON.toJSONString(result);
-    }
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布reply", httpMethod = "POST", response = String.class, notes = "发布reply")
     public  @ResponseBody String publish(HttpServletRequest request, @ModelAttribute ReplyVO replyVO) {
         RemoteResult result = null;
         try{
-            if(null == replyVO || StringUtils.isBlank(replyVO.getContent())|| replyVO.getFromUserId() == null ||
-                    replyVO.getCommentId() == null || null == replyVO.getReplyType()){
+            if(null == replyVO || StringUtils.isBlank(replyVO.getContent())|| replyVO.getFromUserId() == null || null == replyVO.getReplyType()){
                 LOGGER.error("publish reply is error , param is error[{}]",JSON.toJSONString(replyVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
@@ -69,7 +59,13 @@ public class ReplyController extends  BaseController {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"publish reply type is error ");
                 return JSON.toJSONString(result);
             }
-            if(replyVO.getReplyType().intValue() == ReplyTypeEnum.COMMENT.getKey() && replyVO.getCommentId() != replyVO.getReplyId() ){
+            if(replyVO.getReplyType().intValue() == ReplyTypeEnum.COMMENT.getKey() && null != replyVO.getCommentId() && replyVO.getCommentId() == replyVO.getReplyId() ){
+                LOGGER.error("publish comment reply, the reply id need equal comment id ,param is error[{}]",JSON.toJSONString(replyVO));
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"publish comment reply, the reply id need equal comment id ");
+                return JSON.toJSONString(result);
+            }
+
+            if(replyVO.getReplyType().intValue() == ReplyTypeEnum.REPLY.getKey() && null != replyVO.getReplyId()){
                 LOGGER.error("publish comment reply, the reply id need equal comment id ,param is error[{}]",JSON.toJSONString(replyVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"publish comment reply, the reply id need equal comment id ");
                 return JSON.toJSONString(result);

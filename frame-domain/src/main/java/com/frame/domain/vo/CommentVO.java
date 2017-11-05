@@ -6,19 +6,26 @@ import com.frame.domain.base.BaseDomain;
  * Created by yefan on 2017/10/18.
  */
 public class CommentVO{
-    private Integer topicId;
+    private Long topicId;
     private Integer topicType;
     private String content;
     private Long fromUserId;
     private String fromUserName;
     private String fromUserAvtor;
+
+    private Long toUserId;
+    private String toUserName;
+    private String toUserAvtor;
+
+
+
     private Boolean isReView;
 
-    public Integer getTopicId() {
+    public Long getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(Long topicId) {
         this.topicId = topicId;
     }
 
@@ -68,5 +75,29 @@ public class CommentVO{
 
     public void setReView(Boolean reView) {
         isReView = reView;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
+    }
+
+    public String getToUserAvtor() {
+        return toUserAvtor;
+    }
+
+    public void setToUserAvtor(String toUserAvtor) {
+        this.toUserAvtor = toUserAvtor;
     }
 }

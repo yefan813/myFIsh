@@ -10,9 +10,13 @@
 			topic_id as topicId,
 			topic_type as topicType,
 			content,
-			from_id as fromId,
+			from_uid as fromUserId,
 			from_uname as fromUserName,
 			from_uavtor as fromUserAvtor,
+			to_uid as toUserId,
+			to_uname as toUserName,
+			to_uavtor as toUserAvtor,
+			is_review as isReView,
 			feature,
 			created,
 			modified,
@@ -32,6 +36,10 @@
 			<if test="fromUserId != null and fromUserId != ''"><![CDATA[AND from_uid = #{fromUserId}]]></if>
 			<if test="fromUserName != null and fromUserName != ''"><![CDATA[AND from_uname = #{fromUserName}]]></if>
 			<if test="fromUserAvtor != null"><![CDATA[AND from_uavtor = #{fromUserAvtor}]]></if>
+			<if test="toUserId != null and toUserId != ''"><![CDATA[AND to_uid = #{toUserId}]]></if>
+			<if test="toUserName != null and toUserName != ''"><![CDATA[AND to_uname = #{toUserName}]]></if>
+			<if test="toUserAvtor != null"><![CDATA[AND to_uavtor = #{toUserAvtor}]]></if>
+			<if test="isReView != null"><![CDATA[AND is_review = #{isReView}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
@@ -54,6 +62,12 @@
 			<if test="fromUserId != null and fromUserId != ''"><![CDATA[ from_uid = #{fromUserId},]]></if>
 			<if test="fromUserName != null"><![CDATA[from_uname = #{fromUserName},]]></if>
 			<if test="fromUserAvtor != null and fromUserAvtor != ''"><![CDATA[from_uavtor = #{fromUserAvtor},]]></if>
+			<if test="toUserId != null and toUserId != ''"><![CDATA[ to_uid = #{toUserId},]]></if>
+			<if test="toUserName != null"><![CDATA[to_uname = #{toUserName},]]></if>
+			<if test="toUserAvtor != null and toUserAvtor != ''"><![CDATA[to_uavtor = #{toUserAvtor},]]></if>
+			<if test="isReView != null and isReView != ''"><![CDATA[is_review = #{isReView},]]></if>
+			<if test="feature != null and feature != ''"><![CDATA[feature = #{feature},]]></if>
+
 			<if test="created != null and created != ''"><![CDATA[created = #{created},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
@@ -63,8 +77,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="comment" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_comment (topic_id,topic_type,content,from_uid,from_uname,from_uavtor,feature,created,modified,yn)
-			VALUES (#{topicId},#{topicType},#{content},#{fromUserId},#{fromUserName},#{fromUserAvtor},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_comment (topic_id,topic_type,content,from_uid,from_uname,from_uavtor,to_uid,to_uname,to_uavtor,feature,created,modified,yn)
+			VALUES (#{topicId},#{topicType},#{content},#{fromUserId},#{fromUserName},#{fromUserAvtor},#{toUserId},#{toUserName},#{toUserAvtor},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	
