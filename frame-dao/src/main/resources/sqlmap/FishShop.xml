@@ -17,6 +17,8 @@
 			lng,
 			lat,
 			address,
+			publish_type as publishType,
+			is_publish as isPublish,
 			site_phone as sitePhone,
 			feature,
 			created,
@@ -41,6 +43,9 @@
 			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
 			<if test="lat != null and lat != ''"><![CDATA[AND lat = #{lat}]]></if>
 			<if test="address != null and address != ''"><![CDATA[AND address = #{address}]]></if>
+			<if test="publishType != null and publishType != ''"><![CDATA[AND address = #{publishType}]]></if>
+			<if test="isPublish != null and isPublish != ''"><![CDATA[AND is_publish = #{isPublish}]]></if>
+
 			<if test="sitePhone != null"><![CDATA[AND site_phone = #{sitePhone}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
@@ -68,6 +73,9 @@
 			<if test="lng != null and lng != ''"><![CDATA[ lng = #{lng},]]></if>
 			<if test="lat != null and lat != ''"><![CDATA[ lat = #{lat},]]></if>
 			<if test="address != null and address != ''"><![CDATA[ address = #{address},]]></if>
+			<if test="publishType != null and publishType != ''"><![CDATA[ publish_type = #{publishType},]]></if>
+			<if test="isPublish != null and isPublish != ''"><![CDATA[ is_publish = #{isPublish},]]></if>
+
 			<if test="sitePhone != null"><![CDATA[ site_phone = #{sitePhone},]]></if>
 			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
 			<if test="created != null lng created != ''"><![CDATA[created = #{created},]]></if>
@@ -80,10 +88,10 @@
 	<insert id="insertEntry" parameterType="fishShop" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_fish_shop (user_id,title,introduce,pic0,pic1,
-											pic2,pic3,lng,lat,address,site_phone,
+											pic2,pic3,lng,lat,address,publish_type,is_publish,site_phone,
 											feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},
-											#{pic2},#{pic3},#{lng},#{lat},#{address},#{sitePhone},
+											#{pic2},#{pic3},#{lng},#{lat},#{address},#{isPublish},#{publishType},#{sitePhone},
 											#{feature},now(),now(),#{yn})
 		]]>
 	</insert>

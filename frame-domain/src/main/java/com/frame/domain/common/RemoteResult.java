@@ -4,6 +4,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.frame.domain.enums.BusinessCode;
 
+import java.rmi.Remote;
+
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class RemoteResult {
 	
@@ -82,5 +84,9 @@ public class RemoteResult {
 	
 	public static RemoteResult success(Object data){
 		return new RemoteResult(SUCCESS_CODE, data);
+	}
+
+	public static RemoteResult success(Object data, String msg){
+		return new RemoteResult(SUCCESS_CODE, msg, data);
 	}
 }

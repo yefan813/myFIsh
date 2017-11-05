@@ -215,6 +215,7 @@ public class UserController extends BaseController {
 				userAuths.setYn(YnEnum.Normal.getKey());
 
 				result = userService.registOrUpdateUser(defaultUser, userAuths);
+				result.setMsg("重置密码成功");
 			} else {
 				result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
 			}
@@ -289,6 +290,7 @@ public class UserController extends BaseController {
 				userAuths.setYn(YnEnum.Normal.getKey());
 
 				result = userService.registOrUpdateUser(defaultUser, userAuths);
+				result.setMsg("注册成功");
 			} else {
 				result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
 			}
@@ -630,7 +632,7 @@ public class UserController extends BaseController {
 			auths.setCredential(newPwd);
 			int res = userAuthsService.updateByKey(auths);
 			if(res > 0){
-				result = RemoteResult.success("修改密码成功");
+				result = RemoteResult.success(null,"修改密码成功");
 				return JSON.toJSONString(result);
 			}else{
 				result = RemoteResult.failure("修改密码失败");

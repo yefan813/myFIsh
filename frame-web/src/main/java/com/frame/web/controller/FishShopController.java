@@ -135,6 +135,7 @@ public class FishShopController extends BaseController {
                 result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
             }else{
                 result = RemoteResult.success();
+                result.setMsg("渔具店上传成功");
             }
 
             return JSON.toJSONString(result);

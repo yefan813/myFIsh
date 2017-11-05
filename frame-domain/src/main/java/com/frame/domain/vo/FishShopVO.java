@@ -18,6 +18,7 @@ public class FishShopVO{
     private String lat;
     private String address;
     private String sitePhone;
+    private Integer publishType;
 
     public Long getUserId() {
         return userId;
@@ -115,4 +116,11 @@ public class FishShopVO{
         this.sitePhone = sitePhone;
     }
 
+    public Integer getPublishType() {
+        return publishType;
+    }
+
+    public void setPublishType(Integer publishType) {
+        this.publishType = publishType;
+    }
 }

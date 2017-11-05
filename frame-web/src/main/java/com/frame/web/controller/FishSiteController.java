@@ -132,6 +132,7 @@ public class FishSiteController extends BaseController {
                 result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
             }else{
                 result = RemoteResult.success();
+                result.setMsg("钓点上传成功");
             }
             return JSON.toJSONString(result);
         }catch (Exception e) {

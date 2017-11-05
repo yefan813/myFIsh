@@ -18,9 +18,10 @@ public class FishSite extends BaseDomain {
     private String lng;
     private String lat;
     private String address;
-    private Integer siteType;
-    private Integer siteFeeType;
-    private Integer siteFishType;
+    private Integer publishype;
+    private String siteType;
+    private String siteFeeType;
+    private String siteFishType;
     private String sitePhone;
     private Boolean canPark;
     private Boolean canNight;
@@ -123,27 +124,35 @@ public class FishSite extends BaseDomain {
         this.address = address;
     }
 
-    public Integer getSiteType() {
+    public Integer getPublishype() {
+        return publishype;
+    }
+
+    public void setPublishype(Integer publishype) {
+        this.publishype = publishype;
+    }
+
+    public String getSiteType() {
         return siteType;
     }
 
-    public void setSiteType(Integer siteType) {
+    public void setSiteType(String siteType) {
         this.siteType = siteType;
     }
 
-    public Integer getSiteFeeType() {
+    public String getSiteFeeType() {
         return siteFeeType;
     }
 
-    public void setSiteFeeType(Integer siteFeeType) {
+    public void setSiteFeeType(String siteFeeType) {
         this.siteFeeType = siteFeeType;
     }
 
-    public Integer getSiteFishType() {
+    public String getSiteFishType() {
         return siteFishType;
     }
 
-    public void setSiteFishType(Integer siteFishType) {
+    public void setSiteFishType(String siteFishType) {
         this.siteFishType = siteFishType;
     }
 

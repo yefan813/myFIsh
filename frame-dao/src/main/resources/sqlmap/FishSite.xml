@@ -17,6 +17,7 @@
 			lng,
 			lat,
 			address,
+			publish_type as publishType,
 			site_type as siteType,
 			site_fee_type as siteFeeType,
 			site_fish_type as siteFishType,
@@ -48,6 +49,7 @@
 			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
 			<if test="lat != null and lat != ''"><![CDATA[AND lat = #{lat}]]></if>
 			<if test="address != null and address != ''"><![CDATA[AND address = #{address}]]></if>
+			<if test="publishType != null"><![CDATA[AND publish_type = #{publishType}]]></if>
 			<if test="siteType != null"><![CDATA[AND site_type = #{siteType}]]></if>
 			<if test="siteFeeType != null"><![CDATA[AND site_fee_type = #{siteFeeType}]]></if>
 			<if test="siteFishType != null"><![CDATA[AND site_fish_type = #{siteFishType}]]></if>
@@ -82,6 +84,7 @@
 			<if test="lng != null and lng != ''"><![CDATA[ lng = #{lng},]]></if>
 			<if test="lat != null and lat != ''"><![CDATA[ lat = #{lat},]]></if>
 			<if test="address != null and address != ''"><![CDATA[ address = #{address},]]></if>
+			<if test="publishType != null"><![CDATA[ publish_type = #{publishType},]]></if>
 			<if test="siteType != null"><![CDATA[ site_type = #{siteType},]]></if>
 			<if test="siteFeeType != null"><![CDATA[ site_fee_type = #{siteFeeType},]]></if>
 			<if test="siteFishType != null"><![CDATA[ site_fish_type = #{siteFishType},]]></if>
@@ -101,11 +104,11 @@
 	<insert id="insertEntry" parameterType="fishSite" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_fish_site (user_id,title,introduce,pic0,pic1,
-											pic2,pic3,lng,lat,address,site_type,
+											pic2,pic3,lng,lat,address,pubish_type,site_type,
 											site_fee_type,site_fish_type,site_phone,can_park,can_night,can_eat,can_hotel,
 											feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},
-											#{pic2},#{pic3},#{lng},#{lat},#{address},#{siteType},
+											#{pic2},#{pic3},#{lng},#{lat},#{address},#{publishType},#{siteType},
 											#{siteFeeType},#{siteFishType},#{sitePhone},#{canPark},#{canNight},#{canEat},#{canHotel},
 											#{feature},now(),now(),#{yn})
 		]]>

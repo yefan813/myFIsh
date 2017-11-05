@@ -204,6 +204,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 				UserAuths oldData = resList.get(0);
 
 				User user = selectEntry(oldData.getUserId().longValue());
+				user.setAvatarUrl(IMAGEPREFIX + user.getAvatarUrl());
 
 				result = RemoteResult.success(convertUser2UserVO(user));
 				return result;
