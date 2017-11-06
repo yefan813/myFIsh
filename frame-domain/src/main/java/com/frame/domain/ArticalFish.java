@@ -17,7 +17,7 @@ public class ArticalFish extends BaseDomain {
     private Date time;
     private  Integer waterType;
     private Integer bait;
-    private  Integer fishType;
+    private  String fishType;
     private Integer fishingFunc;
     private  Double fishLines;
     private Double fishPoleLength;
@@ -95,11 +95,11 @@ public class ArticalFish extends BaseDomain {
         this.bait = bait;
     }
 
-    public Integer getFishType() {
+    public String getFishType() {
         return fishType;
     }
 
-    public void setFishType(Integer fishType) {
+    public void setFishType(String fishType) {
         this.fishType = fishType;
     }
 

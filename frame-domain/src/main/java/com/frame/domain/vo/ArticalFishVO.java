@@ -11,7 +11,7 @@ public class ArticalFishVO{
     private String title;
     private  Integer waterType;
     private Integer bait;
-    private  Integer fishType;
+    private  String fishType;
     private Integer fishingFunc;
     private  Double fishLines;
     private Double fishPoleLength;
@@ -72,11 +72,11 @@ public class ArticalFishVO{
         this.bait = bait;
     }
 
-    public Integer getFishType() {
+    public String getFishType() {
         return fishType;
     }
 
-    public void setFishType(Integer fishType) {
+    public void setFishType(String fishType) {
         this.fishType = fishType;
     }
 
