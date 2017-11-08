@@ -9,12 +9,12 @@ public class ArticalFishVO{
 
     private Long userId;
     private String title;
-    private  Integer waterType;
-    private Integer bait;
+    private  String waterType;
+    private String bait;
     private  String fishType;
-    private Integer fishingFunc;
-    private  Double fishLines;
-    private Double fishPoleLength;
+    private String fishingFunc;
+    private  String fishLines;
+    private String fishPoleLength;
     private String fishPoleBrand;
     private  String lat;
     private String lng;
@@ -56,19 +56,19 @@ public class ArticalFishVO{
     }
 
 
-    public Integer getWaterType() {
+    public String getWaterType() {
         return waterType;
     }
 
-    public void setWaterType(Integer waterType) {
+    public void setWaterType(String waterType) {
         this.waterType = waterType;
     }
 
-    public Integer getBait() {
+    public String getBait() {
         return bait;
     }
 
-    public void setBait(Integer bait) {
+    public void setBait(String bait) {
         this.bait = bait;
     }
 
@@ -80,27 +80,27 @@ public class ArticalFishVO{
         this.fishType = fishType;
     }
 
-    public Integer getFishingFunc() {
+    public String getFishingFunc() {
         return fishingFunc;
     }
 
-    public void setFishingFunc(Integer fishingFunc) {
+    public void setFishingFunc(String fishingFunc) {
         this.fishingFunc = fishingFunc;
     }
 
-    public Double getFishLines() {
+    public String getFishLines() {
         return fishLines;
     }
 
-    public void setFishLines(Double fishLines) {
+    public void setFishLines(String fishLines) {
         this.fishLines = fishLines;
     }
 
-    public Double getFishPoleLength() {
+    public String getFishPoleLength() {
         return fishPoleLength;
     }
 
-    public void setFishPoleLength(Double fishPoleLength) {
+    public void setFishPoleLength(String fishPoleLength) {
         this.fishPoleLength = fishPoleLength;
     }
 

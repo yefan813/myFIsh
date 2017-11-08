@@ -112,7 +112,7 @@
 
 	<!-- 删除,通过条件 -->
 	<update id="deleteByCondtion" parameterType="articalFish" >
-		<![CDATA[DELETE FROM tb_artical_fish]]>
+		<![CDATA[DELETE锕rti FROM tb_artical_fish]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</update>
 
