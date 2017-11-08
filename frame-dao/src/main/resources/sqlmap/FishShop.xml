@@ -43,7 +43,7 @@
 			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
 			<if test="lat != null and lat != ''"><![CDATA[AND lat = #{lat}]]></if>
 			<if test="address != null and address != ''"><![CDATA[AND address = #{address}]]></if>
-			<if test="publishType != null and publishType != ''"><![CDATA[AND address = #{publishType}]]></if>
+			<if test="publishType != null and publishType != ''"><![CDATA[AND publish_type = #{publishType}]]></if>
 			<if test="isPublish != null and isPublish != ''"><![CDATA[AND is_publish = #{isPublish}]]></if>
 
 			<if test="sitePhone != null"><![CDATA[AND site_phone = #{sitePhone}]]></if>
@@ -91,7 +91,7 @@
 											pic2,pic3,lng,lat,address,publish_type,is_publish,site_phone,
 											feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},
-											#{pic2},#{pic3},#{lng},#{lat},#{address},#{isPublish},#{publishType},#{sitePhone},
+											#{pic2},#{pic3},#{lng},#{lat},#{address},#{publishType},#{isPublish},#{sitePhone},
 											#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
