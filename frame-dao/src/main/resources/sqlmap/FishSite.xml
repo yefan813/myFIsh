@@ -104,7 +104,7 @@
 	<insert id="insertEntry" parameterType="fishSite" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_fish_site (user_id,title,introduce,pic0,pic1,
-											pic2,pic3,lng,lat,address,pubish_type,site_type,
+											pic2,pic3,lng,lat,address,publish_type,site_type,
 											site_fee_type,site_fish_type,site_phone,can_park,can_night,can_eat,can_hotel,
 											feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{introduce},#{pic0},#{pic1},

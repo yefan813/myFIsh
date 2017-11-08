@@ -15,7 +15,7 @@ public class FishSiteVO{
     private String lng;
     private String lat;
     private String address;
-    private Integer publishype;
+    private Integer publishType;
     private String siteType;
     private String siteFeeType;
     private String siteFishType;
@@ -113,12 +113,12 @@ public class FishSiteVO{
         this.address = address;
     }
 
-    public Integer getPublishype() {
-        return publishype;
+    public Integer getPublishType() {
+        return publishType;
     }
 
-    public void setPublishype(Integer publishype) {
-        this.publishype = publishype;
+    public void setPublishType(Integer publishType) {
+        this.publishType = publishType;
     }
 
     public String getSiteType() {

@@ -18,7 +18,7 @@ public class FishSite extends BaseDomain {
     private String lng;
     private String lat;
     private String address;
-    private Integer publishype;
+    private Integer publishType;
     private String siteType;
     private String siteFeeType;
     private String siteFishType;
@@ -124,12 +124,12 @@ public class FishSite extends BaseDomain {
         this.address = address;
     }
 
-    public Integer getPublishype() {
-        return publishype;
+    public Integer getPublishType() {
+        return publishType;
     }
 
-    public void setPublishype(Integer publishype) {
-        this.publishype = publishype;
+    public void setPublishType(Integer publishType) {
+        this.publishType = publishType;
     }
 
     public String getSiteType() {
