@@ -531,7 +531,7 @@ public class UserController extends BaseController {
 	 * 第三方登录借口
 	 * @return
 	 */
-	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST},consumes="application/json")
+	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
 	@ApiOperation(value = "第三方登录借口", httpMethod = "POST", response = String.class, notes = "第三方登录借口")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="query", name = "avartar", value = "用户avartar", required = false, dataType = "String"),
