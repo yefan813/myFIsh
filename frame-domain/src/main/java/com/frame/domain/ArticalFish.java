@@ -31,6 +31,9 @@ public class ArticalFish extends BaseDomain {
     private String img;
     private Date fishTime;
 
+    private Long liked;
+    private Long unliked;
+
     public Date getFishTime() {
         return fishTime;
     }
@@ -173,5 +176,21 @@ public class ArticalFish extends BaseDomain {
 
     public void setIsPublish(Integer isPublish) {
         this.isPublish = isPublish;
+    }
+
+    public Long getLiked() {
+        return liked;
+    }
+
+    public void setLiked(Long liked) {
+        this.liked = liked;
+    }
+
+    public Long getUnliked() {
+        return unliked;
+    }
+
+    public void setUnliked(Long unliked) {
+        this.unliked = unliked;
     }
 }

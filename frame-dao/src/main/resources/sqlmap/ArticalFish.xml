@@ -21,6 +21,8 @@
 			location_address as locationAddress,
 			article_type as articleType,
 			is_publish as isPublish,
+			liked,
+			unliked,
 			content,
 			feature,
 			created,
@@ -52,6 +54,7 @@
 			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
 			<if test="content != null and content != ''"><![CDATA[AND content = #{content}]]></if>
+
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
 			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
@@ -85,6 +88,7 @@
 			<if test="articleType != null and articleType != ''"><![CDATA[ articleType = #{articleType},]]></if>
 			<if test="isPublish != null"><![CDATA[is_publish = #{isPublish},]]></if>
 			<if test="content != null and content != ''"><![CDATA[content = #{content},]]></if>
+
 			<if test="created != null and created != ''"><![CDATA[created = #{created},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>

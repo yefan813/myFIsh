@@ -6,4 +6,5 @@ import com.frame.service.base.BaseService;
 public interface ArticalFishService extends BaseService<ArticalFish, Long> {
 
 
+    public Long likeArtical(Long articalId,Integer count);
 }

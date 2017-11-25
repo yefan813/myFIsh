@@ -21,6 +21,9 @@ public class ArticalFishVO{
     private  String locationAddress;
     private  Integer articleType;
 
+    private Long liked;
+    private Long unliked;
+
     private String img;
 
     public String getImg() {
@@ -134,5 +137,21 @@ public class ArticalFishVO{
 
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
+    }
+
+    public Long getLiked() {
+        return liked;
+    }
+
+    public void setLiked(Long liked) {
+        this.liked = liked;
+    }
+
+    public Long getUnliked() {
+        return unliked;
+    }
+
+    public void setUnliked(Long unliked) {
+        this.unliked = unliked;
     }
 }

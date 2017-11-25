@@ -16,6 +16,8 @@ import javax.annotation.Resource;
 
 @Service("articalFishService")
 public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> implements ArticalFishService {
+
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArticalFishServiceImpl.class);
 
 	@Resource
@@ -31,5 +33,31 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 	public BaseDao<ArticalFish, Long> getDao() {
 		// TODO Auto-generated method stub
 		return articalFishDao;
+	}
+
+	@Override
+	public synchronized Long likeArtical(Long articalId, Integer count) {
+		ArticalFish articalFish = articalFishDao.selectEntry(articalId);
+		if(articalFish == null){
+			return 0l;
+		}
+
+		long likeCount  =  0;
+		if(null == articalFish.getLiked()){
+			likeCount = count;
+		}else{
+			likeCount = articalFish.getLiked() + count;
+		}
+
+		ArticalFish fishTmp = new ArticalFish();
+		fishTmp.setId(articalFish.getId());
+		fishTmp.setLiked(likeCount);
+
+		int res = articalFishDao.updateByKey(fishTmp);
+		if(res < 0){
+			LOGGER.error("artical like is error");
+		}
+
+		return likeCount;
 	}
 }
