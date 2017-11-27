@@ -1,0 +1,887 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frame.dao.ArticalCollectionDao">
+
+  <sql id="QUERY_COLUMN_LIST">
+    <![CDATA[id, artical_id, user_id, feature, modified, created, yn]]>
+  </sql>
+
+  <sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical_collection]]></sql>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <if test="id != null">
+        <![CDATA[AND id = #{id}]]>
+      </if>
+      <if test="articalId != null">
+        <![CDATA[AND artical_id = #{articalId}]]>
+      </if>
+      <if test="userId != null">
+        <![CDATA[AND user_id = #{userId}]]>
+      </if>
+      <if test="feature != null">
+        <![CDATA[AND feature = #{feature}]]>
+      </if>
+      <if test="modified != null">
+        <![CDATA[AND modified = #{modified}]>
+      </if>
+      <if test="created != null">
+        <![CDATA[AND created = #{created}]]>
+      </if>
+      <if test="yn != null">
+        <![CDATA[AND yn = #{yn}]]>
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectEntryList" parameterType="com.frame.domain.ArticalCollectionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.frame.domain.ArticalCollectionExample">
+    delete from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection (id, artical_id, user_id, 
+      feature, modified, created, 
+      yn)
+    values (#{id,jdbcType=BIGINT}, #{articalId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{feature,jdbcType=VARCHAR}, #{modified,jdbcType=TIMESTAMP}, #{created,jdbcType=TIMESTAMP}, 
+      #{yn,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="articalId != null">
+        artical_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="articalId != null">
+        #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultType="java.lang.Long">
+    select count(*) from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_artical_collection
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.articalId != null">
+        artical_id = #{record.articalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.feature != null">
+        feature = #{record.feature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modified != null">
+        modified = #{record.modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.yn != null">
+        yn = #{record.yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_artical_collection
+    set id = #{record.id,jdbcType=BIGINT},
+      artical_id = #{record.articalId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      feature = #{record.feature,jdbcType=VARCHAR},
+      modified = #{record.modified,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      yn = #{record.yn,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    <set>
+      <if test="articalId != null">
+        artical_id = #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    set artical_id = #{articalId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      feature = #{feature,jdbcType=VARCHAR},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, artical_id, user_id, feature, modified, created, yn
+  </sql>
+  <select id="selectByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.frame.domain.ArticalCollectionExample">
+    delete from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection (id, artical_id, user_id,
+      feature, modified, created,
+      yn)
+    values (#{id,jdbcType=BIGINT}, #{articalId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{feature,jdbcType=VARCHAR}, #{modified,jdbcType=TIMESTAMP}, #{created,jdbcType=TIMESTAMP},
+      #{yn,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="articalId != null">
+        artical_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="articalId != null">
+        #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultType="java.lang.Long">
+    select count(*) from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_artical_collection
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.articalId != null">
+        artical_id = #{record.articalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.feature != null">
+        feature = #{record.feature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modified != null">
+        modified = #{record.modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.yn != null">
+        yn = #{record.yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_artical_collection
+    set id = #{record.id,jdbcType=BIGINT},
+      artical_id = #{record.articalId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      feature = #{record.feature,jdbcType=VARCHAR},
+      modified = #{record.modified,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      yn = #{record.yn,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    <set>
+      <if test="articalId != null">
+        artical_id = #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    set artical_id = #{articalId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      feature = #{feature,jdbcType=VARCHAR},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.frame.domain.ArticalCollection">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="artical_id" jdbcType="BIGINT" property="articalId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="feature" jdbcType="VARCHAR" property="feature" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, artical_id, user_id, feature, modified, created, yn
+  </sql>
+  <select id="selectByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.frame.domain.ArticalCollectionExample">
+    delete from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection (id, artical_id, user_id,
+      feature, modified, created,
+      yn)
+    values (#{id,jdbcType=BIGINT}, #{articalId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{feature,jdbcType=VARCHAR}, #{modified,jdbcType=TIMESTAMP}, #{created,jdbcType=TIMESTAMP},
+      #{yn,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="articalId != null">
+        artical_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="articalId != null">
+        #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultType="java.lang.Long">
+    select count(*) from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_artical_collection
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.articalId != null">
+        artical_id = #{record.articalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.feature != null">
+        feature = #{record.feature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modified != null">
+        modified = #{record.modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.yn != null">
+        yn = #{record.yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_artical_collection
+    set id = #{record.id,jdbcType=BIGINT},
+      artical_id = #{record.articalId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      feature = #{record.feature,jdbcType=VARCHAR},
+      modified = #{record.modified,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      yn = #{record.yn,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    <set>
+      <if test="articalId != null">
+        artical_id = #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    set artical_id = #{articalId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      feature = #{feature,jdbcType=VARCHAR},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.frame.domain.ArticalCollection">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="artical_id" jdbcType="BIGINT" property="articalId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="feature" jdbcType="VARCHAR" property="feature" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="yn" jdbcType="TINYINT" property="yn" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, artical_id, user_id, feature, modified, created, yn
+  </sql>
+  <select id="selectByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_artical_collection
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.frame.domain.ArticalCollectionExample">
+    delete from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection (id, artical_id, user_id,
+      feature, modified, created,
+      yn)
+    values (#{id,jdbcType=BIGINT}, #{articalId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
+      #{feature,jdbcType=VARCHAR}, #{modified,jdbcType=TIMESTAMP}, #{created,jdbcType=TIMESTAMP},
+      #{yn,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.frame.domain.ArticalCollection">
+    insert into tb_artical_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="articalId != null">
+        artical_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="yn != null">
+        yn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="articalId != null">
+        #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        #{yn,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.frame.domain.ArticalCollectionExample" resultType="java.lang.Long">
+    select count(*) from tb_artical_collection
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tb_artical_collection
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.articalId != null">
+        artical_id = #{record.articalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.feature != null">
+        feature = #{record.feature,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modified != null">
+        modified = #{record.modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.yn != null">
+        yn = #{record.yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tb_artical_collection
+    set id = #{record.id,jdbcType=BIGINT},
+      artical_id = #{record.articalId,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      feature = #{record.feature,jdbcType=VARCHAR},
+      modified = #{record.modified,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      yn = #{record.yn,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    <set>
+      <if test="articalId != null">
+        artical_id = #{articalId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=VARCHAR},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.frame.domain.ArticalCollection">
+    update tb_artical_collection
+    set artical_id = #{articalId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      feature = #{feature,jdbcType=VARCHAR},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
+      yn = #{yn,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
