@@ -62,7 +62,7 @@ public class ArticalFishController extends BaseController {
         RemoteResult result = null;
         try {
             if (null == articalFishVO) {
-                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】");
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】",JSON.toJSON(articalFishVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);

@@ -1,86 +1,97 @@
 package com.frame.domain;
-
-import com.frame.domain.base.BaseDomain;
-import io.swagger.models.auth.In;
-import org.omg.CORBA.INTERNAL;
-
 import java.io.Serializable;
-import java.util.Date;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import com.frame.domain.base.BaseDomain;
+
 
 /**
- * @author 
- */
-public class SiteCollection extends BaseDomain {
+ * 
+ * 
+ * @author yefan
+ * @date 2017-11-29 16:41:12
+ **/
+public class SiteCollection  extends BaseDomain  {
 
-    private Long shopSiteId;
+	/****/
+	private Long shopSiteId;
 
-    private Long userId;
+	/****/
+	private Long userId;
 
-    private Byte type;
+	/****/
+	private Integer type;
 
-    private String feature;
+	/****/
+	private String feature;
 
-    private Date modified;
+	/****/
+	private java.util.Date modified;
 
-    private Date created;
+	/****/
+	private java.util.Date created;
 
-    private Integer yn;
+	/****/
+	private Integer yn;
 
-    private static final long serialVersionUID = 1L;
 
-    public Long getShopSiteId() {
-        return shopSiteId;
-    }
 
-    public void setShopSiteId(Long shopSiteId) {
-        this.shopSiteId = shopSiteId;
-    }
+	public void setShopSiteId(Long shopSiteId){
+		this.shopSiteId = shopSiteId;
+	}
 
-    public Long getUserId() {
-        return userId;
-    }
+	public Long getShopSiteId(){
+		return this.shopSiteId;
+	}
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+	public void setUserId(Long userId){
+		this.userId = userId;
+	}
 
-    public Byte getType() {
-        return type;
-    }
+	public Long getUserId(){
+		return this.userId;
+	}
 
-    public void setType(Byte type) {
-        this.type = type;
-    }
+	public void setType(Integer type){
+		this.type = type;
+	}
 
-    public String getFeature() {
-        return feature;
-    }
+	public Integer getType(){
+		return this.type;
+	}
 
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
+	public void setFeature(String feature){
+		this.feature = feature;
+	}
 
-    public Date getModified() {
-        return modified;
-    }
+	public String getFeature(){
+		return this.feature;
+	}
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+	public void setModified(java.util.Date modified){
+		this.modified = modified;
+	}
 
-    public Date getCreated() {
-        return created;
-    }
+	public java.util.Date getModified(){
+		return this.modified;
+	}
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+	public void setCreated(java.util.Date created){
+		this.created = created;
+	}
 
-    public Integer getYn() {
-        return yn;
-    }
+	public java.util.Date getCreated(){
+		return this.created;
+	}
 
-    public void setYn(Integer yn) {
-        this.yn = yn;
-    }
+	public void setYn(Integer yn){
+		this.yn = yn;
+	}
+
+	public Integer getYn(){
+		return this.yn;
+	}
+
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

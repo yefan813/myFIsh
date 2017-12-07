@@ -7,6 +7,7 @@ import com.frame.domain.base.BaseDomain;
  */
 public class ArticalFishVO{
 
+    private Long id;
     private Long userId;
     private String title;
     private  String waterType;

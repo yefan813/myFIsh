@@ -1,85 +1,97 @@
 package com.frame.domain;
-
+import java.io.Serializable;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import com.frame.domain.base.BaseDomain;
 
-import java.io.Serializable;
-import java.util.Date;
 
 /**
- * @author 
- */
-public class ArticalReport extends BaseDomain {
+ * 
+ * 
+ * @author yefan
+ * @date 2017-11-29 16:41:12
+ **/
+public class ArticalReport  extends BaseDomain  {
 
-    private Long articalId;
+	/****/
+	private Long articalId;
 
-    private Long userId;
+	/****/
+	private Long userId;
 
-    private Byte reportType;
+	/****/
+	private Integer reportType;
 
-    private String feature;
+	/****/
+	private String feature;
 
-    private Date modified;
+	/****/
+	private java.util.Date modified;
 
-    private Date created;
+	/****/
+	private java.util.Date created;
 
-    private Integer yn;
+	/****/
+	private Integer yn;
 
-    private static final long serialVersionUID = 1L;
 
 
-    public Long getArticalId() {
-        return articalId;
-    }
+	public void setArticalId(Long articalId){
+		this.articalId = articalId;
+	}
 
-    public void setArticalId(Long articalId) {
-        this.articalId = articalId;
-    }
+	public Long getArticalId(){
+		return this.articalId;
+	}
 
-    public Long getUserId() {
-        return userId;
-    }
+	public void setUserId(Long userId){
+		this.userId = userId;
+	}
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+	public Long getUserId(){
+		return this.userId;
+	}
 
-    public Byte getReportType() {
-        return reportType;
-    }
+	public void setReportType(Integer reportType){
+		this.reportType = reportType;
+	}
 
-    public void setReportType(Byte reportType) {
-        this.reportType = reportType;
-    }
+	public Integer getReportType(){
+		return this.reportType;
+	}
 
-    public String getFeature() {
-        return feature;
-    }
+	public void setFeature(String feature){
+		this.feature = feature;
+	}
 
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
+	public String getFeature(){
+		return this.feature;
+	}
 
-    public Date getModified() {
-        return modified;
-    }
+	public void setModified(java.util.Date modified){
+		this.modified = modified;
+	}
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+	public java.util.Date getModified(){
+		return this.modified;
+	}
 
-    public Date getCreated() {
-        return created;
-    }
+	public void setCreated(java.util.Date created){
+		this.created = created;
+	}
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+	public java.util.Date getCreated(){
+		return this.created;
+	}
 
-    public Integer getYn() {
-        return yn;
-    }
+	public void setYn(Integer yn){
+		this.yn = yn;
+	}
 
-    public void setYn(Integer yn) {
-        this.yn = yn;
-    }
+	public Integer getYn(){
+		return this.yn;
+	}
+
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this);
+	}
 }

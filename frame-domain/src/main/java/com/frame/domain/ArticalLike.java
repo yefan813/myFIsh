@@ -1,95 +1,108 @@
 package com.frame.domain;
-
+import java.io.Serializable;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import com.frame.domain.base.BaseDomain;
 
-import java.io.Serializable;
-import java.util.Date;
 
 /**
- * @author 
- */
-public class ArticalLike extends BaseDomain {
+ * 
+ * 
+ * @author yefan
+ * @date 2017-11-29 16:41:12
+ **/
+public class ArticalLike  extends BaseDomain  {
 
-    private Long articalId;
+	/****/
+	private Long articalId;
 
-    private Long userId;
+	/****/
+	private Long userId;
 
-    private Byte like;
+	/****/
+	private Integer like;
 
-    private Byte unliked;
+	/****/
+	private Integer unliked;
 
-    private String feature;
+	/****/
+	private String feature;
 
-    private Date created;
+	/****/
+	private java.util.Date created;
 
-    private Date modified;
+	/****/
+	private java.util.Date modified;
 
-    private Integer yn;
+	/****/
+	private Integer yn;
 
-    private static final long serialVersionUID = 1L;
 
 
-    public Long getArticalId() {
-        return articalId;
-    }
+	public void setArticalId(Long articalId){
+		this.articalId = articalId;
+	}
 
-    public void setArticalId(Long articalId) {
-        this.articalId = articalId;
-    }
+	public Long getArticalId(){
+		return this.articalId;
+	}
 
-    public Long getUserId() {
-        return userId;
-    }
+	public void setUserId(Long userId){
+		this.userId = userId;
+	}
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+	public Long getUserId(){
+		return this.userId;
+	}
 
-    public Byte getLike() {
-        return like;
-    }
+	public void setLike(Integer like){
+		this.like = like;
+	}
 
-    public void setLike(Byte like) {
-        this.like = like;
-    }
+	public Integer getLike(){
+		return this.like;
+	}
 
-    public Byte getUnliked() {
-        return unliked;
-    }
+	public void setUnliked(Integer unliked){
+		this.unliked = unliked;
+	}
 
-    public void setUnliked(Byte unliked) {
-        this.unliked = unliked;
-    }
+	public Integer getUnliked(){
+		return this.unliked;
+	}
 
-    public String getFeature() {
-        return feature;
-    }
+	public void setFeature(String feature){
+		this.feature = feature;
+	}
 
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
+	public String getFeature(){
+		return this.feature;
+	}
 
-    public Date getCreated() {
-        return created;
-    }
+	public void setCreated(java.util.Date created){
+		this.created = created;
+	}
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+	public java.util.Date getCreated(){
+		return this.created;
+	}
 
-    public Date getModified() {
-        return modified;
-    }
+	public void setModified(java.util.Date modified){
+		this.modified = modified;
+	}
 
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+	public java.util.Date getModified(){
+		return this.modified;
+	}
 
-    public Integer getYn() {
-        return yn;
-    }
+	public void setYn(Integer yn){
+		this.yn = yn;
+	}
 
-    public void setYn(Integer yn) {
-        this.yn = yn;
-    }
+	public Integer getYn(){
+		return this.yn;
+	}
+
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this);
+	}
 }
