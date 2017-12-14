@@ -1,6 +1,7 @@
 package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.frame.domain.ArticalFish;
 import com.frame.domain.FishShop;
 import com.frame.domain.User;
 import com.frame.domain.base.YnEnum;
@@ -141,6 +142,44 @@ public class FishShopController extends BaseController {
             return JSON.toJSONString(result);
         }catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
+
+    @RequestMapping(value = "/del", method = {RequestMethod.POST})
+    @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
+        RemoteResult result = null;
+
+        if(null == id ){
+            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id );
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    BusinessCode.PARAMETERS_ERROR.getValue());
+            return JSON.toJSONString(result);
+        }
+        try {
+
+            //valid fishShop  is valid
+            FishShop fishShop = fishShopService.selectEntry(id);
+            if(null == fishShop){
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "此渔具店不存在");
+                return JSON.toJSONString(result);
+            }
+
+            FishShop condition = new FishShop();
+            condition.setId(id.intValue());
+            condition.setYn(YnEnum.Deleted.getKey());
+            int res = fishShopService.updateByKey(condition);
+            if(res <= 0 ){
+                result = RemoteResult.failure("0002", " fish shop is failed,server internal error");
+            }else{
+                result = RemoteResult.success();
+            }
+        } catch (Exception e) {
+            LOGGER.error("del exception" , e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
         return JSON.toJSONString(result);

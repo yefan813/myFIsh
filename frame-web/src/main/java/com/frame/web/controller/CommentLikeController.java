@@ -14,10 +14,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +43,7 @@ public class CommentLikeController {
 
 
     @RequestMapping(value = "/like", method = {RequestMethod.POST})
-    @ApiOperation(value = "收藏文章", httpMethod = "POST", response = String.class, notes = "收藏文章")
+    @ApiOperation(value = "评论点赞", httpMethod = "POST", response = String.class, notes = "评论点赞")
     public @ResponseBody
     String like(HttpServletRequest request, @ModelAttribute CommentLikeVO commentLikeVO) {
         RemoteResult result = null;
@@ -58,13 +55,6 @@ public class CommentLikeController {
                 return JSON.toJSONString(result);
             }
 
-            //valid user is valid
-            User user = userService.selectEntry(commentLikeVO.getUserId());
-            if (null == user) {
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
-                return JSON.toJSONString(result);
-            }
 
             //valid artical is valid
 
@@ -95,6 +85,28 @@ public class CommentLikeController {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
+        return JSON.toJSONString(result);
+    }
+
+    @RequestMapping(value = "/cancel", method = {RequestMethod.POST})
+    @ApiOperation(value = "delete commentLikeVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    public  @ResponseBody String cancel(HttpServletRequest request, @RequestParam Long id) {
+        RemoteResult result = null;
+        try{
+            if(null == id){
+                LOGGER.error("delete commentLikeVO  传入的参数错误 id【{}】", id);
+                result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            int res =  commentLikeService.deleteByKey(id);
+            if(res > 0){
+                result = RemoteResult.success("删除评论点赞成功");
+            }
+        }catch (Exception e){
+
+        }
+
         return JSON.toJSONString(result);
     }
 

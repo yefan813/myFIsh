@@ -16,25 +16,13 @@ public class ArticalLike  extends BaseDomain  {
 	private Long articalId;
 
 	/****/
-	private Long userId;
 
 	/****/
-	private Integer like;
+	private Long like;
 
 	/****/
-	private Integer unliked;
+	private Long unliked;
 
-	/****/
-	private String feature;
-
-	/****/
-	private java.util.Date created;
-
-	/****/
-	private java.util.Date modified;
-
-	/****/
-	private Integer yn;
 
 
 
@@ -46,60 +34,21 @@ public class ArticalLike  extends BaseDomain  {
 		return this.articalId;
 	}
 
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
 
-	public Long getUserId(){
-		return this.userId;
-	}
-
-	public void setLike(Integer like){
+	public void setLike(Long like){
 		this.like = like;
 	}
 
-	public Integer getLike(){
+	public Long getLike(){
 		return this.like;
 	}
 
-	public void setUnliked(Integer unliked){
+	public void setUnliked(Long unliked){
 		this.unliked = unliked;
 	}
 
-	public Integer getUnliked(){
+	public Long getUnliked(){
 		return this.unliked;
-	}
-
-	public void setFeature(String feature){
-		this.feature = feature;
-	}
-
-	public String getFeature(){
-		return this.feature;
-	}
-
-	public void setCreated(java.util.Date created){
-		this.created = created;
-	}
-
-	public java.util.Date getCreated(){
-		return this.created;
-	}
-
-	public void setModified(java.util.Date modified){
-		this.modified = modified;
-	}
-
-	public java.util.Date getModified(){
-		return this.modified;
-	}
-
-	public void setYn(Integer yn){
-		this.yn = yn;
-	}
-
-	public Integer getYn(){
-		return this.yn;
 	}
 
 	public String toString(){

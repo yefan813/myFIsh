@@ -22,8 +22,9 @@ public class ArticalFishVO{
     private  String locationAddress;
     private  Integer articleType;
 
-    private Long liked;
+    private Long liked;  //点赞数量
     private Long unliked;
+    private Boolean isMineLiked; //是否已经点赞
 
     private String img;
 
@@ -154,5 +155,13 @@ public class ArticalFishVO{
 
     public void setUnliked(Long unliked) {
         this.unliked = unliked;
+    }
+
+    public Boolean getMineLiked() {
+        return isMineLiked;
+    }
+
+    public void setMineLiked(Boolean mineLiked) {
+        isMineLiked = mineLiked;
     }
 }

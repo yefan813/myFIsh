@@ -135,5 +135,28 @@ public class SiteCollectionController {
         return JSON.toJSONString(result);
     }
 
+    @RequestMapping(value = "/del", method = {RequestMethod.GET})
+    @ApiOperation(value = "delete site collection", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    public @ResponseBody
+    String del(HttpServletRequest request, @RequestParam Long id) {
+        RemoteResult result = null;
+        try {
+            if (null == id) {
+                LOGGER.error("delete site collection  传入的参数错误 id【{}】", id);
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            int res = siteCollectionService.deleteByKey(id);
+            if (res > 0) {
+                result = RemoteResult.success("删除钓点收藏成功");
+            }
+        } catch (Exception e) {
+
+        }
+
+        return JSON.toJSONString(result);
+    }
+
 
 }

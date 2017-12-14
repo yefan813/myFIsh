@@ -97,8 +97,8 @@ public class CommentController extends  BaseController {
             }
 
             if(commentVO.getToUserId() != null && commentVO.getFromUserId().longValue() == commentVO.getToUserId()){
-                LOGGER.error("不能回复增加的评论 , param is error[{}]",JSON.toJSONString(commentVO));
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"不能回复增加的评论");
+                LOGGER.error("不能回复自己的评论 , param is error[{}]",JSON.toJSONString(commentVO));
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"不能回复自己的评论");
                 return JSON.toJSONString(result);
             }
 
@@ -143,23 +143,23 @@ public class CommentController extends  BaseController {
     }
 
     @RequestMapping(value = "/del", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete commentVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
-    public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
-        RemoteResult result = null;
-        try{
-            if(null == id){
-                LOGGER.error("delete commentVO  传入的参数错误 id【{}】", id);
-                result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
-                return JSON.toJSONString(result);
-            }
+        @ApiOperation(value = "delete commentVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+        public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
+            RemoteResult result = null;
+            try{
+                if(null == id){
+                    LOGGER.error("delete commentVO  传入的参数错误 id【{}】", id);
+                    result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
+                    return JSON.toJSONString(result);
+                }
 
-           int res =  commentService.deleteByKey(id);
-            if(res > 0){
-                result = RemoteResult.success("删除评论成功");
-            }
-        }catch (Exception e){
+                int res =  commentService.deleteByKey(id);
+                if(res > 0){
+                    result = RemoteResult.success("删除评论成功");
+                }
+            }catch (Exception e){
 
-        }
+            }
 
         return JSON.toJSONString(result);
     }

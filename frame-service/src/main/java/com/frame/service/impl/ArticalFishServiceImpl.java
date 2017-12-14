@@ -1,21 +1,29 @@
 package com.frame.service.impl;
 
+import com.frame.common.exception.AppException;
 import com.frame.dao.ArticalFishDao;
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.ArticalFish;
+import com.frame.domain.ArticalLike;
+import com.frame.domain.base.YnEnum;
+import com.frame.domain.common.Page;
 import com.frame.service.ArticalFishService;
+import com.frame.service.ArticalLikeService;
 import com.frame.service.UserService;
 import com.frame.service.base.BaseServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @Service("articalFishService")
 public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> implements ArticalFishService {
+
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArticalFishServiceImpl.class);
@@ -26,6 +34,9 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 	@Resource
 	private UserService uerService;
 
+	@Resource
+	private ArticalLikeService articalLikeService;
+
 	@Value("${img.prefix}")
 	private String IMAGEPREFIX;
 
@@ -35,29 +46,45 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 		return articalFishDao;
 	}
 
+
 	@Override
-	public synchronized Long likeArtical(Long articalId, Integer count) {
-		ArticalFish articalFish = articalFishDao.selectEntry(articalId);
-		if(articalFish == null){
-			return 0l;
+	public ArticalFish selectEntryDetail(Long articalFishId) {
+
+		ArticalFish fish = articalFishDao.selectEntryDetail(articalFishId);
+		if(null == fish){
+			return null;
 		}
 
-		long likeCount  =  0;
-		if(null == articalFish.getLiked()){
-			likeCount = count;
-		}else{
-			likeCount = articalFish.getLiked() + count;
+		ArticalLike query = new ArticalLike();
+		query.setArticalId(fish.getId().longValue());
+		query.setYn(YnEnum.Normal.getKey());
+
+		List<ArticalLike> res = articalLikeService.selectEntryList(query);
+		if(CollectionUtils.isNotEmpty(res)){
+			ArticalLike like = res.get(0);
+			fish.setLiked(like.getLike());
+			fish.setUnliked(like.getUnliked());
 		}
-
-		ArticalFish fishTmp = new ArticalFish();
-		fishTmp.setId(articalFish.getId());
-		fishTmp.setLiked(likeCount);
-
-		int res = articalFishDao.updateByKey(fishTmp);
-		if(res < 0){
-			LOGGER.error("artical like is error");
-		}
-
-		return likeCount;
+		return fish;
 	}
+
+	@Override
+	public Page<ArticalFish> selectBaseEntryList(ArticalFish condition, Page<ArticalFish> page) {
+		try {
+			Class<?> clz = condition.getClass();
+			clz.getMethod("setStartIndex", Integer.class).invoke(condition, page.getStartIndex());
+			clz.getMethod("setEndIndex", Integer.class).invoke(condition, page.getEndIndex());
+		} catch (Exception e) {
+			throw new AppException("设置分页参数失败", e);
+		}
+		Integer size = articalFishDao.selectBaseEntryListCount(condition);
+		if(size == null || size <= 0) {
+			return page;
+		}
+		page.setTotalCount(size);
+		page.setResult(articalFishDao.selectBaseEntryList(condition));
+		return page;
+	}
+
+
 }

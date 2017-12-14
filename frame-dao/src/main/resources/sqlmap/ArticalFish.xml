@@ -4,7 +4,35 @@
 <mapper namespace="com.frame.dao.ArticalFishDao">
 
 	<!-- groupon 所有查询列 -->
-	<sql id="QUERY_COLUMN_LIST">
+	<sql id="QUERY_BASE_COLUMN_LIST">
+		<![CDATA[
+			id,
+			user_id as userId,
+			title,
+			img,
+			fish_time as fishTime,
+			water_type as waterType,
+			bait,
+			fish_type as fishType,
+			fishing_func as fishingFunc,
+			fish_lines as fishLines,
+			fish_pole_length as fishPoleLength,
+			fish_pole_brand as fishPoleBrand,
+			location_address as locationAddress,
+			article_type as articleType,
+			is_publish as isPublish,
+			liked,
+			unliked,
+			feature,
+			created,
+			modified,
+			yn
+		]]>
+	</sql>
+
+
+	<!-- groupon 所有查询列 -->
+	<sql id="QUERY_DETAIL_COLUMN_LIST">
 		<![CDATA[
 			id,
 			user_id as userId,
@@ -53,8 +81,6 @@
 			<if test="locationAddress != null and locationAddress != ''"><![CDATA[AND location_address = #{locationAddress}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
-			<if test="content != null and content != ''"><![CDATA[AND content = #{content}]]></if>
-
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
 			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
@@ -116,7 +142,7 @@
 
 	<!-- 删除,通过条件 -->
 	<update id="deleteByCondtion" parameterType="articalFish" >
-		<![CDATA[DELETE锕rti FROM tb_artical_fish]]>
+		<![CDATA[DELETE FROM tb_artical_fish]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</update>
 
@@ -131,7 +157,7 @@
 	<!-- 查询,通过主键IN(array) -->
 	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="articalFish">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_BASE_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<![CDATA[WHERE id IN]]>
 		<foreach collection="array" item="id" open="(" separator="," close=")">
@@ -142,7 +168,7 @@
 	<!-- 查询,通过条件 -->
 	<select id="selectEntryList" parameterType="articalFish" resultType="articalFish">
 		<![CDATA[SELECT]]>
-		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_BASE_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
@@ -154,6 +180,87 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryDetail" parameterType="articalFish" resultType="articalFish">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_DETAIL_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[ where  id = #{ariticalFishId}]]>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectBaseEntryList" parameterType="articalFish" resultType="articalFish">
+		<![CDATA[
+			af.id,
+			af.user_id as userId,
+			af.title,
+			af.img,
+			af.fish_time as fishTime,
+			af.water_type as waterType,
+			af.bait,
+			af.fish_type as fishType,
+			af.fishing_func as fishingFunc,
+			af.fish_lines as fishLines,
+			af.fish_pole_length as fishPoleLength,
+			af.fish_pole_brand as fishPoleBrand,
+			af.location_address as locationAddress,
+			af.article_type as articleType,
+			af.is_publish as isPublish,
+			sum(al.liked) as liked,
+			al.unliked,
+			af.feature,
+			af.created,
+			af.modified,
+			yn  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id]]>
+		<where>
+			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
+			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
+			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
+			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
+			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
+			<if test="bait != null"><![CDATA[AND af.bait = #{bait}]]></if>
+			<if test="fishType != null"><![CDATA[AND af.fish_type = #{fishType}]]></if>
+			<if test="fishingFunc != null"><![CDATA[AND af.fishing_func = #{fishingFunc}]]></if>
+			<if test="fishLines != null"><![CDATA[AND af.fish_lines = #{fishLines}]]></if>
+			<if test="fishPoleLength != null"><![CDATA[AND af.fish_pole_length = #{fishPoleLength}]]></if>
+			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
+			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
+			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+		</where>
+
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+		<![CDATA[ GROUP by af.id]]>
+	</select>
+
+
+	<!-- 查询,通过条件 -->
+	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="articalFish">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id]]>
+		<where>
+			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
+			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
+			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
+			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
+			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
+			<if test="bait != null"><![CDATA[AND af.bait = #{bait}]]></if>
+			<if test="fishType != null"><![CDATA[AND af.fish_type = #{fishType}]]></if>
+			<if test="fishingFunc != null"><![CDATA[AND af.fishing_func = #{fishingFunc}]]></if>
+			<if test="fishLines != null"><![CDATA[AND af.fish_lines = #{fishLines}]]></if>
+			<if test="fishPoleLength != null"><![CDATA[AND af.fish_pole_length = #{fishPoleLength}]]></if>
+			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
+			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
+			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+		</where>
+
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+
+
 
 
 </mapper>

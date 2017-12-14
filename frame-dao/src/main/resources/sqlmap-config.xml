@@ -37,19 +37,23 @@
 
 	<!-- 映射文件路径 -->
 	<mappers>
-		<mapper resource="sqlmap/User.xml" />
-		<mapper resource="sqlmap/UserValid.xml" />
-		<mapper resource="sqlmap/UserAuths.xml" />
 		<mapper resource="sqlmap/AppSecret.xml" />
-		<mapper resource="sqlmap/UserLogin.xml" />
-		<mapper resource="sqlmap/UserFriends.xml" />
-		<mapper resource="sqlmap/ArticalFish.xml" />
 		<mapper resource="sqlmap/Artical.xml" />
+		<mapper resource="sqlmap/ArticalCollection.xml" />
+		<mapper resource="sqlmap/ArticalFish.xml" />
+		<mapper resource="sqlmap/ArticalLike.xml" />
+		<mapper resource="sqlmap/ArticalReport.xml" />
+		<mapper resource="sqlmap/Comment.xml" />
+		<mapper resource="sqlmap/CommentLike.xml" />
 		<mapper resource="sqlmap/FishShop.xml" />
 		<mapper resource="sqlmap/FishSite.xml" />
-		<mapper resource="sqlmap/Comment.xml" />
 		<mapper resource="sqlmap/Reply.xml" />
-
-
+		<mapper resource="sqlmap/ShopSiteComment.xml" />
+		<mapper resource="sqlmap/SiteCollection.xml" />
+		<mapper resource="sqlmap/User.xml" />
+		<mapper resource="sqlmap/UserAuths.xml" />
+		<mapper resource="sqlmap/UserLogin.xml" />
+		<mapper resource="sqlmap/UserSocial.xml" />
+		<mapper resource="sqlmap/UserValid.xml" />
 	</mappers>
 </configuration>

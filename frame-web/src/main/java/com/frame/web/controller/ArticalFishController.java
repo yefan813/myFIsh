@@ -2,6 +2,7 @@ package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.frame.domain.ArticalCollection;
 import com.frame.domain.ArticalFish;
 import com.frame.domain.User;
 import com.frame.domain.base.YnEnum;
@@ -79,7 +80,7 @@ public class ArticalFishController extends BaseController {
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
 
-            Page<ArticalFish> res = articalFishService.selectPage(articalFish, page);
+            Page<ArticalFish> res = articalFishService.selectBaseEntryList(articalFish, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         }catch (Exception e) {
@@ -105,7 +106,7 @@ public class ArticalFishController extends BaseController {
             return JSON.toJSONString(result);
         }
 
-        ArticalFish articalFish = articalFishService.selectEntry(articalId);
+        ArticalFish articalFish = articalFishService.selectEntryDetail(articalId);
         if(null == articalFish){
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
             result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(),
@@ -258,88 +259,41 @@ public class ArticalFishController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    //文章点赞接口
-    @RequestMapping(value = "/articalLike", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "文章点赞", httpMethod = "POST", response = String.class, notes = "文章点赞")
-    public @ResponseBody String articalLike(HttpServletRequest request,
-                                            @RequestParam(value = "userId", required = true) Long userId,
-                                            @RequestParam(value = "articleId", required = true) Long articleId,
-                                            @RequestParam(value = "articleType", required = false) Long articleType,
-                                            @RequestParam(value = "like", required = true) Boolean like){
-
+    @RequestMapping(value = "/del", method = {RequestMethod.POST})
+    @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;
-        if(null == userId || null == articleId || like == null){
-            LOGGER.error("like artical 传入的参数错误 userId【{}】,title【{}】", userId, articleId);
+
+        if(null == id ){
+            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id );
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
+        try {
 
-        User user = userService.selectEntry(userId);
-        if(null == user ){
-            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                    "此用户不存在");
-            return JSON.toJSONString(result);
-        }
+            //valid artical fish is valid
+            ArticalFish collection = articalFishService.selectEntry(id);
+            if(null == collection){
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "此收藏不存在");
+                return JSON.toJSONString(result);
+            }
 
-        ArticalFish articalFish = articalFishService.selectEntry(articleId);
-        if(null == articalFish){
-            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                    "文章不存在");
-            return JSON.toJSONString(result);
+            ArticalFish condition = new ArticalFish();
+            condition.setId(id.intValue());
+            condition.setYn(YnEnum.Deleted.getKey());
+            int res = articalFishService.updateByKey(condition);
+            if(res <= 0 ){
+                result = RemoteResult.failure("0002", "artical delete is failed,server internal error");
+            }else{
+                result = RemoteResult.success();
+            }
+        } catch (Exception e) {
+            LOGGER.error("del exception" , e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
-        int likeCount = 0;
-        if(like){
-            likeCount = 1;
-        }else{
-            likeCount = -1;
-        }
-        Long count = articalFishService.likeArtical(articleId,likeCount);
-        JSONObject object = new JSONObject();
-        object.put("count",count);
-        result = RemoteResult.success(JSON.toJSONString(object));
-
         return JSON.toJSONString(result);
     }
 
-
-//    //文章cancle点赞接口
-//    @RequestMapping(value = "/articalUnLike", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value = "文章点赞", httpMethod = "POST", response = String.class, notes = "文章点赞")
-//    public @ResponseBody String articalUnLike(HttpServletRequest request,
-//                                            @RequestParam(value = "userId", required = true) Long userId,
-//                                            @RequestParam(value = "articleId", required = true) Long articleId,
-//                                            @RequestParam(value = "articleType", required = true) Long articleType,
-//                                            @RequestParam(value = "like", required = true) Boolean like){
-//
-//        RemoteResult result = null;
-//        if(null == userId || null == articleId ||
-//                articleType == null || like == null){
-//            LOGGER.error("like artical 传入的参数错误 userId【{}】,title【{}】", userId, articleId);
-//            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-//                    BusinessCode.PARAMETERS_ERROR.getValue());
-//            return JSON.toJSONString(result);
-//        }
-//
-//        User user = userService.selectEntry(userId);
-//        if(null == user ){
-//            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-//                    "此用户不存在");
-//            return JSON.toJSONString(result);
-//        }
-//
-//        ArticalFish articalFish = articalFishService.selectEntry(articleId);
-//        if(null == articalFish){
-//            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-//                    "文章不存在");
-//            return JSON.toJSONString(result);
-//        }
-//
-//        Long count = articalFishService.likeArtical(articleId,-1);
-//        JSONObject object = new JSONObject();
-//        object.put("count",count);
-//        result = RemoteResult.success(JSON.toJSONString(object));
-//
-//        return JSON.toJSONString(result);
-//    }
 }

@@ -2,6 +2,7 @@ package com.frame.web.controller;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.frame.domain.ArticalCollection;
 import com.frame.domain.ArticalFish;
 import com.frame.domain.ArticalLike;
@@ -52,18 +53,10 @@ public class ArticalLikeController {
     String like(HttpServletRequest request, @ModelAttribute ArticalLikeVO articalLikeVO) {
         RemoteResult result = null;
         try {
-            if (null == articalLikeVO) {
-                LOGGER.error("like artical 传入的参数错");
+            if (null == articalLikeVO || articalLikeVO .getUserId() == null || articalLikeVO.getArticalId() == null) {
+                LOGGER.error("like artical 传入的参数错[{}]" , JSON.toJSONString(articalLikeVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
-                return JSON.toJSONString(result);
-            }
-
-            //valid user is valid
-            User user = userService.selectEntry(articalLikeVO.getUserId());
-            if (null == user) {
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
                 return JSON.toJSONString(result);
             }
 
@@ -73,6 +66,14 @@ public class ArticalLikeController {
             if (null == articalFish) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此文章不存在");
+                return JSON.toJSONString(result);
+            }
+
+            //valid user is valid
+            User user = userService.selectEntry(articalLikeVO.getUserId());
+            if (null == user) {
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "此user不存在");
                 return JSON.toJSONString(result);
             }
 
@@ -98,4 +99,40 @@ public class ArticalLikeController {
         }
         return JSON.toJSONString(result);
     }
+
+    @RequestMapping(value = "/likeCount", method = {RequestMethod.POST})
+    @ApiOperation(value = "文章点赞数量", httpMethod = "POST", response = String.class, notes = "文章点赞数量")
+    public @ResponseBody
+    String likeCount(HttpServletRequest request, @ModelAttribute ArticalLikeVO articalLikeVO) {
+        RemoteResult result = null;
+        try{
+            if (null == articalLikeVO || articalLikeVO.getArticalId() == null) {
+                LOGGER.error("like count artical 传入的参数错[{}]" , JSONObject.toJSONString(articalLikeVO));
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            ArticalFish articalFish = articalFishService.selectEntry(articalLikeVO.getArticalId());
+            if (null == articalFish) {
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "此文章不存在");
+                return JSON.toJSONString(result);
+            }
+
+            ArticalLike articalLike = new ArticalLike();
+            articalLike.setArticalId(articalLikeVO.getArticalId());
+            articalLike.setLike(1l); //点赞
+            articalLike.setYn(YnEnum.Normal.getKey());
+
+            int count = articalLikeService.selectEntryListCount(articalLike);
+            result.setData(count);
+
+        }catch (Exception e){
+            LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
 }

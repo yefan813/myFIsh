@@ -1,127 +1,192 @@
+/*
+ * Copyright (c) 2017 www.xxxx.com All rights reserved.
+ * 未经许可不得任意复制与传播.
+ */
 package com.frame.domain.vo;
 
-import com.frame.domain.base.BaseDomain;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
+import com.frame.domain.base.BaseDomain;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import java.io.Serializable;
 
 /**
- * 
- * 
- * @author yefan
- * @date 2017-11-29 16:41:12
- **/
-public class ShopSiteCommentVO{
+ * tb_shop_site_comment
+ * @author Evan
+ * @since 2017-12-14
+ */
+public class ShopSiteCommentVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-
-	private Long id;
-	/****/
-	private Integer type;
-
-	/****/
-	private Long localId;
-
-	/****/
-	private Long userId;
-
-	/****/
-	private String content;
-
-	/****/
-	private Integer isReview;
-
-	/****/
-	private String feature;
-
-	/****/
-	private java.util.Date created;
-
-	/****/
-	private java.util.Date modified;
-
-	/****/
-	private Integer yn;
-
-	public Long getId() {
-		return id;
+			private Integer type;   //钓点还是渔具店
+		private Long localId;    //钓点或者渔具店的 id
+		private String fromUavtor;
+		private String fromUname;
+		private String toUavtor;
+		private String toUname;
+		private Long toUid;
+		private Long fromUid;
+		private String content;
+		private Boolean isReview;
+					
+		
+	/**
+	 * 获取 type
+	 * @return
+	 */
+	public Integer getType(){
+		return type;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
+	/**
+	 * 设置 type
+	 * @param type
+	 */
 	public void setType(Integer type){
 		this.type = type;
 	}
-
-	public Integer getType(){
-		return this.type;
+	
+	/**
+	 * 获取 localId
+	 * @return
+	 */
+	public Long getLocalId(){
+		return localId;
 	}
 
+	/**
+	 * 设置 localId
+	 * @param localId
+	 */
 	public void setLocalId(Long localId){
 		this.localId = localId;
 	}
-
-	public Long getLocalId(){
-		return this.localId;
+	
+	/**
+	 * 获取 fromUavtor
+	 * @return
+	 */
+	public String getFromUavtor(){
+		return fromUavtor;
 	}
 
-	public void setUserId(Long userId){
-		this.userId = userId;
+	/**
+	 * 设置 fromUavtor
+	 * @param fromUavtor
+	 */
+	public void setFromUavtor(String fromUavtor){
+		this.fromUavtor = fromUavtor;
+	}
+	
+	/**
+	 * 获取 fromUname
+	 * @return
+	 */
+	public String getFromUname(){
+		return fromUname;
 	}
 
-	public Long getUserId(){
-		return this.userId;
+	/**
+	 * 设置 fromUname
+	 * @param fromUname
+	 */
+	public void setFromUname(String fromUname){
+		this.fromUname = fromUname;
+	}
+	
+	/**
+	 * 获取 toUavtor
+	 * @return
+	 */
+	public String getToUavtor(){
+		return toUavtor;
 	}
 
+	/**
+	 * 设置 toUavtor
+	 * @param toUavtor
+	 */
+	public void setToUavtor(String toUavtor){
+		this.toUavtor = toUavtor;
+	}
+	
+	/**
+	 * 获取 toUname
+	 * @return
+	 */
+	public String getToUname(){
+		return toUname;
+	}
+
+	/**
+	 * 设置 toUname
+	 * @param toUname
+	 */
+	public void setToUname(String toUname){
+		this.toUname = toUname;
+	}
+	
+	/**
+	 * 获取 toUid
+	 * @return
+	 */
+	public Long getToUid(){
+		return toUid;
+	}
+
+	/**
+	 * 设置 toUid
+	 * @param toUid
+	 */
+	public void setToUid(Long toUid){
+		this.toUid = toUid;
+	}
+	
+	/**
+	 * 获取 fromUid
+	 * @return
+	 */
+	public Long getFromUid(){
+		return fromUid;
+	}
+
+	/**
+	 * 设置 fromUid
+	 * @param fromUid
+	 */
+	public void setFromUid(Long fromUid){
+		this.fromUid = fromUid;
+	}
+	
+	/**
+	 * 获取 content
+	 * @return
+	 */
+	public String getContent(){
+		return content;
+	}
+
+	/**
+	 * 设置 content
+	 * @param content
+	 */
 	public void setContent(String content){
 		this.content = content;
 	}
-
-	public String getContent(){
-		return this.content;
+	
+	/**
+	 * 获取 isReview
+	 * @return
+	 */
+	public Boolean getIsReview(){
+		return isReview;
 	}
 
-	public void setIsReview(Integer isReview){
+	/**
+	 * 设置 isReview
+	 * @param isReview
+	 */
+	public void setIsReview(Boolean isReview){
 		this.isReview = isReview;
 	}
-
-	public Integer getIsReview(){
-		return this.isReview;
-	}
-
-	public void setFeature(String feature){
-		this.feature = feature;
-	}
-
-	public String getFeature(){
-		return this.feature;
-	}
-
-	public void setCreated(java.util.Date created){
-		this.created = created;
-	}
-
-	public java.util.Date getCreated(){
-		return this.created;
-	}
-
-	public void setModified(java.util.Date modified){
-		this.modified = modified;
-	}
-
-	public java.util.Date getModified(){
-		return this.modified;
-	}
-
-	public void setYn(Integer yn){
-		this.yn = yn;
-	}
-
-	public Integer getYn(){
-		return this.yn;
-	}
-
-	public String toString(){
-		return ToStringBuilder.reflectionToString(this);
-	}
-}
+					}

@@ -55,12 +55,18 @@ public class ArticalCollectionController {
     @Value("${img.prefix}")
     private String IMAGEPREFIX;
 
-    @RequestMapping(value = "/articalCollectionList", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    /**
+     * list collection artical
+     * @param request
+     * @param currrentPage
+     * @param articalCollectionVO
+     * @return
+     */
+    @RequestMapping(value = "/list", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "文章搜藏列表", httpMethod = "GET", response = String.class, notes = "文章搜藏列表")
     @ResponseBody
     public String getArticalFishCollectionList(HttpServletRequest request
-            , @ApiParam(value="currrentPage",required = true)@RequestParam(value = "currrentPage", required = true)Integer currrentPage ,
-                                               @ModelAttribute ArticalCollectionVO articalCollectionVO){
+            , @ApiParam(value="currrentPage",required = true) Integer currrentPage, @ModelAttribute ArticalCollectionVO articalCollectionVO){
         RemoteResult result = null;
 
         if(null == articalCollectionVO){
@@ -98,6 +104,12 @@ public class ArticalCollectionController {
     }
 
 
+    /**
+     * collect artical
+     * @param request
+     * @param articalCollectionVO
+     * @return
+     */
     @RequestMapping(value = "/collection", method = {RequestMethod.POST})
     @ApiOperation(value = "收藏文章", httpMethod = "POST", response = String.class, notes = "收藏文章")
     public  @ResponseBody String collection(HttpServletRequest request, @ModelAttribute ArticalCollectionVO articalCollectionVO) {
@@ -133,11 +145,50 @@ public class ArticalCollectionController {
             }
             return JSON.toJSONString(result);
         }catch (Exception e) {
-            LOGGER.error("失败:" + e.getMessage(), e);
+            LOGGER.error("collection 失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
         return JSON.toJSONString(result);
     }
+
+
+    @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "cancel artical collection", httpMethod = "GET", response = String.class, notes = "cancle artical collection")
+    public @ResponseBody String cancelArticalCollection(HttpServletRequest request, @ApiParam(value="collectionId",required = true) Long collectionId) {
+        RemoteResult result = null;
+
+        if(null == collectionId ){
+            LOGGER.error("cancleArticlCollection 传入参数错误，传入的参数为:collectionId:[{}]", collectionId );
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    BusinessCode.PARAMETERS_ERROR.getValue());
+            return JSON.toJSONString(result);
+        }
+        try {
+
+            //valid user is valid
+            ArticalCollection collection = articalCollectionService.selectEntry(collectionId);
+            if(null == collection){
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "此收藏不存在");
+                return JSON.toJSONString(result);
+            }
+
+            ArticalCollection condition = new ArticalCollection();
+            condition.setId(collectionId.intValue());
+            condition.setYn(YnEnum.Deleted.getKey());
+            int res = articalCollectionService.updateByKey(condition);
+            if(res <= 0 ){
+                result = RemoteResult.failure("0002", "artical collection cancel is failed,server internal error");
+            }else{
+                result = RemoteResult.success();
+            }
+        } catch (Exception e) {
+            LOGGER.error("cancleArticlCollection exception" , e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
 
 
 

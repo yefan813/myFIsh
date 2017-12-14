@@ -27,16 +27,6 @@ public class ArticalLikeVO{
 	private Integer unliked;
 
 	/****/
-	private String feature;
-
-	/****/
-	private java.util.Date created;
-
-	/****/
-	private java.util.Date modified;
-
-	/****/
-	private Integer yn;
 
 	public Long getId() {
 		return id;
@@ -54,13 +44,6 @@ public class ArticalLikeVO{
 		return this.articalId;
 	}
 
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
-
-	public Long getUserId(){
-		return this.userId;
-	}
 
 	public void setLike(Integer like){
 		this.like = like;
@@ -78,36 +61,12 @@ public class ArticalLikeVO{
 		return this.unliked;
 	}
 
-	public void setFeature(String feature){
-		this.feature = feature;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public String getFeature(){
-		return this.feature;
-	}
-
-	public void setCreated(java.util.Date created){
-		this.created = created;
-	}
-
-	public java.util.Date getCreated(){
-		return this.created;
-	}
-
-	public void setModified(java.util.Date modified){
-		this.modified = modified;
-	}
-
-	public java.util.Date getModified(){
-		return this.modified;
-	}
-
-	public void setYn(Integer yn){
-		this.yn = yn;
-	}
-
-	public Integer getYn(){
-		return this.yn;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String toString(){
