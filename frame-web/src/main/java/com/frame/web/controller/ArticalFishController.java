@@ -1,8 +1,6 @@
 package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.frame.domain.ArticalCollection;
 import com.frame.domain.ArticalFish;
 import com.frame.domain.User;
 import com.frame.domain.base.YnEnum;
@@ -32,8 +30,6 @@ import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/18.
- *
- *
  */
 
 
@@ -59,11 +55,11 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/articalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获列表", httpMethod = "POST", response = String.class, notes = "渔获列表")
     @ResponseBody
-    public String getArticalFishList(HttpServletRequest request, @ApiParam(value="currrentPage",required = true)@RequestParam(value = "currrentPage", required = true)Integer currrentPage ,@ModelAttribute ArticalFishVO articalFishVO){
+    public String getArticalFishList(HttpServletRequest request, @ApiParam(value = "currrentPage", required = true) @RequestParam(value = "currrentPage", required = true) Integer currrentPage, @ModelAttribute ArticalFishVO articalFishVO) {
         RemoteResult result = null;
         try {
             if (null == articalFishVO) {
-                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】",JSON.toJSON(articalFishVO));
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSON(articalFishVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
@@ -83,7 +79,7 @@ public class ArticalFishController extends BaseController {
             Page<ArticalFish> res = articalFishService.selectBaseEntryList(articalFish, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
@@ -93,10 +89,10 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获文章详细", httpMethod = "POST", response = String.class, notes = "渔获文章详细")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "articalId", value = "articalId", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "articalId", value = "articalId", required = true, dataType = "Integer"),
     })
     @ResponseBody
-    public String getArticalFishDetail(HttpServletRequest request,  @RequestParam(value = "articalId", required = true)Long articalId){
+    public String getArticalFishDetail(HttpServletRequest request, @RequestParam(value = "articalId", required = true) Long articalId) {
 
         RemoteResult result = null;
         if (null == articalId) {
@@ -107,7 +103,7 @@ public class ArticalFishController extends BaseController {
         }
 
         ArticalFish articalFish = articalFishService.selectEntryDetail(articalId);
-        if(null == articalFish){
+        if (null == articalFish) {
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
             result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(),
                     BusinessCode.SUCCESS.getValue());
@@ -116,7 +112,6 @@ public class ArticalFishController extends BaseController {
         result = RemoteResult.success(articalFish);
         return JSON.toJSONString(result);
     }
-
 
 
     /**
@@ -172,40 +167,41 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布文章", httpMethod = "POST", response = String.class, notes = "发布文章")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "Long"),
-            @ApiImplicitParam(paramType="query", name = "title", value = "title", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishTime", value = "fishTime", required = false, dataType = "Long"),
-            @ApiImplicitParam(paramType="query", name = "waterType", value = "waterType", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "bait", value = "bait", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishType", value = "fishType", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishingFunc", value = "fishingFunc", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishLines", value = "fishLines", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishPoleLength", value = "fishPoleLength", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "fishPoleBrand", value = "fishPoleBrand", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "lat", value = "lat", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "lng", value = "lng", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "locationAddress", value = "locationAddress", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "articleType", value = "articleType", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType="query", name = "isPublish", value = "isPublish", required = true, dataType = "Integer"),
-            @ApiImplicitParam(paramType="query", name = "content", value = "content", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "userId", value = "userId", required = true, dataType = "Long"),
+            @ApiImplicitParam(paramType = "query", name = "title", value = "title", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishTime", value = "fishTime", required = false, dataType = "Long"),
+            @ApiImplicitParam(paramType = "query", name = "waterType", value = "waterType", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "bait", value = "bait", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishType", value = "fishType", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishingFunc", value = "fishingFunc", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishLines", value = "fishLines", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishPoleLength", value = "fishPoleLength", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "fishPoleBrand", value = "fishPoleBrand", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "lat", value = "lat", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "lng", value = "lng", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "locationAddress", value = "locationAddress", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "articleType", value = "articleType", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "isPublish", value = "isPublish", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "content", value = "content", required = true, dataType = "String"),
     })
-    public  @ResponseBody String publish(HttpServletRequest request,
-                                         @RequestParam(value = "userId", required = true) Long userId,
-                                         @RequestParam(value = "title", required = true)String title,
-                                         @RequestParam(value = "fishTime", required = false)Long fishTime,
-                                         @RequestParam(value = "waterType", required = false)String waterType,
-                                         @RequestParam(value = "bait", required = false) String bait,
-                                         @RequestParam(value = "fishType", required = false)String fishType,
-                                         @RequestParam(value = "fishingFunc", required = false) String fishingFunc,
-                                         @RequestParam(value = "fishLines", required = false) String fishLines,
-                                         @RequestParam(value = "fishPoleLength", required = false) String fishPoleLength,
-                                         @RequestParam(value = "fishPoleBrand", required = false)String fishPoleBrand,
-                                         @RequestParam(value = "lat", required = false)String lat,
-                                         @RequestParam(value = "lng", required = false) String lng,
-                                         @RequestParam(value = "locationAddress", required = false) String locationAddress,
-                                         @RequestParam(value = "articleType", required = true)Integer articleType,
-                                         @RequestParam(value = "isPublish", required = true)Integer isPublish,
-                                         @RequestParam(value = "content", required = true)String content) {
+    public @ResponseBody
+    String publish(HttpServletRequest request,
+                   @RequestParam(value = "userId", required = true) Long userId,
+                   @RequestParam(value = "title", required = true) String title,
+                   @RequestParam(value = "fishTime", required = false) Long fishTime,
+                   @RequestParam(value = "waterType", required = false) String waterType,
+                   @RequestParam(value = "bait", required = false) String bait,
+                   @RequestParam(value = "fishType", required = false) String fishType,
+                   @RequestParam(value = "fishingFunc", required = false) String fishingFunc,
+                   @RequestParam(value = "fishLines", required = false) String fishLines,
+                   @RequestParam(value = "fishPoleLength", required = false) String fishPoleLength,
+                   @RequestParam(value = "fishPoleBrand", required = false) String fishPoleBrand,
+                   @RequestParam(value = "lat", required = false) String lat,
+                   @RequestParam(value = "lng", required = false) String lng,
+                   @RequestParam(value = "locationAddress", required = false) String locationAddress,
+                   @RequestParam(value = "articleType", required = true) Integer articleType,
+                   @RequestParam(value = "isPublish", required = true) Integer isPublish,
+                   @RequestParam(value = "content", required = true) String content) {
         RemoteResult result = null;
         if (articleType == 1 && (null == userId || StringUtils.isEmpty(title) ||
                 null == waterType ||
@@ -223,7 +219,7 @@ public class ArticalFishController extends BaseController {
 
         //valid user is valid
         User user = userService.selectEntry(userId);
-        if(null == user){
+        if (null == user) {
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     "此用户不存在");
             return JSON.toJSONString(result);
@@ -238,7 +234,7 @@ public class ArticalFishController extends BaseController {
         articalFish.setFishType(fishType);
         articalFish.setFishingFunc(fishingFunc);
         articalFish.setFishLines(fishLines);
-        if(null != fishTime){
+        if (null != fishTime) {
             articalFish.setFishTime(new Date(fishTime));
         }
         articalFish.setFishPoleBrand(fishPoleBrand);
@@ -250,10 +246,10 @@ public class ArticalFishController extends BaseController {
         articalFish.setLocationAddress(locationAddress);
         articalFish.setArticleType(articleType);
         articalFish.setYn(YnEnum.Normal.getKey());
-       int res = articalFishService.insertEntry(articalFish);
-        if(res <= 0 ){
+        int res = articalFishService.insertEntry(articalFish);
+        if (res <= 0) {
             result = RemoteResult.failure("0002", "artical publish is failed,server internal error");
-        }else{
+        } else {
             result = RemoteResult.success();
         }
         return JSON.toJSONString(result);
@@ -261,11 +257,12 @@ public class ArticalFishController extends BaseController {
 
     @RequestMapping(value = "/del", method = {RequestMethod.POST})
     @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
-    public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
+    public @ResponseBody
+    String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;
 
-        if(null == id ){
-            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id );
+        if (null == id) {
+            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id);
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -274,7 +271,7 @@ public class ArticalFishController extends BaseController {
 
             //valid artical fish is valid
             ArticalFish collection = articalFishService.selectEntry(id);
-            if(null == collection){
+            if (null == collection) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此收藏不存在");
                 return JSON.toJSONString(result);
@@ -284,13 +281,13 @@ public class ArticalFishController extends BaseController {
             condition.setId(id.intValue());
             condition.setYn(YnEnum.Deleted.getKey());
             int res = articalFishService.updateByKey(condition);
-            if(res <= 0 ){
+            if (res <= 0) {
                 result = RemoteResult.failure("0002", "artical delete is failed,server internal error");
-            }else{
+            } else {
                 result = RemoteResult.success();
             }
         } catch (Exception e) {
-            LOGGER.error("del exception" , e);
+            LOGGER.error("del exception", e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
         return JSON.toJSONString(result);

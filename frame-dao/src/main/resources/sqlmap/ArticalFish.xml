@@ -238,7 +238,7 @@
 
 	<!-- 查询,通过条件 -->
 	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="articalFish">
-		<![CDATA[SELECT COUNT(id) AS dataCount]]>  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id]]>
+		<![CDATA[SELECT COUNT(id) AS dataCount  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>

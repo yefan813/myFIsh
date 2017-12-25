@@ -1,5 +1,4 @@
 package com.frame.domain;
-import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import com.frame.domain.base.BaseDomain;
 
@@ -14,7 +13,6 @@ public class ArticalCollection  extends BaseDomain  {
 
 	/****/
 	private Long articalId;
-
 	/****/
 	private Long userId;
 

@@ -29,10 +29,12 @@
 		<typeAlias type="com.frame.domain.FishShop" alias="fishShop"/>
 		<typeAlias type="com.frame.domain.Comment" alias="comment"/>
 		<typeAlias type="com.frame.domain.Reply" alias="reply"/>
-
-
-
-
+		<typeAlias type="com.frame.domain.ArticalCollection" alias="articalCollection"/>
+		<typeAlias type="com.frame.domain.ArticalReport" alias="articalReport"/>
+		<typeAlias type="com.frame.domain.ArticalLike" alias="articalLike"/>
+		<typeAlias type="com.frame.domain.CommentLike" alias="commentLike"/>
+		<typeAlias type="com.frame.domain.ShopSiteComment" alias="shopSiteComment"/>
+		<typeAlias type="com.frame.domain.SiteCollection" alias="siteCollection"/>
 	</typeAliases>
 
 	<!-- 映射文件路径 -->
@@ -53,7 +55,6 @@
 		<mapper resource="sqlmap/User.xml" />
 		<mapper resource="sqlmap/UserAuths.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />
-		<mapper resource="sqlmap/UserSocial.xml" />
 		<mapper resource="sqlmap/UserValid.xml" />
 	</mappers>
 </configuration>

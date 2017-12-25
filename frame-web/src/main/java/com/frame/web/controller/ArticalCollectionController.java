@@ -66,7 +66,7 @@ public class ArticalCollectionController {
     @ApiOperation(value = "文章搜藏列表", httpMethod = "GET", response = String.class, notes = "文章搜藏列表")
     @ResponseBody
     public String getArticalFishCollectionList(HttpServletRequest request
-            , @ApiParam(value="currrentPage",required = true) Integer currrentPage, @ModelAttribute ArticalCollectionVO articalCollectionVO){
+            , @RequestParam(value="currrentPage",required = true) Integer currrentPage, @ModelAttribute ArticalCollectionVO articalCollectionVO){
         RemoteResult result = null;
 
         if(null == articalCollectionVO){
@@ -91,7 +91,6 @@ public class ArticalCollectionController {
 
             Page<ArticalCollection> page = new Page<ArticalCollection>();
             page.setCurrentPage(currrentPage);
-
 
             Page<ArticalFish> res = articalCollectionService.getArticalCollectionById(articalCollectionVO, page);
             result = RemoteResult.success(res);
@@ -154,7 +153,7 @@ public class ArticalCollectionController {
 
     @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "cancel artical collection", httpMethod = "GET", response = String.class, notes = "cancle artical collection")
-    public @ResponseBody String cancelArticalCollection(HttpServletRequest request, @ApiParam(value="collectionId",required = true) Long collectionId) {
+    public @ResponseBody String cancelArticalCollection(HttpServletRequest request, @RequestParam(value="collectionId",required = true) Long collectionId) {
         RemoteResult result = null;
 
         if(null == collectionId ){
