@@ -58,7 +58,7 @@ public class SiteCollectionController {
     @ResponseBody
     public String getSiteCollectionList(HttpServletRequest request
             , @ApiParam(value = "currrentPage", required = true) @RequestParam(value = "currrentPage", required = true) Integer currrentPage,
-                                        @ModelAttribute SiteCollectionVO siteCollectionVO) {
+                                        @RequestBody SiteCollectionVO siteCollectionVO) {
         RemoteResult result = null;
 
         if (null == siteCollectionVO) {
@@ -96,7 +96,7 @@ public class SiteCollectionController {
     @RequestMapping(value = "/collection", method = {RequestMethod.POST})
     @ApiOperation(value = "收藏钓点", httpMethod = "POST", response = String.class, notes = "收藏钓点")
     public @ResponseBody
-    String collection(HttpServletRequest request, @ModelAttribute  SiteCollectionVO siteCollectionVO) {
+    String collection(HttpServletRequest request, @RequestBody  SiteCollectionVO siteCollectionVO) {
         RemoteResult result = null;
         try {
             if (null == siteCollectionVO) {

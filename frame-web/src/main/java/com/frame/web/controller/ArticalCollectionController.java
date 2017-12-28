@@ -111,7 +111,7 @@ public class ArticalCollectionController {
      */
     @RequestMapping(value = "/collection", method = {RequestMethod.POST})
     @ApiOperation(value = "收藏文章", httpMethod = "POST", response = String.class, notes = "收藏文章")
-    public  @ResponseBody String collection(HttpServletRequest request, @ModelAttribute ArticalCollectionVO articalCollectionVO) {
+    public  @ResponseBody String collection(HttpServletRequest request, @RequestBody ArticalCollectionVO articalCollectionVO) {
         RemoteResult result = null;
         try{
             if (null == articalCollectionVO) {

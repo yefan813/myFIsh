@@ -9,7 +9,7 @@
 			id,
 			user_id as userId,
 			title,
-			img,
+			recommends,
 			fish_time as fishTime,
 			water_type as waterType,
 			bait,
@@ -37,7 +37,7 @@
 			id,
 			user_id as userId,
 			title,
-			img,
+			recommends,
 			fish_time as fishTime,
 			water_type as waterType,
 			bait,
@@ -67,7 +67,7 @@
 			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND title = #{title}]]></if>
-			<if test="img != null and img != ''"><![CDATA[AND img = #{img}]]></if>
+			<if test="recommends != null and recommends != ''"><![CDATA[AND imrecommendsg = #{recommends}]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[AND fish_time = #{fishTime}]]></if>
 			<if test="waterType != null"><![CDATA[AND water_type = #{waterType}]]></if>
 			<if test="bait != null"><![CDATA[AND bait = #{bait}]]></if>
@@ -98,7 +98,7 @@
 		<set>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
 			<if test="title != null"><![CDATA[title = #{title},]]></if>
-			<if test="img != null and img != ''"><![CDATA[img = #{img},]]></if>
+			<if test="recommends != null and recommends != ''"><![CDATA[recommends = #{recommends},]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[fish_time = #{fishTime},]]></if>
 
 			<if test="waterType != null"><![CDATA[ water_type = #{waterType},]]></if>
@@ -124,8 +124,8 @@
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical_fish (user_id,title,img,fish_time,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{img},#{fishTime},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_artical_fish (user_id,title,recommends,fish_time,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
+			VALUES (#{userId},#{title},#{recommends},#{fishTime},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 	
@@ -192,11 +192,11 @@
 
 	<!-- 查询,通过条件 -->
 	<select id="selectBaseEntryList" parameterType="articalFish" resultType="articalFish">
-		<![CDATA[
+		<![CDATA[select
 			af.id,
 			af.user_id as userId,
 			af.title,
-			af.img,
+			af.recommends,
 			af.fish_time as fishTime,
 			af.water_type as waterType,
 			af.bait,
@@ -208,12 +208,10 @@
 			af.location_address as locationAddress,
 			af.article_type as articleType,
 			af.is_publish as isPublish,
-			sum(al.liked) as liked,
-			al.unliked,
 			af.feature,
 			af.created,
 			af.modified,
-			yn  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id]]>
+			af.yn  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
@@ -228,17 +226,17 @@
 			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
-			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>
 
-		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
-		<![CDATA[ GROUP by af.id]]>
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY CONCAT('af.', '${orderField}', '') ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
 	</select>
 
 
 	<!-- 查询,通过条件 -->
-	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="articalFish">
-		<![CDATA[SELECT COUNT(id) AS dataCount  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
+	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="int">
+		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
@@ -253,11 +251,10 @@
 			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
-			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>
 
-		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
-	</select>
+		</select>
 
 
 

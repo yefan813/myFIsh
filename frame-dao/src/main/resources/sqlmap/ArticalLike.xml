@@ -5,7 +5,7 @@
 
 	<!-- tb_artical_like 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
-		<![CDATA[id,artical_id AS articalId,user_id AS userId,like,unliked,feature,created,modified,yn]]>
+		<![CDATA[id,artical_id AS articalId,user_id AS userId,type,feature,created,modified,yn]]>
 	</sql>
 
 	<!-- tb_artical_like 查询列来源表-->
@@ -17,8 +17,7 @@
 			<if test="id != null and id != ''"><![CDATA[AND id = #{id}]]></if>
 			<if test="articalId != null and articalId != ''"><![CDATA[AND artical_id = #{articalId}]]></if>
 			<if test="userId != null and userId != ''"><![CDATA[AND user_id = #{userId}]]></if>
-			<if test="like != null and like != ''"><![CDATA[AND like = #{like}]]></if>
-			<if test="unliked != null and unliked != ''"><![CDATA[AND unliked = #{unliked}]]></if>
+			<if test="type != null and type != ''"><![CDATA[AND type = #{type}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
@@ -37,8 +36,7 @@
 		<set>
 			<if test="articalId != null"><![CDATA[artical_id = #{articalId},]]></if>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
-			<if test="like != null"><![CDATA[like = #{like},]]></if>
-			<if test="unliked != null"><![CDATA[unliked = #{unliked},]]></if>
+			<if test="type != null"><![CDATA[type = #{type},]]></if>
 			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
 			<if test="created != null"><![CDATA[created = #{created},]]></if>
 			<if test="modified != null"><![CDATA[modified = #{modified},]]></if>
@@ -49,8 +47,8 @@
 	<!-- 插入tb_artical_like记录 -->
 	<insert id="insertEntry" parameterType="articalLike" >
 		<![CDATA[
-			INSERT INTO tb_artical_like (id,artical_id,user_id,like,unliked,feature,created,modified,yn)
-			VALUES (#{id},#{articalId},#{userId},#{like},#{unliked},#{feature},#{created},#{modified},#{yn})
+			INSERT INTO tb_artical_like (id,artical_id,user_id,type,feature,created,modified,yn)
+			VALUES (#{id},#{articalId},#{userId},#{type},#{feature},#{created},#{modified},#{yn})
 		]]>
 	</insert>
 	

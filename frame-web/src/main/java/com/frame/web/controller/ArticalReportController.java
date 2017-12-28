@@ -47,7 +47,7 @@ public class ArticalReportController {
     @RequestMapping(value = "/list", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "文章举报列表", httpMethod = "POST", response = String.class, notes = "文章举报列表")
     @ResponseBody
-    public String list(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @ModelAttribute  ArticalReportVO articalReportVO){
+    public String list(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @RequestBody  ArticalReportVO articalReportVO){
         RemoteResult result = null;
         try {
             if (null == articalReportVO ) {

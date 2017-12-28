@@ -28,7 +28,7 @@ public class ArticalFish extends BaseDomain {
     private  Integer articleType;
     private Integer isPublish;
     private String content;
-    private String img;
+    private String recommends;
     private Date fishTime;
 
     private Long liked;
@@ -42,12 +42,12 @@ public class ArticalFish extends BaseDomain {
         this.fishTime = fishTime;
     }
 
-    public String getImg() {
-        return img;
+    public String getRecommends() {
+        return recommends;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setRecommends(String recommends) {
+        this.recommends = recommends;
     }
 
     public Integer getArticleType() {

@@ -104,7 +104,7 @@ public class ShopSiteCommentController {
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布钓点comment", httpMethod = "POST", response = String.class, notes = "发布钓点comment")
-    public  @ResponseBody String publish(HttpServletRequest request, @ModelAttribute ShopSiteCommentVO shopSiteCommentVO) {
+    public  @ResponseBody String publish(HttpServletRequest request, @RequestBody ShopSiteCommentVO shopSiteCommentVO) {
         RemoteResult result = null;
         try{
             if(null == shopSiteCommentVO || StringUtils.isBlank(shopSiteCommentVO.getContent())|| shopSiteCommentVO.getFromUid() == null ||

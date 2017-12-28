@@ -33,7 +33,7 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 
 	@Override
 	public List<ArticalFish> selectBaseEntryList(ArticalFish condition) {
-		return select(getNameSpace(selectBaseEntryList),condition);
+		return selectList(getNameSpace(selectBaseEntryList),condition);
 	}
 
 	@Override

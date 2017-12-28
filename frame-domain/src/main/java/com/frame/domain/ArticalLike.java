@@ -15,13 +15,12 @@ public class ArticalLike  extends BaseDomain  {
 	/****/
 	private Long articalId;
 
+	private Long userId;
 	/****/
 
 	/****/
-	private Long like;
-
+	private Integer type;
 	/****/
-	private Long unliked;
 
 
 
@@ -34,24 +33,23 @@ public class ArticalLike  extends BaseDomain  {
 		return this.articalId;
 	}
 
-
-	public void setLike(Long like){
-		this.like = like;
+	public Integer getType() {
+		return type;
 	}
 
-	public Long getLike(){
-		return this.like;
-	}
-
-	public void setUnliked(Long unliked){
-		this.unliked = unliked;
-	}
-
-	public Long getUnliked(){
-		return this.unliked;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 }

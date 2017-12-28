@@ -1,6 +1,5 @@
 package com.frame.domain.vo;
 
-import com.frame.domain.base.BaseDomain;
 
 /**
  * Created by yefan on 2017/7/23.
@@ -26,14 +25,14 @@ public class ArticalFishVO{
     private Long unliked;
     private Boolean isMineLiked; //是否已经点赞
 
-    private String img;
+    private String recommends;
 
-    public String getImg() {
-        return img;
+    public String getRecommends() {
+        return recommends;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setRecommends(String recommends) {
+        this.recommends = recommends;
     }
 
     public Integer getArticleType() {

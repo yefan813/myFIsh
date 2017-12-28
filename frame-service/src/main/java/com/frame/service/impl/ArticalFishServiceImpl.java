@@ -62,8 +62,7 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 		List<ArticalLike> res = articalLikeService.selectEntryList(query);
 		if(CollectionUtils.isNotEmpty(res)){
 			ArticalLike like = res.get(0);
-			fish.setLiked(like.getLike());
-			fish.setUnliked(like.getUnliked());
+			fish.setLiked(like.getType().longValue());
 		}
 		return fish;
 	}

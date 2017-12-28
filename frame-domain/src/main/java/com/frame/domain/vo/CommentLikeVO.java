@@ -1,6 +1,8 @@
 package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -10,30 +12,24 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author yefan
  * @date 2017-11-29 16:41:12
  **/
+@ApiModel
 public class CommentLikeVO{
 
 
-	private Long id;
 	/****/
+	@ApiModelProperty(value = "评论 id")
 	private Long commentId;
 
-	/****/
+	@ApiModelProperty(value = "用户 id")
+	private Long userId;
 
 	/****/
-	private Integer like;
 
 	/****/
-	private Integer unliked;
+	@ApiModelProperty(value = "1 喜欢 2不喜欢")
+	private Integer type;
 
-	private Boolean isMineLiked;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public void setCommentId(Long commentId){
 		this.commentId = commentId;
@@ -44,33 +40,24 @@ public class CommentLikeVO{
 	}
 
 
-	public void setLike(Integer like){
-		this.like = like;
+	public Integer getType() {
+		return type;
 	}
 
-	public Integer getLike(){
-		return this.like;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUnliked(Integer unliked){
-		this.unliked = unliked;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public Integer getUnliked(){
-		return this.unliked;
+	public void setType(Integer type) {
+		this.type = type;
 	}
-
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this);
 	}
 
-
-	public Boolean getMineLiked() {
-		return isMineLiked;
-	}
-
-	public void setMineLiked(Boolean mineLiked) {
-		isMineLiked = mineLiked;
-	}
 }

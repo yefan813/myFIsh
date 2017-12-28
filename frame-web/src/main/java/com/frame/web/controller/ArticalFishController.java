@@ -89,7 +89,7 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获文章详细", httpMethod = "POST", response = String.class, notes = "渔获文章详细")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "articalId", value = "articalId", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType = "query", name = "articalId", value = "articalId", required = true, dataType = "Long"),
     })
     @ResponseBody
     public String getArticalFishDetail(HttpServletRequest request, @RequestParam(value = "articalId", required = true) Long articalId) {
@@ -183,6 +183,8 @@ public class ArticalFishController extends BaseController {
             @ApiImplicitParam(paramType = "query", name = "articleType", value = "articleType", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "isPublish", value = "isPublish", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType = "query", name = "content", value = "content", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType = "query", name = "recommends", value = "recommends", required = true, dataType = "String"),
+
     })
     public @ResponseBody
     String publish(HttpServletRequest request,
@@ -201,7 +203,9 @@ public class ArticalFishController extends BaseController {
                    @RequestParam(value = "locationAddress", required = false) String locationAddress,
                    @RequestParam(value = "articleType", required = true) Integer articleType,
                    @RequestParam(value = "isPublish", required = true) Integer isPublish,
-                   @RequestParam(value = "content", required = true) String content) {
+                   @RequestParam(value = "content", required = true) String content,
+                   @RequestParam(value = "recommends", required = true) String recommends
+                   ) {
         RemoteResult result = null;
         if (articleType == 1 && (null == userId || StringUtils.isEmpty(title) ||
                 null == waterType ||
@@ -234,6 +238,7 @@ public class ArticalFishController extends BaseController {
         articalFish.setFishType(fishType);
         articalFish.setFishingFunc(fishingFunc);
         articalFish.setFishLines(fishLines);
+        articalFish.setRecommends(recommends);
         if (null != fishTime) {
             articalFish.setFishTime(new Date(fishTime));
         }

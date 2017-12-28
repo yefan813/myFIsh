@@ -1,6 +1,8 @@
 package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -10,37 +12,22 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author yefan
  * @date 2017-11-29 16:41:12
  **/
+@ApiModel
 public class SiteCollectionVO{
 
-	private Long id;
 	/****/
+	@ApiModelProperty(value = "站点，钓点 id")
 	private Long shopSiteId;
 
 	/****/
+	@ApiModelProperty(value = "user id")
 	private Long userId;
 
 	/****/
+	@ApiModelProperty(value = "1钓点， 2渔具店")
 	private Integer type;
 
-	/****/
-	private String feature;
 
-	/****/
-	private java.util.Date modified;
-
-	/****/
-	private java.util.Date created;
-
-	/****/
-	private Integer yn;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public void setShopSiteId(Long shopSiteId){
 		this.shopSiteId = shopSiteId;
@@ -66,37 +53,6 @@ public class SiteCollectionVO{
 		return this.type;
 	}
 
-	public void setFeature(String feature){
-		this.feature = feature;
-	}
-
-	public String getFeature(){
-		return this.feature;
-	}
-
-	public void setModified(java.util.Date modified){
-		this.modified = modified;
-	}
-
-	public java.util.Date getModified(){
-		return this.modified;
-	}
-
-	public void setCreated(java.util.Date created){
-		this.created = created;
-	}
-
-	public java.util.Date getCreated(){
-		return this.created;
-	}
-
-	public void setYn(Integer yn){
-		this.yn = yn;
-	}
-
-	public Integer getYn(){
-		return this.yn;
-	}
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this);

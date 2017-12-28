@@ -16,14 +16,10 @@ public class CommentLike  extends BaseDomain  {
 	private Long commentId;
 
 	/****/
+	private Long userId;
 
 	/****/
-	private Integer like;
-
-	/****/
-	private Integer unliked;
-
-	private Boolean isLiked;
+	private Integer type;
 
 	public void setCommentId(Long commentId){
 		this.commentId = commentId;
@@ -33,29 +29,20 @@ public class CommentLike  extends BaseDomain  {
 		return this.commentId;
 	}
 
-
-	public void setLike(Integer like){
-		this.like = like;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public Integer getLike(){
-		return this.like;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public void setUnliked(Integer unliked){
-		this.unliked = unliked;
+	public Integer getType() {
+		return type;
 	}
 
-	public Integer getUnliked(){
-		return this.unliked;
-	}
-
-	public Boolean getLiked() {
-		return isLiked;
-	}
-
-	public void setLiked(Boolean liked) {
-		isLiked = liked;
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public String toString(){

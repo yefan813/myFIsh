@@ -42,10 +42,10 @@ public class CommentLikeController {
 
 
 
-    @RequestMapping(value = "/like", method = {RequestMethod.POST})
+    @RequestMapping(value = "/isLike", method = {RequestMethod.POST})
     @ApiOperation(value = "评论点赞", httpMethod = "POST", response = String.class, notes = "评论点赞")
     public @ResponseBody
-    String like(HttpServletRequest request, @ModelAttribute CommentLikeVO commentLikeVO) {
+    String like(HttpServletRequest request, @RequestBody CommentLikeVO commentLikeVO) {
         RemoteResult result = null;
         try {
             if (null == commentLikeVO) {
@@ -73,13 +73,14 @@ public class CommentLikeController {
             commentLike.setModified(new Date());
 
 
-            int res = commentLikeService.insertEntry(commentLike);
-            if (res <= 0) {
-                result = RemoteResult.failure("0002", "comment like is failed,server internal error");
-            } else {
-                result = RemoteResult.success();
-                result.setMsg("点赞评论成功");
+            int res = commentLikeService.saveOrUpdate(commentLikeVO);
+            if(res < 1){
+                LOGGER.error("点赞失败");
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        "点赞失败");
+                return JSON.toJSONString(result);
             }
+            result = RemoteResult.success();
             return JSON.toJSONString(result);
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
@@ -88,26 +89,5 @@ public class CommentLikeController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/cancel", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete commentLikeVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
-    public  @ResponseBody String cancel(HttpServletRequest request, @RequestParam Long id) {
-        RemoteResult result = null;
-        try{
-            if(null == id){
-                LOGGER.error("delete commentLikeVO  传入的参数错误 id【{}】", id);
-                result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
-                return JSON.toJSONString(result);
-            }
-
-            int res =  commentLikeService.deleteByKey(id);
-            if(res > 0){
-                result = RemoteResult.success("删除评论点赞成功");
-            }
-        }catch (Exception e){
-
-        }
-
-        return JSON.toJSONString(result);
-    }
 
 }

@@ -1,6 +1,8 @@
 package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -10,23 +12,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author yefan
  * @date 2017-11-29 16:41:12
  **/
+@ApiModel
 public class ArticalReportVO{
 
-	private Long id;
-	/****/
+	@ApiModelProperty(value = "文章 id")
 	private Long articalId;
 
 	/****/
+	@ApiModelProperty(value = "用户 id")
 	private Long userId;
 
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public void setArticalId(Long articalId){
 		this.articalId = articalId;

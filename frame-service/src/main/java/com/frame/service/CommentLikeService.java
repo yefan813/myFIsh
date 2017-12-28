@@ -1,5 +1,6 @@
 package com.frame.service;
 
+import com.frame.domain.vo.CommentLikeVO;
 import com.frame.service.base.BaseService;
 import com.frame.domain.CommentLike;
 
@@ -13,6 +14,5 @@ import com.frame.domain.CommentLike;
  **/
 
 public interface CommentLikeService extends BaseService<CommentLike , Long> {
-
-
+    int saveOrUpdate(CommentLikeVO commentLikeVO);
 }
