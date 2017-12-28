@@ -46,7 +46,7 @@ public class CommentController extends  BaseController {
 
     @RequestMapping(value = "/getComment", method = {RequestMethod.POST})
     @ApiOperation(value = "获取comment", httpMethod = "POST", response = String.class, notes = "获取comment")
-    public @ResponseBody String getCommentByArticalId(HttpServletRequest request,@RequestParam(value = "currrentPage", required = true)Integer currrentPage
+    public @ResponseBody String getCommentByArticalId(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage
             ,@RequestParam(value = "topicId", required = true)Long topicId){
         RemoteResult result = null;
         try{
@@ -86,7 +86,7 @@ public class CommentController extends  BaseController {
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布comment", httpMethod = "POST", response = String.class, notes = "发布comment")
-    public  @ResponseBody String publish(HttpServletRequest request, @ModelAttribute CommentVO commentVO) {
+    public  @ResponseBody String publish(HttpServletRequest request, @RequestBody CommentVO commentVO) {
         RemoteResult result = null;
         try{
             if(null == commentVO || StringUtils.isBlank(commentVO.getContent())|| commentVO.getFromUserId() == null ||

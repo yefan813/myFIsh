@@ -76,7 +76,7 @@ public class ArticalReportController {
     @RequestMapping(value = "/report", method = {RequestMethod.POST})
     @ApiOperation(value = "收藏文章", httpMethod = "POST", response = String.class, notes = "收藏文章")
     public @ResponseBody
-    String report(HttpServletRequest request, @ModelAttribute ArticalReportVO articalReportVO) {
+    String report(HttpServletRequest request, @RequestBody ArticalReportVO articalReportVO) {
         RemoteResult result = null;
         try {
             if (null == articalReportVO) {

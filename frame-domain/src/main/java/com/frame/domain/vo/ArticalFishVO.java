@@ -1,30 +1,47 @@
 package com.frame.domain.vo;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Created by yefan on 2017/7/23.
  */
+@ApiModel
 public class ArticalFishVO{
 
     private Long id;
     private Long userId;
     private String title;
     private  String waterType;
+    @ApiModelProperty(hidden = true)
     private String bait;
     private  String fishType;
+    @ApiModelProperty(hidden = true)
     private String fishingFunc;
+    @ApiModelProperty(hidden = true)
     private  String fishLines;
+    @ApiModelProperty(hidden = true)
     private String fishPoleLength;
+    @ApiModelProperty(hidden = true)
     private String fishPoleBrand;
+    @ApiModelProperty(hidden = true)
     private  String lat;
+    @ApiModelProperty(hidden = true)
     private String lng;
+    @ApiModelProperty(hidden = true)
     private  String locationAddress;
+    @ApiModelProperty(value = "文章内容")
     private  Integer articleType;
 
-    private Long liked;  //点赞数量
-    private Long unliked;
-    private Boolean isMineLiked; //是否已经点赞
 
+    @ApiModelProperty(hidden = true)
+    private Long liked;  //点赞数量
+    @ApiModelProperty(hidden = true)
+    private Long unliked;
+    @ApiModelProperty(hidden = true)
+    private Boolean isMineLiked; //是否已经点赞
+    @ApiModelProperty(hidden = true)
     private String recommends;
 
     public String getRecommends() {

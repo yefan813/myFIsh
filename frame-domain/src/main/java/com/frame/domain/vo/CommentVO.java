@@ -1,10 +1,12 @@
 package com.frame.domain.vo;
 
 import com.frame.domain.base.BaseDomain;
+import io.swagger.annotations.ApiModel;
 
 /**
  * Created by yefan on 2017/10/18.
  */
+@ApiModel
 public class CommentVO{
     private Long topicId;
     private Integer topicType;

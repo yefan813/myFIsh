@@ -1,8 +1,11 @@
 package com.frame.domain.vo;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * Created by yefan on 2017/7/23.
  */
+@ApiModel
 public class FishSiteVO{
     private Long userId;
     private String title;

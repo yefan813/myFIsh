@@ -53,7 +53,7 @@ public class FishShopController extends BaseController {
     @RequestMapping(value = "/fishShopList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔具店列表", httpMethod = "POST", response = String.class, notes = "渔具店列表")
     @ResponseBody
-    public String getFishShopList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage ,@ModelAttribute FishShopVO fishShopVO){
+    public String getFishShopList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage ,@RequestBody FishShopVO fishShopVO){
         RemoteResult result = null;
         try {
             if (null == fishShopVO) {
@@ -110,7 +110,7 @@ public class FishShopController extends BaseController {
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布文章", httpMethod = "POST", response = String.class, notes = "发布文章")
-    public  @ResponseBody String publish(HttpServletRequest request,@ModelAttribute FishShopVO fishShopVO) {
+    public  @ResponseBody String publish(HttpServletRequest request,@RequestBody FishShopVO fishShopVO) {
         RemoteResult result = null;
         try{
             if (null == fishShopVO) {

@@ -54,7 +54,7 @@ public class FishSiteController extends BaseController {
     @RequestMapping(value = "/fishSiteList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "钓点列表", httpMethod = "POST", response = String.class, notes = "钓点列表")
     @ResponseBody
-    public String getFishSiteList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @ModelAttribute FishSiteVO fishSiteVO){
+    public String getFishSiteList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @RequestBody FishSiteVO fishSiteVO){
         RemoteResult result = null;
         try {
             Page<FishSite> page = new Page<>();
@@ -104,7 +104,7 @@ public class FishSiteController extends BaseController {
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     @ApiOperation(value = "发布文章", httpMethod = "POST", response = String.class, notes = "发布文章")
-    public  @ResponseBody String publish(HttpServletRequest request,@ModelAttribute FishSiteVO fishSiteVO) {
+    public  @ResponseBody String publish(HttpServletRequest request,@RequestBody FishSiteVO fishSiteVO) {
         RemoteResult result = null;
         try{
             if (null == fishSiteVO) {

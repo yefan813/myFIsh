@@ -2,6 +2,7 @@ package com.frame.domain;
 
 import java.util.Date;
 
+import io.swagger.annotations.ApiModel;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import com.frame.domain.base.BaseDomain;
@@ -9,6 +10,7 @@ import com.frame.domain.base.BaseDomain;
 /**
  * Created by garnett on 2015/11/18.
  */
+@ApiModel
 public class UserLogin extends BaseDomain {
 
 	/**

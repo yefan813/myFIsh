@@ -13,10 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +40,7 @@ public class UserLoginController extends BaseController {
 	@RequestMapping(value = "/saveUserLoginInfo", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
 	@ApiOperation(value = "用户登录上创登陆信息", httpMethod = "POST", response = String.class, notes = "用户登录上创登陆信息")
 	public @ResponseBody
-	String saveUserLoginInfo(HttpServletRequest request, @ModelAttribute UserLogin userLogin) {
+	String saveUserLoginInfo(HttpServletRequest request, @RequestBody UserLogin userLogin) {
 		RemoteResult result = null;
 		try {
 			if (userLogin == null || userLogin.getUserId() == null
