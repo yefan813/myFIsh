@@ -14,6 +14,7 @@ import com.frame.domain.img.ImageValidate;
 import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
 import com.frame.service.*;
+import com.frame.web.entity.request.*;
 import io.swagger.annotations.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -21,10 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -74,27 +72,14 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/editUserInfo", method = {RequestMethod.POST})
 	@ApiOperation(value = "编辑用户信息接口", httpMethod = "POST", response = String.class, notes = "编辑用户信息接口")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "id", value = "用户id", required = true, dataType = "Integer"),
-			@ApiImplicitParam(paramType="query", name = "nikeName", value = "用户nikeName", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "sex", value = "用户sex", required = false, dataType = "Integer"),
-			@ApiImplicitParam(paramType="query", name = "avatarUrl", value = "用户头像", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "address", value = "用户地址", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "birthday", value = "用户生日", required = false, dataType = "Long"),
-	})
-	public @ResponseBody String editUserInfo(HttpServletRequest request ,
-											 @RequestParam(value = "id", required = true) Integer id,
-											 @RequestParam(value = "nikeName", required = false) String nikeName,
-											 @RequestParam(value = "sex", required = false) Integer sex,
-											 @RequestParam(value = "avatarUrl", required = false) String avatarUrl,
-											 @RequestParam(value = "address", required = false) String address,
-											 @RequestParam(value = "birthday", required = false) Long birthday,
+
+	public @ResponseBody String editUserInfo(HttpServletRequest request ,@RequestBody UserInfoParam userInfoParam,
 											 @ApiParam(value = "imgFile", required = false) MultipartFile imgFile) {
 		RemoteResult result = null;
 		try{
 			String imgUrl = null;
-			if (null == id) {
-				LOGGER.info("调用editUserInfo 传入的参数错误");
+			if (null == userInfoParam || userInfoParam.getId() == null) {
+				LOGGER.info("调用editUserInfo 传入的参数错误,参数[{}]" , JSON.toJSONString(userInfoParam));
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
@@ -124,17 +109,16 @@ public class UserController extends BaseController {
 				}
 			}
 			User user = new User();
-			user.setId(id);
+			user.setId(userInfoParam.getId());
 			user.setAvatarUrl(imgUrl);
-			user.setNickName(nikeName);
-			user.setSex(sex);
-			if(null != birthday){
-				user.setBirthday(new Date(birthday));
+			user.setNickName(userInfoParam.getNikeName());
+			user.setSex(userInfoParam.getSex());
+			if(null != userInfoParam.getBirthday()){
+				user.setBirthday(new Date(userInfoParam.getBirthday()));
 			}
-			user.setAddress(address);
+			user.setAddress(userInfoParam.getAddress());
 
 			result = userService.editUserInfo(user);
-		
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -145,55 +129,45 @@ public class UserController extends BaseController {
 	/**
 	 *
 	 * 忘记密码
-	 * @param tel
-	 * @param password
-	 * @param validCode
 	 * @return
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/forgetPwd", method = {RequestMethod.POST})
 	@ApiOperation(value = "忘记密码", httpMethod = "POST", response = String.class, notes = "忘记密码")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "validCode", value = "验证码", required = true, dataType = "String")
-	})
-	public @ResponseBody String forgetPwd(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
-										   @RequestParam(value = "password", required = true) String password,
-										   @RequestParam(value = "validCode", required = true) String validCode) {
+	public @ResponseBody String forgetPwd(HttpServletRequest request , @RequestBody ForgetPWDParam param) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password) || StringUtils.isEmpty(validCode)) {
-				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
+			if (null == param || StringUtils.isEmpty(param.getTel()) || StringUtils.isEmpty(param.getPassword()) || StringUtils.isEmpty(param.getValidCode())) {
+				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", JSON.toJSONString(param));
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 				// 判断用户是否已经注册
 			}
 
-			if(tel.length() != 11){
+			if(param.getTel().length() != 11){
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
-			boolean existTel = IsExistTel(tel);
+			boolean existTel = IsExistTel(param.getTel());
 			if (!existTel) {
-				LOGGER.warn("未找到此电话号码，手机号为[{}]", tel);
-				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "未找到此电话号码" + tel);
+				LOGGER.warn("未找到此电话号码，手机号为[{}]", param.getTel());
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "未找到此电话号码" + param.getTel());
 				return JSON.toJSONString(result);
 			}
 
 			// 判断出入的validCode 是否是发送时的code
-			boolean res = isCorrectValidCode(tel, validCode, SendSMSTypeEnum.FORGET_PWD.getKey());
+			boolean res = isCorrectValidCode(param.getTel(), param.getValidCode(), SendSMSTypeEnum.FORGET_PWD.getKey());
 
 			if(!res){
-				LOGGER.warn("验证码失效，请重新获取, tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
-				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "验证码失效" + tel);
+				LOGGER.warn("验证码失效，请重新获取, tel【{}】,密码[{}],验证码[{}]",  JSON.toJSONString(param));
+				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "验证码失效" + param.getTel());
 				return JSON.toJSONString(result);
 			}
 			if (res) {
 				UserAuths con = new UserAuths();
 				con.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-				con.setIdentifier(tel);
+				con.setIdentifier(param.getTel());
 				con.setYn(YnEnum.Normal.getKey());
 				List<UserAuths> authses = userAuthsService.selectEntryList(con);
 				if(CollectionUtils.isEmpty(authses)){
@@ -209,8 +183,8 @@ public class UserController extends BaseController {
 				userAuths.setId(authses.get(0).getId());
 				userAuths.setUserId(authses.get(0).getUserId());
 				userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-				userAuths.setIdentifier(tel);
-				userAuths.setCredential(password);
+				userAuths.setIdentifier(param.getTel());
+				userAuths.setCredential(param.getPassword());
 				userAuths.setVerified(1);// 已验证
 				userAuths.setYn(YnEnum.Normal.getKey());
 
@@ -232,60 +206,48 @@ public class UserController extends BaseController {
 	 * 
 	 * 用户注册接口
 	 * 
-	 * @param tel
-	 * @param password
-	 * @param validCode
 	 * @return
 	 */
 	@RequestLimit
 	@RequestMapping(value = "/regist", method = {RequestMethod.POST})
 	@ApiOperation(value = "注册用户", httpMethod = "POST", response = String.class, notes = "注册用户")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "validCode", value = "验证码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "inviteCode", value = "邀请码", required = false, dataType = "String"),
-	})
-	public @ResponseBody String registUser(HttpServletRequest request , @RequestParam(value = "tel", required = true) String tel,
-										   @RequestParam(value = "password", required = true) String password,
-										   @RequestParam(value = "validCode", required = true) String validCode,
-										   @RequestParam(value = "inviteCode", required = false) String inviteCode) {
+	public @ResponseBody String registUser(HttpServletRequest request , @RequestBody UserRegistParam param) {
 		RemoteResult result = null;
 		try {
 
-			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password) || StringUtils.isEmpty(validCode)) {
-				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", tel, password, validCode);
+			if (null == param || StringUtils.isEmpty(param.getTel()) || StringUtils.isEmpty(param.getPassword()) || StringUtils.isEmpty(param.getPassword())) {
+				LOGGER.error("调用registUser 传入的参数错误 tel【{}】,密码[{}],验证码[{}]", JSON.toJSONString(param));
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 				// 判断用户是否已经注册
 			}
 
-			if(tel.length() != 11){
+			if(param.getTel().length() != 11){
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
-			boolean existTel = IsExistTel(tel);
+			boolean existTel = IsExistTel(param.getTel());
 			if (existTel) {
-				LOGGER.info("该用户已经注册，手机号为【{}】", tel);
+				LOGGER.info("该用户已经注册，手机号为【{}】", param.getTel());
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
 				return JSON.toJSONString(result);
 			}
 
 			// 判断出入的validCode 是否是发送时的code
-			boolean res = isCorrectValidCode(tel,validCode,SendSMSTypeEnum.REGIST_USER.getKey());
+			boolean res = isCorrectValidCode(param.getTel(),param.getValidCode(),SendSMSTypeEnum.REGIST_USER.getKey());
 			if (res) {
 				// 验证成功向数据库写入一条默认数据
 				User defaultUser = new User();
-				defaultUser.setTel(tel);
+				defaultUser.setTel(param.getTel());
 				defaultUser.setLevel(0);
 				defaultUser.setPoint(0l);
 				defaultUser.setYn(YnEnum.Normal.getKey());
 
 				UserAuths userAuths = new UserAuths();
 				userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-				userAuths.setIdentifier(tel);
-				userAuths.setCredential(password);
+				userAuths.setIdentifier(param.getTel());
+				userAuths.setCredential(param.getPassword());
 				userAuths.setVerified(1);// 已验证
 				userAuths.setYn(YnEnum.Normal.getKey());
 
@@ -489,33 +451,26 @@ public class UserController extends BaseController {
 	 * 
 	 * 用户的电话号码登录借口
 	 * 
-	 * @param tel
-	 * @param password
 	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/login4Tel", method = {RequestMethod.POST})
 	@ApiOperation(value = "用户的电话号码登录借口", httpMethod = "POST", response = String.class, notes = "用户的电话号码登录借口")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "password", value = "用户密码", required = true, dataType = "String"),
 
-	})
-	public @ResponseBody String login4Tel(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel,
-										  @RequestParam(value = "password", required = true) String password) {
+	public @ResponseBody String login4Tel(HttpServletRequest request , @RequestBody UserLoginParam loginParam) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel) || StringUtils.isEmpty(password)) {
-				LOGGER.error("调用login 传入的参数错误 tel【{}】, password=[{}]", tel, password);
+			if (StringUtils.isEmpty(loginParam.getTel()) || StringUtils.isEmpty(loginParam.getPassword())) {
+				LOGGER.error("调用login 传入的参数错误 tel【{}】, password=[{}]", JSON.toJSONString(loginParam));
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
 			UserAuths auths = new UserAuths();
-			auths.setIdentifier(tel);
+			auths.setIdentifier(loginParam.getTel());
 			auths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
-			auths.setCredential(password);
+			auths.setCredential(loginParam.getPassword());
 
 			result = userService.login4Tel(auths);
 		} catch (Exception e) {
@@ -533,45 +488,27 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
 	@ApiOperation(value = "第三方登录借口", httpMethod = "POST", response = String.class, notes = "第三方登录借口")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "avartar", value = "用户avartar", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "birthday", value = "用户birthday", required = false, dataType = "Long"),
-			@ApiImplicitParam(paramType="query", name = "credential", value = "用户credential", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "identifier", value = "用户identifier", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "identityType", value = "用户identityType", required = true, dataType = "Integer"),
-			@ApiImplicitParam(paramType="query", name = "nickName", value = "用户nickName", required = false, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "sex", value = "用户sex", required = false, dataType = "Integer"),
-
-	})
-	public @ResponseBody String login4ThirdPart(HttpServletRequest request ,
-												@RequestParam(value = "avartar", required = false) String avartar,
-												@RequestParam(value = "birthday", required = false) Long birthday,
-												@RequestParam(value = "credential", required = false) String credential,
-												@RequestParam(value = "identifier", required = true) String identifier,
-												@RequestParam(value = "identityType", required = true) Integer identityType,
-												@RequestParam(value = "nickName", required = false) String nickName,
-												@RequestParam(value = "sex", required = false) Integer sex
-												) {
+	public @ResponseBody String login4ThirdPart(HttpServletRequest request , @RequestBody UserThirdPartLoginParam param) {
 		RemoteResult result = null;
 		try {
-			if (null == identityType) {
-				LOGGER.error("调用login 传入的参数错误 tel[{}]", identityType);
+			if (null == param || null == param.getIdentityType()) {
+				LOGGER.error("调用login 传入的参数错误 tel[{}]", param.getIdentityType());
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 
 			UserAuths auths = new UserAuths();
-			auths.setIdentifier(identifier);
-			auths.setIdentityType(identityType);
-			auths.setCredential(credential);
+			auths.setIdentifier(param.getIdentifier());
+			auths.setIdentityType(param.getIdentityType());
+			auths.setCredential(param.getCredential());
 
 			User user = new User();
-			user.setAvatarUrl(avartar);
-			user.setNickName(nickName);
-			user.setSex(sex);
-			if(null != birthday){
-				user.setBirthday(new Date(birthday));
+			user.setAvatarUrl(param.getAvartar());
+			user.setNickName(param.getNickName());
+			user.setSex(param.getSex());
+			if(null != param.getBirthday()){
+				user.setBirthday(new Date(param.getBirthday()));
 			}
 
 			result = userService.login4ThirdPart(auths, user);
@@ -588,7 +525,6 @@ public class UserController extends BaseController {
 	 *
 	 * change pwd
 	 *
-	 * @param id
 	 * @return
 	 */
 	@RequestMapping(value = "/changePwd", method = {RequestMethod.POST})
@@ -598,19 +534,17 @@ public class UserController extends BaseController {
 			@ApiImplicitParam(paramType="query", name = "oldPwd", value = "旧密码", required = true, dataType = "String"),
 			@ApiImplicitParam(paramType="query", name = "newPwd", value = "新密码", required = true, dataType = "String"),
 	})
-	public @ResponseBody String changePwd(HttpServletRequest request ,@RequestParam(value = "id", required = true) Integer id,
-										  @RequestParam(value = "oldPwd", required = true) String oldPwd,
-										  @RequestParam(value = "newPwd", required = true) String newPwd) {
+	public @ResponseBody String changePwd(HttpServletRequest request ,@RequestBody ChangePWDParam param) {
 		RemoteResult result = null;
 		try {
-			if (null == id || StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
-				LOGGER.error("changePwd 传入的参数错误 id【{}】,oldPwd【{}】,newPwd【{}】", id, oldPwd, newPwd);
+			if (null == param || StringUtils.isEmpty(param.getOldPwd()) || StringUtils.isEmpty(param.getNewPwd())){
+				LOGGER.error("changePwd 传入的参数错误 id【{}】,oldPwd【{}】,newPwd【{}】", JSON.toJSONString(param));
 				result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
 						BusinessCode.PARAMETERS_ERROR.getValue());
 				return JSON.toJSONString(result);
 			}
 			UserAuths condition = new UserAuths();
-			condition.setUserId(id);
+			condition.setUserId(param.getId());
 			condition.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
 
 			List<UserAuths> authses = userAuthsService.selectEntryList(condition);
@@ -619,7 +553,7 @@ public class UserController extends BaseController {
 				return JSON.toJSONString(result);
 			}
 
-			condition.setCredential(oldPwd);
+			condition.setCredential(param.getOldPwd());
 			authses = userAuthsService.selectEntryList(condition);
 			if(CollectionUtils.isEmpty(authses)){
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "输入的老密码不正确");
@@ -629,7 +563,7 @@ public class UserController extends BaseController {
 
 			UserAuths auths = new UserAuths();
 			auths.setId(authses.get(0).getId());
-			auths.setCredential(newPwd);
+			auths.setCredential(param.getNewPwd());
 			int res = userAuthsService.updateByKey(auths);
 			if(res > 0){
 				result = RemoteResult.success(null,"修改密码成功");
