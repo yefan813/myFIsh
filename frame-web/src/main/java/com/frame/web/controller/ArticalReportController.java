@@ -14,6 +14,7 @@ import com.frame.service.ArticalFishService;
 import com.frame.service.ArticalLikeService;
 import com.frame.service.ArticalReportService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.ArticalReportListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
@@ -47,21 +48,22 @@ public class ArticalReportController {
     @RequestMapping(value = "/list", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "文章举报列表", httpMethod = "POST", response = String.class, notes = "文章举报列表")
     @ResponseBody
-    public String list(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @RequestBody  ArticalReportVO articalReportVO){
+    public String list(HttpServletRequest request, @RequestBody ArticalReportListParam listParam){
         RemoteResult result = null;
         try {
-            if (null == articalReportVO ) {
-                LOGGER.error("文章举报 list 传入的参数错误 articalId【{}】" , JSON.toJSONString(articalReportVO));
+            if (null == listParam ) {
+                LOGGER.error("文章举报 list 传入的参数错误 articalId【{}】" , JSON.toJSONString(listParam));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
             Page<ArticalReport> page = new Page<>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(listParam.getCurrrentPage());
 
             ArticalReport articalReport = new ArticalReport();
-            BeanUtils.copyProperties(articalReport,articalReportVO);
+            BeanUtils.copyProperties(articalReport,listParam);
+
             articalReport.setYn(YnEnum.Normal.getKey());
             Page<ArticalReport> res = articalReportService.selectPage(articalReport,page);
             result = RemoteResult.success(res);

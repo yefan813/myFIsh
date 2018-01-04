@@ -12,6 +12,7 @@ import com.frame.domain.vo.SiteCollectionVO;
 import com.frame.service.FishSiteService;
 import com.frame.service.SiteCollectionService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.SitCollectionListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,16 +54,15 @@ public class SiteCollectionController {
         }
     }
 
-    @RequestMapping(value = "/siteCollectionList", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "站点搜藏列表", httpMethod = "GET", response = String.class, notes = "站点搜藏列表")
+    @RequestMapping(value = "/siteCollectionList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "站点搜藏列表", httpMethod = "POST", response = String.class, notes = "站点搜藏列表")
     @ResponseBody
     public String getSiteCollectionList(HttpServletRequest request
-            , @ApiParam(value = "currrentPage", required = true) @RequestParam(value = "currrentPage", required = true) Integer currrentPage,
-                                        @RequestBody SiteCollectionVO siteCollectionVO) {
+            , @RequestBody SitCollectionListParam param) {
         RemoteResult result = null;
 
-        if (null == siteCollectionVO) {
-            LOGGER.error("getSiteCollectionList 传入参数错误，传入的参数为:[{}]", JSON.toJSON(siteCollectionVO));
+        if (null == param) {
+            LOGGER.error("getSiteCollectionList 传入参数错误，传入的参数为:[{}]", JSON.toJSON(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -70,8 +70,8 @@ public class SiteCollectionController {
         try {
 
             //检查用户是否存在
-            if (null != siteCollectionVO.getUserId() || !validUser(siteCollectionVO.getUserId())) {
-                LOGGER.warn("用户不存在", siteCollectionVO);
+            if (null != param.getUserId() || !validUser(param.getUserId())) {
+                LOGGER.warn("用户不存在", param);
                 result = RemoteResult.failure(BusinessCode.IS_EXIST_NO.getCode(),
                         "用户不存在");
                 return JSON.toJSONString(result);
@@ -79,8 +79,10 @@ public class SiteCollectionController {
 
 
             Page<SiteCollection> page = new Page<SiteCollection>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(param.getCurrrentPage());
 
+            SiteCollectionVO  siteCollectionVO= new SiteCollectionVO();
+            BeanUtils.copyProperties(siteCollectionVO,param);
 
             Page<FishSite> res = siteCollectionService.getSiteCollectionById(siteCollectionVO, page);
             result = RemoteResult.success(res);
@@ -135,8 +137,8 @@ public class SiteCollectionController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/del", method = {RequestMethod.GET})
-    @ApiOperation(value = "delete site collection", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "delete site collection", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
     String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;

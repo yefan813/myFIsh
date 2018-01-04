@@ -12,6 +12,7 @@ import com.frame.domain.vo.FishSiteVO;
 import com.frame.service.FishSiteService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.FishSiteListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,6 +30,7 @@ import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/18.
+ * 钓点相关接口
  */
 
 
@@ -54,14 +56,14 @@ public class FishSiteController extends BaseController {
     @RequestMapping(value = "/fishSiteList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "钓点列表", httpMethod = "POST", response = String.class, notes = "钓点列表")
     @ResponseBody
-    public String getFishSiteList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage , @RequestBody FishSiteVO fishSiteVO){
+    public String getFishSiteList(HttpServletRequest request, @RequestBody FishSiteListParam param){
         RemoteResult result = null;
         try {
             Page<FishSite> page = new Page<>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(param.getCurrentPage());
 
             FishSite fishSite = new FishSite();
-            BeanUtils.copyProperties(fishSite, fishSiteVO);
+            BeanUtils.copyProperties(fishSite, param);
             fishSite.setYn(YnEnum.Normal.getKey());
             Page<FishSite> res = fishSiteService.selectPage(fishSite, page);
             result = RemoteResult.success(res);
@@ -73,8 +75,8 @@ public class FishSiteController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/fishSiteDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "钓点详细", httpMethod = "POST", response = String.class, notes = "钓点详细")
+    @RequestMapping(value = "/fishSiteDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "钓点详细", httpMethod = "GET", response = String.class, notes = "钓点详细")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "siteId", value = "siteId", required = true, dataType = "Integer"),
     })
@@ -103,7 +105,7 @@ public class FishSiteController extends BaseController {
 
 
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    @ApiOperation(value = "发布文章", httpMethod = "POST", response = String.class, notes = "发布文章")
+    @ApiOperation(value = "发布钓点", httpMethod = "POST", response = String.class, notes = "发布钓点")
     public  @ResponseBody String publish(HttpServletRequest request,@RequestBody FishSiteVO fishSiteVO) {
         RemoteResult result = null;
         try{
@@ -143,8 +145,8 @@ public class FishSiteController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/del", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;
 

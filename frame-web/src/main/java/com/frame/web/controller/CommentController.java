@@ -10,7 +10,10 @@ import com.frame.domain.vo.CommentVO;
 import com.frame.service.ArticalFishService;
 import com.frame.service.CommentService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.CommentListParam;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +26,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+/**
+ * 文章评论相关接口
+ */
 
 @Controller
 @RequestMapping(value = "comment")
@@ -46,29 +53,28 @@ public class CommentController extends  BaseController {
 
     @RequestMapping(value = "/getComment", method = {RequestMethod.POST})
     @ApiOperation(value = "获取comment", httpMethod = "POST", response = String.class, notes = "获取comment")
-    public @ResponseBody String getCommentByArticalId(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage
-            ,@RequestParam(value = "topicId", required = true)Long topicId){
+    public @ResponseBody String getCommentByArticalId(HttpServletRequest request, @RequestBody CommentListParam param){
         RemoteResult result = null;
         try{
-            if(null == topicId || topicId < 0){
-                LOGGER.error("get commentVO is error , param is error[{}]",JSON.toJSONString(topicId));
+            if(null == param || param.getTopicId() < 0){
+                LOGGER.error("get commentVO is error , param is error[{}]",JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
-            ArticalFish articalFish = articalFishService.selectEntry(topicId);
+            ArticalFish articalFish = articalFishService.selectEntry(param.getTopicId());
             if(null == articalFish){
-                LOGGER.error("artical is  not exist , param is error[{}]",JSON.toJSONString(topicId));
+                LOGGER.error("artical is  not exist , param is error[{}]",JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"文章不存在！");
                 return JSON.toJSONString(result);
             }
 
 
             Page<Comment> page = new Page<>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(param.getCurrrentPage());
 
             Comment comment = new Comment();
-            comment.setTopicId(topicId);
+            comment.setTopicId(param.getTopicId());
             comment.setYn(YnEnum.Normal.getKey());
             comment.setOrderField("created");
             comment.setOrderFieldType("ASC");
@@ -142,8 +148,8 @@ public class CommentController extends  BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/del", method = {RequestMethod.POST})
-        @ApiOperation(value = "delete commentVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+        @ApiOperation(value = "delete commentVO", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
         public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
             RemoteResult result = null;
             try{

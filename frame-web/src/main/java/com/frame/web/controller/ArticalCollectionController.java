@@ -18,6 +18,7 @@ import com.frame.service.ArticalCollectionService;
 import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.ArticalCollectionListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -58,19 +59,18 @@ public class ArticalCollectionController {
     /**
      * list collection artical
      * @param request
-     * @param currrentPage
-     * @param articalCollectionVO
+     * @param listParam
      * @return
      */
-    @RequestMapping(value = "/list", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "文章搜藏列表", httpMethod = "GET", response = String.class, notes = "文章搜藏列表")
+    @RequestMapping(value = "/list", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "文章搜藏列表", httpMethod = "POST", response = String.class, notes = "文章搜藏列表")
     @ResponseBody
     public String getArticalFishCollectionList(HttpServletRequest request
-            , @RequestParam(value="currrentPage",required = true) Integer currrentPage, @RequestBody ArticalCollectionVO articalCollectionVO){
+            , @RequestBody ArticalCollectionListParam listParam){
         RemoteResult result = null;
 
-        if(null == articalCollectionVO){
-            LOGGER.error("articalCollectionList 传入参数错误，传入的参数为:[{}]", JSON.toJSON(articalCollectionVO));
+        if(null == listParam){
+            LOGGER.error("articalCollectionList 传入参数错误，传入的参数为:[{}]", JSON.toJSON(listParam));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -78,10 +78,10 @@ public class ArticalCollectionController {
         try {
 
             //检查用户是否存在
-            if(null != articalCollectionVO.getUserId()){
-                User user = userService.selectEntry(articalCollectionVO.getUserId());
+            if(null != listParam.getUserId()){
+                User user = userService.selectEntry(listParam.getUserId());
                 if(null == user){
-                    LOGGER.warn("用户不存在", articalCollectionVO);
+                    LOGGER.warn("用户不存在", listParam);
                     result = RemoteResult.failure(BusinessCode.IS_EXIST_NO.getCode(),
                             "用户不存在");
                     return JSON.toJSONString(result);
@@ -90,7 +90,10 @@ public class ArticalCollectionController {
 
 
             Page<ArticalCollection> page = new Page<ArticalCollection>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(listParam.getCurrrentPage());
+
+            ArticalCollectionVO articalCollectionVO = new ArticalCollectionVO();
+            BeanUtils.copyProperties(articalCollectionVO,listParam);
 
             Page<ArticalFish> res = articalCollectionService.getArticalCollectionById(articalCollectionVO, page);
             result = RemoteResult.success(res);

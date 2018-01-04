@@ -306,8 +306,8 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
-	@ApiOperation(value = "注册获取验证		码", httpMethod = "POST", response = String.class, notes = "注册获取验证码")
+	@RequestMapping(value = "/getValidCode", method = {RequestMethod.GET})
+	@ApiOperation(value = "注册获取验证		码", httpMethod = "GET", response = String.class, notes = "注册获取验证码")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
 
@@ -349,8 +349,8 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
-	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
+	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.GET})
+	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "GET", response = String.class, notes = "获取忘记密码验证码")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
 	})
@@ -407,8 +407,8 @@ public class UserController extends BaseController {
 	}
 
 	@RequestLimit
-	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.POST})
-	@ApiOperation(value = "验证手机是否注册", httpMethod = "POST", response = String.class, notes = "验证手机是否注册")
+	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.GET})
+	@ApiOperation(value = "验证手机是否注册", httpMethod = "GET", response = String.class, notes = "验证手机是否注册")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String")
 	})
@@ -529,11 +529,6 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping(value = "/changePwd", method = {RequestMethod.POST})
 	@ApiOperation(value = "修改密码", httpMethod = "POST", response = String.class, notes = "修改密码")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "id", value = "user ID", required = true, dataType = "Integer"),
-			@ApiImplicitParam(paramType="query", name = "oldPwd", value = "旧密码", required = true, dataType = "String"),
-			@ApiImplicitParam(paramType="query", name = "newPwd", value = "新密码", required = true, dataType = "String"),
-	})
 	public @ResponseBody String changePwd(HttpServletRequest request ,@RequestBody ChangePWDParam param) {
 		RemoteResult result = null;
 		try {

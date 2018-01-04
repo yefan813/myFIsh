@@ -12,6 +12,7 @@ import com.frame.service.FishShopService;
 import com.frame.service.FishSiteService;
 import com.frame.service.ShopSiteCommentService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.ShopSiteCommentListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
@@ -51,27 +52,25 @@ public class ShopSiteCommentController {
     @RequestMapping(value = "/getComment", method = {RequestMethod.GET})
     @ApiOperation(value = "获取comment", httpMethod = "POST", response = String.class, notes = "获取comment")
     public @ResponseBody
-    String getCommentByArticalId(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true) Integer currrentPage
-            , @RequestParam(value = "localId", required = true) Long localId
-            , @RequestParam(value = "type", required = true) Integer type) {
+    String getCommentByArticalId(HttpServletRequest request, @RequestBody ShopSiteCommentListParam param) {
         RemoteResult result = null;
         try {
-            if (null == localId || localId < 0  || null == type || type < 0  ) {
-                LOGGER.error("get commentVO is error , param is error localid:[{}] , type :[{}]", localId , type);
+            if (null == param || param.getLocalId() < 0  || null == param.getType() || param.getType() < 0  ) {
+                LOGGER.error("get commentVO is error , param is error prarm:[{}] ", JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
-            if(type == 1){
-                FishSite fishSite = fishSiteService.selectEntry(localId);
+            if(param.getType() == 1){
+                FishSite fishSite = fishSiteService.selectEntry(param.getLocalId());
                 if (null == fishSite) {
-                    LOGGER.error("fish site is  not exist , param is error[{}]", localId);
+                    LOGGER.error("fish site is  not exist , param is error[{}]", JSON.toJSONString(param));
                     result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), "钓点不存在！");
                     return JSON.toJSONString(result);
                 }
             }else{
-                FishShop fishShop = fishShopService.selectEntry(localId);
+                FishShop fishShop = fishShopService.selectEntry(param.getLocalId());
                 if (null == fishShop) {
-                    LOGGER.error("fish shop is  not exist , param is error[{}]", JSON.toJSONString(localId));
+                    LOGGER.error("fish shop is  not exist , param is error[{}]", JSON.toJSONString(param));
                     result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), "钓点不存在！");
                     return JSON.toJSONString(result);
                 }
@@ -82,11 +81,11 @@ public class ShopSiteCommentController {
 
 
             Page<ShopSiteComment> page = new Page<>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(param.getCurrrentPage());
 
             ShopSiteComment comment = new ShopSiteComment();
-            comment.setLocalId(localId);
-            comment.setType(type);
+            comment.setLocalId(param.getLocalId());
+            comment.setType(param.getType());
             comment.setYn(YnEnum.Normal.getKey());
             comment.setOrderField("created");
             comment.setOrderFieldType("ASC");
@@ -171,8 +170,8 @@ public class ShopSiteCommentController {
     }
 
 
-    @RequestMapping(value = "/del", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete commentVO", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "delete commentVO", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
     String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;

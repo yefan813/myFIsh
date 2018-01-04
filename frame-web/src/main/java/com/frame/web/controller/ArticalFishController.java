@@ -15,6 +15,7 @@ import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.ArticalFishSaveParam;
+import com.frame.web.entity.request.ArtivalFishListParam;
 import io.swagger.annotations.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -56,11 +57,11 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/articalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获列表", httpMethod = "POST", response = String.class, notes = "渔获列表")
     @ResponseBody
-    public String getArticalFishList(HttpServletRequest request, @ApiParam(value = "currrentPage", required = true) @RequestParam(value = "currrentPage", required = true) Integer currrentPage, @RequestBody ArticalFishVO articalFishVO) {
+    public String getArticalFishList(HttpServletRequest request, @RequestBody ArtivalFishListParam artivalFishListParam) {
         RemoteResult result = null;
         try {
-            if (null == articalFishVO) {
-                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSON(articalFishVO));
+            if (null == artivalFishListParam) {
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSON(artivalFishListParam));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
@@ -68,11 +69,11 @@ public class ArticalFishController extends BaseController {
 
 
             Page<ArticalFish> page = new Page<ArticalFish>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(artivalFishListParam.getCurrrentPage());
 
 
             ArticalFish articalFish = new ArticalFish();
-            BeanUtils.copyProperties(articalFish, articalFishVO);
+            BeanUtils.copyProperties(articalFish, artivalFishListParam);
             articalFish.setYn(YnEnum.Normal.getKey());
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
@@ -87,8 +88,8 @@ public class ArticalFishController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "渔获文章详细", httpMethod = "POST", response = String.class, notes = "渔获文章详细")
+    @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "渔获文章详细", httpMethod = "GET", response = String.class, notes = "渔获文章详细")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", name = "articalId", value = "articalId", required = true, dataType = "Long"),
     })
@@ -206,8 +207,8 @@ public class ArticalFishController extends BaseController {
        }
     }
 
-    @RequestMapping(value = "/del", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
     String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;

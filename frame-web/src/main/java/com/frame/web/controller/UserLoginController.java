@@ -6,6 +6,8 @@ import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
 import com.frame.service.UserLoginService;
 import com.frame.service.impl.APNSService;
+import com.frame.web.entity.request.RegistDeviceParam;
+import com.frame.web.entity.request.SendNotiParam;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,23 +75,22 @@ public class UserLoginController extends BaseController {
 	/**
 	 * 注册用户deviceToken接口
 	 * 
-	 * @param userId
-	 * @param deviceToken
+	 * @param param
 	 * @return
 	 */
 	@RequestMapping(value = "/registDeviceToken", method = {  RequestMethod.POST })
 	@ApiOperation(value = "注册设备信息",httpMethod = "POST", response = String.class, notes = "注册设备信息")
-	public @ResponseBody String registDeviceToken(Integer userId, String deviceToken) {
+	public @ResponseBody String registDeviceToken(@RequestBody RegistDeviceParam param) {
 		RemoteResult result = null;
 		try {
-			if (userId == null || StringUtils.isEmpty(deviceToken)) {
+			if (param == null || StringUtils.isEmpty(param.getDeviceToken())) {
 				LOGGER.info("调用registDeviceToken 传入的参数错误");
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
 			UserLogin login = new UserLogin();
-			login.setUserId(userId);
-			login.setDeviceToken(deviceToken);
+			login.setUserId(param.getUserId());
+			login.setDeviceToken(param.getDeviceToken());
 
 			if (userLoginService.registDeviceToken(login) > 0) {
 				LOGGER.info("用户注册deviceToken成功,传入的参数为：[{}]", JSON.toJSONString(login));
@@ -107,17 +108,21 @@ public class UserLoginController extends BaseController {
 	/**
 	 * 发送推送消息接口
 	 * 
-	 * @param msg
-	 * @param deviceToken
 	 * @return
 	 */
 	@RequestMapping(value = "/sendNotifi", method = {  RequestMethod.POST })
-	public @ResponseBody String sendNotifi(String msg, String deviceToken) {
+	@ApiOperation(value = "发送推送消息接口",httpMethod = "POST", response = String.class, notes = "注册设备信息")
+	public @ResponseBody String sendNotifi(@RequestBody SendNotiParam param) {
 		RemoteResult result = null;
+		if(param == null  || StringUtils.isBlank(param.getDeviceToken())){
+			LOGGER.error("发送推送消息接口传入参数错误，参数为:[{}]", JSON.toJSONString(param));
+			result = RemoteResult.failure("0001", "发送推送消息接口传入参数错误:");
+			return JSON.toJSONString(result);
+		}
 		try {
 			List<String> list = Lists.newArrayList();
-			list.add(deviceToken);
-			aPNSService.senPushNotification(list, msg);
+			list.add(param.getDeviceToken());
+			aPNSService.senPushNotification(list, param.getMsg());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());

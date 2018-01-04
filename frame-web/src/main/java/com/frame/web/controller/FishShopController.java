@@ -12,6 +12,7 @@ import com.frame.domain.vo.FishShopVO;
 import com.frame.service.FishShopService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.FishShopListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -53,20 +54,20 @@ public class FishShopController extends BaseController {
     @RequestMapping(value = "/fishShopList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔具店列表", httpMethod = "POST", response = String.class, notes = "渔具店列表")
     @ResponseBody
-    public String getFishShopList(HttpServletRequest request, @RequestParam(value = "currrentPage", required = true)Integer currrentPage ,@RequestBody FishShopVO fishShopVO){
+    public String getFishShopList(HttpServletRequest request, @RequestBody FishShopListParam param){
         RemoteResult result = null;
         try {
-            if (null == fishShopVO) {
-                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】");
+            if (null == param) {
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】",JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
             Page<FishShop> page = new Page<>();
-            page.setCurrentPage(currrentPage);
+            page.setCurrentPage(param.getCurrentPage());
 
             FishShop fishShop = new FishShop();
-            BeanUtils.copyProperties(fishShop,fishShopVO);
+            BeanUtils.copyProperties(fishShop,param);
             fishShop.setYn(YnEnum.Normal.getKey());
             Page<FishShop> res = fishShopService.selectPage(fishShop,page);
             result = RemoteResult.success(res);
@@ -78,8 +79,8 @@ public class FishShopController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/fishShopDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "钓点详细", httpMethod = "POST", response = String.class, notes = "钓点详细")
+    @RequestMapping(value = "/fishShopDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "钓点详细", httpMethod = "GET", response = String.class, notes = "钓点详细")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "siteId", value = "siteId", required = true, dataType = "Integer"),
     })
@@ -148,8 +149,8 @@ public class FishShopController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/del", method = {RequestMethod.POST})
-    @ApiOperation(value = "delete", httpMethod = "POST", response = String.class, notes = "delete commentVO")
+    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
+    @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
         RemoteResult result = null;
 
