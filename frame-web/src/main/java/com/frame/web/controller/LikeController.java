@@ -13,9 +13,9 @@ import com.frame.domain.vo.LikeVO;
 import com.frame.service.ArticalFishService;
 import com.frame.service.LikeService;
 import com.frame.service.UserService;
-import com.frame.web.entity.request.IdParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -128,16 +130,19 @@ public class LikeController {
 
     @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
     @ApiOperation(value = "取消点赞", httpMethod = "DELETE", response = String.class, notes = "取消点赞")
-    public  @ResponseBody String del(HttpServletRequest request, @RequestBody IdParam id) {
+    public  @ResponseBody String del(HttpServletRequest request, @RequestBody LikeVO param) {
         RemoteResult result = null;
         try {
-            if (null == id || id.getId() == null) {
-                LOGGER.error("取消点赞  传入的参数错误 id【{}】", id);
+            if (null == param || param.getSourceId() == null || param.getSourceType() == null || param.getUserId() == null) {
+                LOGGER.error("取消点赞  传入的参数错误 id【{}】", JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
-            int res = likeService.deleteByKey(id.getId());
+            Like query = new Like();
+            BeanUtils.copyProperties(query,param);
+            query.setYn(YnEnum.Normal.getKey());
+            int res = likeService.deleteByCondtion(query);
             if (res > 0) {
                 result = RemoteResult.success("删除点赞成功");
             }

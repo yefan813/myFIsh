@@ -8,6 +8,7 @@ import com.frame.domain.Like;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
 import com.frame.domain.enums.CommentTypeEnum;
+import com.frame.domain.vo.ArticalFishVO;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.LikeService;
@@ -49,23 +50,13 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 
 
     @Override
-    public ArticalFish selectEntryDetail(Long articalFishId) {
+    public ArticalFishListResponse selectEntryDetail(Long articalFishId) {
 
-        ArticalFish fish = articalFishDao.selectEntryDetail(articalFishId);
+        ArticalFishListResponse fish = articalFishDao.selectEntryDetail(articalFishId);
         if (null == fish) {
             return null;
         }
 
-        Like query = new Like();
-        query.setSourceId(fish.getId().longValue());
-        query.setSourceType(CommentTypeEnum.ARTICAL.getKey());
-        query.setYn(YnEnum.Normal.getKey());
-
-        List<Like> res = likeService.selectEntryList(query);
-        if (CollectionUtils.isNotEmpty(res)) {
-            Like like = res.get(0);
-            fish.setLiked(like.getSourceType().longValue());
-        }
         return fish;
     }
 

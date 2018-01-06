@@ -27,7 +27,7 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 
 
 	@Override
-	public ArticalFish selectEntryDetail(Long articalFishId) {
+	public ArticalFishListResponse selectEntryDetail(Long articalFishId) {
 		return select(getNameSpace(SELECT_ENTRY_DETAIL),articalFishId);
 	}
 

@@ -103,7 +103,7 @@ public class ArticalFishController extends BaseController {
             return JSON.toJSONString(result);
         }
 
-        ArticalFish articalFish = articalFishService.selectEntryDetail(param.getArticalId());
+        ArticalFishListResponse articalFish = articalFishService.selectEntryDetail(param.getArticalId());
         if (null == articalFish) {
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", param.getArticalId());
             result = RemoteResult.failure(BusinessCode.FAILED.getCode(),

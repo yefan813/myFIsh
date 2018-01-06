@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ArticalFishDao extends BaseDao<ArticalFish, Long> {
 
-    ArticalFish selectEntryDetail(Long articalFishId);
+    ArticalFishListResponse selectEntryDetail(Long articalFishId);
 
     List<ArticalFishListResponse> selectBaseEntryList(ArticalFish condition);
 

@@ -12,6 +12,7 @@
 		<result property="created" column="created"/>
 		<result property="articalType" column="articalType"/>
 		<result property="waterType" column="waterType"/>
+		<result property="content" column="content"/>
 		<result property="userId" column="userId"/>
 		<association property="user" resultMap="userBaseVO" />
 	</resultMap>
@@ -203,11 +204,36 @@
 
 
 	<!-- 查询,通过条件 -->
-	<select id="selectEntryDetail" parameterType="articalFish" resultType="articalFish">
-		<![CDATA[SELECT]]>
-		<include refid="QUERY_DETAIL_COLUMN_LIST"/>
-		<include refid="QUERY_FROM_TABLE"/>
-		<![CDATA[ where  id = #{ariticalFishId}]]>
+	<select id="selectEntryDetail" parameterType="Long" resultMap="articalFishBaseListMap">
+		<![CDATA[select
+			af.id as id,
+			af.user_id as userId,
+			af.title as title,
+			af.recommends as recommends,
+			af.fish_time as fishTime,
+			af.water_type as waterType,
+			af.bait as bait,
+			af.content as content,
+			af.fish_type as fishType,
+			af.fishing_func as fishingFunc,
+			af.fish_lines as fishLines,
+			af.fish_pole_length as fishPoleLength,
+			af.fish_pole_brand as fishPoleBrand,
+			af.location_address as locationAddress,
+			af.article_type as articleType,
+			af.is_publish as isPublish,
+			af.created,
+			u.nick_name AS nickName,
+			u.avatar_url AS avatarUrl,
+			u.address AS address,
+			tal.likeCount AS likeCount,
+			tc.commentCount as commentCount
+ 			FROM tb_artical_fish af
+ 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
+			LEFT join tb_user u on af.user_id = u.id
+			]]>
+		<![CDATA[ where  af.id  = #{articalFishId}]]>
 	</select>
 
 	<!-- 查询,通过条件 -->
@@ -219,26 +245,14 @@
 			af.recommends as recommends,
 			af.fish_time as fishTime,
 			af.water_type as waterType,
-			af.bait as bait,
-			af.fish_type as fishType,
-			af.fishing_func as fishingFunc,
-			af.fish_lines as fishLines,
-			af.fish_pole_length as fishPoleLength,
-			af.fish_pole_brand as fishPoleBrand,
-			af.location_address as locationAddress,
 			af.article_type as articleType,
-			af.is_publish as isPublish,
-			af.feature,
-			af.created,
-			af.modified,
-			af.yn,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
 			u.address AS address,
 			tal.likeCount AS likeCount,
 			tc.commentCount as commentCount
  			FROM tb_artical_fish af
- 			LEFT join (select artical_id, source_type,count(*) as likeCount from tb_like GROUP BY artical_id,source_type) tal on   tal.artical_id = af.id and tal.source_type=1
+ 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
  			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
 			]]>
@@ -261,7 +275,7 @@
 	<!-- 查询,通过条件 -->
 	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="int">
 		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_artical_fish af
-			LEFT join (select artical_id, source_type,count(*) as likeCount from tb_like GROUP BY artical_id,source_type) tal on   tal.artical_id = af.id and tal.source_type=1
+			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
  			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
 		  ]]>

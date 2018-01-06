@@ -44,6 +44,45 @@ public class ArticalFishVO{
     @ApiModelProperty(hidden = true)
     private String recommends;
 
+    @ApiModelProperty(hidden = true)
+    private Long likeCount;
+    @ApiModelProperty(hidden = true)
+    private Long commentCount;
+    @ApiModelProperty(hidden = true)
+    private Long collectionCount;
+
+    public Long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Long getCollectionCount() {
+        return collectionCount;
+    }
+
+    public void setCollectionCount(Long collectionCount) {
+        this.collectionCount = collectionCount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getContent() {
         return content;
     }
