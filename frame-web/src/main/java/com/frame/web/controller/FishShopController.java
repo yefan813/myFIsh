@@ -13,6 +13,8 @@ import com.frame.service.FishShopService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.FishShopListParam;
+import com.frame.web.entity.request.IdParam;
+import com.frame.web.entity.request.SiteIdParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -79,25 +81,22 @@ public class FishShopController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/fishShopDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "钓点详细", httpMethod = "GET", response = String.class, notes = "钓点详细")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "siteId", value = "siteId", required = true, dataType = "Integer"),
-    })
+    @RequestMapping(value = "/fishShopDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "钓点详细", httpMethod = "POST", response = String.class, notes = "钓点详细")
     @ResponseBody
-    public String getFishShopDetail(HttpServletRequest request,  @RequestParam(value = "siteId", required = true)Long siteId){
+    public String getFishShopDetail(HttpServletRequest request, @RequestBody SiteIdParam param){
 
         RemoteResult result = null;
-        if (null == siteId) {
-            LOGGER.error("getFishShopDetail artical 传入的参数错误 articalId【{}】", siteId);
+        if (null == param || param.getSiteId() == null) {
+            LOGGER.error("getFishShopDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
 
-        FishShop fishShop = fishShopService.selectEntry(siteId);
+        FishShop fishShop = fishShopService.selectEntry(param.getSiteId());
         if(null == fishShop){
-            LOGGER.error("getFishShopDetail artical 传入的参数错误 articalId【{}】", siteId);
+            LOGGER.error("getFishShopDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -151,10 +150,10 @@ public class FishShopController extends BaseController {
 
     @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
     @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
-    public  @ResponseBody String del(HttpServletRequest request, @RequestParam Long id) {
+    public  @ResponseBody String del(HttpServletRequest request, @RequestBody IdParam id) {
         RemoteResult result = null;
 
-        if(null == id ){
+        if(null == id || id.getId() == null){
             LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id );
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
@@ -163,7 +162,7 @@ public class FishShopController extends BaseController {
         try {
 
             //valid fishShop  is valid
-            FishShop fishShop = fishShopService.selectEntry(id);
+            FishShop fishShop = fishShopService.selectEntry(id.getId());
             if(null == fishShop){
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此渔具店不存在");
@@ -171,7 +170,7 @@ public class FishShopController extends BaseController {
             }
 
             FishShop condition = new FishShop();
-            condition.setId(id.intValue());
+            condition.setId(id.getId().intValue());
             condition.setYn(YnEnum.Deleted.getKey());
             int res = fishShopService.updateByKey(condition);
             if(res <= 0 ){

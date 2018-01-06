@@ -4,6 +4,8 @@ package com.frame.domain.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
  * Created by yefan on 2017/7/23.
  */
@@ -33,6 +35,9 @@ public class ArticalFishVO{
     private  String locationAddress;
     @ApiModelProperty(value = "文章内容")
     private  Integer articleType;
+
+    @ApiModelProperty(value = "文章穿件时间")
+    private Date created;
 
 
     @ApiModelProperty(hidden = true)
@@ -179,5 +184,13 @@ public class ArticalFishVO{
 
     public void setMineLiked(Boolean mineLiked) {
         isMineLiked = mineLiked;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

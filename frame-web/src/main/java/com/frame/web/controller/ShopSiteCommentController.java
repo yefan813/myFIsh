@@ -12,6 +12,7 @@ import com.frame.service.FishShopService;
 import com.frame.service.FishSiteService;
 import com.frame.service.ShopSiteCommentService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.IdParam;
 import com.frame.web.entity.request.ShopSiteCommentListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +50,7 @@ public class ShopSiteCommentController {
     @Value("${img.prefix}")
     private String IMAGEPREFIX;
 
-    @RequestMapping(value = "/getComment", method = {RequestMethod.GET})
+    @RequestMapping(value = "/getComment", method = {RequestMethod.POST})
     @ApiOperation(value = "获取comment", httpMethod = "POST", response = String.class, notes = "获取comment")
     public @ResponseBody
     String getCommentByArticalId(HttpServletRequest request, @RequestBody ShopSiteCommentListParam param) {
@@ -173,16 +174,16 @@ public class ShopSiteCommentController {
     @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
     @ApiOperation(value = "delete commentVO", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
-    String del(HttpServletRequest request, @RequestParam Long id) {
+    String del(HttpServletRequest request, @RequestBody IdParam id) {
         RemoteResult result = null;
         try {
-            if (null == id) {
+            if (null == id || id.getId() == null) {
                 LOGGER.error("delete commentVO  传入的参数错误 id【{}】", id);
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
-            int res = shopSiteCommentService.deleteByKey(id);
+            int res = shopSiteCommentService.deleteByKey(id.getId());
             if (res > 0) {
                 result = RemoteResult.success("删除评论成功");
             }

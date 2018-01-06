@@ -19,6 +19,7 @@ import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.ArticalCollectionListParam;
+import com.frame.web.entity.request.CollecttionId;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -154,13 +155,13 @@ public class ArticalCollectionController {
     }
 
 
-    @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.GET})
-    @ApiOperation(value = "cancel artical collection", httpMethod = "GET", response = String.class, notes = "cancle artical collection")
-    public @ResponseBody String cancelArticalCollection(HttpServletRequest request, @RequestParam(value="collectionId",required = true) Long collectionId) {
+    @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.POST})
+    @ApiOperation(value = "cancel artical collection", httpMethod = "POST", response = String.class, notes = "cancle artical collection")
+    public @ResponseBody String cancelArticalCollection(HttpServletRequest request, @RequestBody CollecttionId id) {
         RemoteResult result = null;
 
-        if(null == collectionId ){
-            LOGGER.error("cancleArticlCollection 传入参数错误，传入的参数为:collectionId:[{}]", collectionId );
+        if(null == id || id.getCollectionId() ==null ){
+            LOGGER.error("cancleArticlCollection 传入参数错误，传入的参数为:collectionId:[{}]", JSON.toJSONString(id) );
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -168,7 +169,7 @@ public class ArticalCollectionController {
         try {
 
             //valid user is valid
-            ArticalCollection collection = articalCollectionService.selectEntry(collectionId);
+            ArticalCollection collection = articalCollectionService.selectEntry(id.getCollectionId());
             if(null == collection){
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此收藏不存在");
@@ -176,7 +177,7 @@ public class ArticalCollectionController {
             }
 
             ArticalCollection condition = new ArticalCollection();
-            condition.setId(collectionId.intValue());
+            condition.setId(id.getCollectionId().intValue());
             condition.setYn(YnEnum.Deleted.getKey());
             int res = articalCollectionService.updateByKey(condition);
             if(res <= 0 ){

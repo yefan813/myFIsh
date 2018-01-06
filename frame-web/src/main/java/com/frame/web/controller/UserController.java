@@ -302,37 +302,33 @@ public class UserController extends BaseController {
 	 *
 	 * 获取验证码
 	 *
-	 * @param tel
+	 * @param param
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/getValidCode", method = {RequestMethod.GET})
-	@ApiOperation(value = "注册获取验证		码", httpMethod = "GET", response = String.class, notes = "注册获取验证码")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-
-	})
-	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
+	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
+	@ApiOperation(value = "注册获取验证		码", httpMethod = "POST", response = String.class, notes = "注册获取验证码")
+	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel) ) {
+			if (param==null || StringUtils.isEmpty(param.getTel()) ) {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
 
-			if(tel.length() != 11){
+			if(param.getTel().length() != 11){
 				result = RemoteResult.failure("0001", "请传入正确的电话号码");
 				return JSON.toJSONString(result);
 			}
 
-			boolean existTel = IsExistTel(tel);
+			boolean existTel = IsExistTel(param.getTel());
 			if (existTel) {
-				LOGGER.info("该用户已经注册，手机号为【{}】", tel);
+				LOGGER.info("该用户已经注册，手机号为【{}】", param.getTel());
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户已经注册");
 				return JSON.toJSONString(result);
 			}
 
-			result = taoBaoSmsService.sendValidSMS(tel, System.currentTimeMillis(), SendSMSTypeEnum.REGIST_USER.getKey());
+			result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), SendSMSTypeEnum.REGIST_USER.getKey());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -345,36 +341,33 @@ public class UserController extends BaseController {
 	 *
 	 * 获取忘记密码验证码
 	 *
-	 * @param tel
+	 * @param param
 	 * @return
 	 */
 	@RequestLimit
-	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.GET})
-	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "GET", response = String.class, notes = "获取忘记密码验证码")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String"),
-	})
-	public @ResponseBody String getValidCodeforgetPassword(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
+	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
+	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
+	public @ResponseBody String getValidCodeforgetPassword(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel) ) {
+			if (param==null || StringUtils.isEmpty(param.getTel()) ) {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
 
-			if(tel.length() != 11){
+			if(param.getTel().length() != 11){
 				result = RemoteResult.failure("0001", "请传入正确的电话号码");
 				return JSON.toJSONString(result);
 			}
 
-			boolean existTel = IsExistTel(tel);
+			boolean existTel = IsExistTel(param.getTel());
 			if (!existTel) {
-				LOGGER.info("该用户未注册，手机号为【{}】", tel);
+				LOGGER.info("该用户未注册，手机号为【{}】", param.getTel());
 				result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户未注册");
 				return JSON.toJSONString(result);
 			}
 
-			result = taoBaoSmsService.sendValidSMS(tel, System.currentTimeMillis(), SendSMSTypeEnum.FORGET_PWD.getKey());
+			result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), SendSMSTypeEnum.FORGET_PWD.getKey());
 		} catch (Exception e) {
 			LOGGER.error("失败:" + e.getMessage(), e);
 			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -407,25 +400,22 @@ public class UserController extends BaseController {
 	}
 
 	@RequestLimit
-	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.GET})
-	@ApiOperation(value = "验证手机是否注册", httpMethod = "GET", response = String.class, notes = "验证手机是否注册")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType="query", name = "tel", value = "用户电话", required = true, dataType = "String")
-	})
-	public @ResponseBody String validTelIsExist(HttpServletRequest request ,@RequestParam(value = "tel", required = true) String tel) {
+	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.POST})
+	@ApiOperation(value = "验证手机是否注册", httpMethod = "POST", response = String.class, notes = "验证手机是否注册")
+	public @ResponseBody String validTelIsExist(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
 		RemoteResult result = null;
 		try {
-			if (StringUtils.isEmpty(tel)) {
+			if (param == null || StringUtils.isEmpty(param.getTel())) {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
-			if(tel.length() != 11){
+			if(param.getTel().length() != 11){
 				result = RemoteResult.failure("0001", "请传入正确的电话号码");
 				return JSON.toJSONString(result);
 			}
 
 			User user = new User();
-			user.setTel(tel);
+			user.setTel(param.getTel());
 			user.setYn(YnEnum.Normal.getKey());
 			List<User> users = userService.selectEntryList(user);
 

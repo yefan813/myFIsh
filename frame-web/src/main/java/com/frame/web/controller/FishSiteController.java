@@ -13,6 +13,7 @@ import com.frame.service.FishSiteService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.FishSiteListParam;
+import com.frame.web.entity.request.SiteIdParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -75,25 +76,22 @@ public class FishSiteController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/fishSiteDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "钓点详细", httpMethod = "GET", response = String.class, notes = "钓点详细")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "siteId", value = "siteId", required = true, dataType = "Integer"),
-    })
+    @RequestMapping(value = "/fishSiteDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "钓点详细", httpMethod = "POST", response = String.class, notes = "钓点详细")
     @ResponseBody
-    public String getFishSiteDetail(HttpServletRequest request,  @RequestParam(value = "siteId", required = true)Long siteId){
+    public String getFishSiteDetail(HttpServletRequest request, @RequestBody SiteIdParam param){
 
         RemoteResult result = null;
-        if (null == siteId) {
-            LOGGER.error("getFishSiteDetail artical 传入的参数错误 articalId【{}】", siteId);
+        if (null == param || param.getSiteId() == null) {
+            LOGGER.error("getFishSiteDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
 
-        FishSite articalFish = fishSiteService.selectEntry(siteId);
+        FishSite articalFish = fishSiteService.selectEntry(param.getSiteId());
         if(null == articalFish){
-            LOGGER.error("getFishSiteDetail artical 传入的参数错误 articalId【{}】", siteId);
+            LOGGER.error("getFishSiteDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);

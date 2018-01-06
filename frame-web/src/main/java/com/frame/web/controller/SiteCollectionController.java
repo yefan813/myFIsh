@@ -12,6 +12,7 @@ import com.frame.domain.vo.SiteCollectionVO;
 import com.frame.service.FishSiteService;
 import com.frame.service.SiteCollectionService;
 import com.frame.service.UserService;
+import com.frame.web.entity.request.IdParam;
 import com.frame.web.entity.request.SitCollectionListParam;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -140,16 +141,16 @@ public class SiteCollectionController {
     @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
     @ApiOperation(value = "delete site collection", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
-    String del(HttpServletRequest request, @RequestParam Long id) {
+    String del(HttpServletRequest request, @RequestBody IdParam id) {
         RemoteResult result = null;
         try {
-            if (null == id) {
+            if (null == id || id.getId() ==null) {
                 LOGGER.error("delete site collection  传入的参数错误 id【{}】", id);
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
-            int res = siteCollectionService.deleteByKey(id);
+            int res = siteCollectionService.deleteByKey(id.getId());
             if (res > 0) {
                 result = RemoteResult.success("删除钓点收藏成功");
             }

@@ -16,9 +16,10 @@ import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.ArticalFishSaveParam;
 import com.frame.web.entity.request.ArtivalFishListParam;
+import com.frame.web.entity.request.ActivityIdParam;
+import com.frame.web.entity.request.IdParam;
 import io.swagger.annotations.*;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 /**
  * Created by yefan on 2017/7/18.
@@ -78,7 +78,8 @@ public class ArticalFishController extends BaseController {
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
 
-            Page<ArticalFish> res = articalFishService.selectBaseEntryList(articalFish, page);
+            Page<ArticalFishVO> res = articalFishService.selectList(articalFish, page);
+
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         } catch (Exception e) {
@@ -88,25 +89,23 @@ public class ArticalFishController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "渔获文章详细", httpMethod = "GET", response = String.class, notes = "渔获文章详细")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "articalId", value = "articalId", required = true, dataType = "Long"),
-    })
+
+    @RequestMapping(value = "/articalFishDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "渔获文章详细", httpMethod = "POST", response = String.class, notes = "渔获文章详细")
     @ResponseBody
-    public String getArticalFishDetail(HttpServletRequest request, @RequestParam(value = "articalId", required = true) Long articalId) {
+    public String getArticalFishDetail(HttpServletRequest request, @RequestBody ActivityIdParam param) {
 
         RemoteResult result = null;
-        if (null == articalId) {
-            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
+        if (null == param) {
+            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
 
-        ArticalFish articalFish = articalFishService.selectEntryDetail(articalId);
+        ArticalFish articalFish = articalFishService.selectEntryDetail(param.getArticalId());
         if (null == articalFish) {
-            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", articalId);
+            LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", param.getArticalId());
             result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(),
                     BusinessCode.SUCCESS.getValue());
             return JSON.toJSONString(result);
@@ -210,11 +209,11 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
     @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public @ResponseBody
-    String del(HttpServletRequest request, @RequestParam Long id) {
+    String del(HttpServletRequest request, @RequestBody IdParam param) {
         RemoteResult result = null;
 
-        if (null == id) {
-            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id);
+        if (null == param || param.getId() == null) {
+            LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
@@ -222,7 +221,7 @@ public class ArticalFishController extends BaseController {
         try {
 
             //valid artical fish is valid
-            ArticalFish collection = articalFishService.selectEntry(id);
+            ArticalFish collection = articalFishService.selectEntry(param.getId());
             if (null == collection) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此收藏不存在");
@@ -230,7 +229,7 @@ public class ArticalFishController extends BaseController {
             }
 
             ArticalFish condition = new ArticalFish();
-            condition.setId(id.intValue());
+            condition.setId(param.getId().intValue());
             condition.setYn(YnEnum.Deleted.getKey());
             int res = articalFishService.updateByKey(condition);
             if (res <= 0) {
