@@ -19,7 +19,7 @@ public class Like  extends BaseDomain  {
 	/****/
 
 	/****/
-	private Integer type;
+	private Integer sourceType;
 	/****/
 
 
@@ -33,12 +33,12 @@ public class Like  extends BaseDomain  {
 		return this.sourceId;
 	}
 
-	public Integer getType() {
-		return type;
+	public Integer getSourceType() {
+		return sourceType;
 	}
 
-	public void setType(Integer type) {
-		this.type = type;
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public String toString(){

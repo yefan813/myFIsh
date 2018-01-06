@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by garnett on 2015/11/18.
  */
 @ApiModel
-public class UserBaseVO implements Serializable {
+public class UserBaseVO {
 
     private static final long serialVersionUID = 6723005414893784943L;
 

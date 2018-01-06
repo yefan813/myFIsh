@@ -9,7 +9,7 @@
 	</sql>
 
 	<!-- tb_artical_like 查询列来源表-->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical_like]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_like]]></sql>
 	
 	<!-- 全部条件(更多功能可以通过queryData扩展实现)  -->
 	<sql id="QUERY_WHERE_CLAUSE">
@@ -17,7 +17,7 @@
 			<if test="id != null and id != ''"><![CDATA[AND id = #{id}]]></if>
 			<if test="articalId != null and articalId != ''"><![CDATA[AND artical_id = #{articalId}]]></if>
 			<if test="userId != null and userId != ''"><![CDATA[AND user_id = #{userId}]]></if>
-			<if test="type != null and type != ''"><![CDATA[AND type = #{type}]]></if>
+			<if test="sourceType != null and sourceType != ''"><![CDATA[AND source_type = #{sourceType}]]></if>
 			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
@@ -36,7 +36,7 @@
 		<set>
 			<if test="articalId != null"><![CDATA[artical_id = #{articalId},]]></if>
 			<if test="userId != null"><![CDATA[user_id = #{userId},]]></if>
-			<if test="type != null"><![CDATA[type = #{type},]]></if>
+			<if test="sourceType != null"><![CDATA[source_type = #{sourceType},]]></if>
 			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
 			<if test="created != null"><![CDATA[created = #{created},]]></if>
 			<if test="modified != null"><![CDATA[modified = #{modified},]]></if>
@@ -47,8 +47,8 @@
 	<!-- 插入tb_artical_like记录 -->
 	<insert id="insertEntry" parameterType="articalLike" >
 		<![CDATA[
-			INSERT INTO tb_artical_like (id,artical_id,user_id,type,feature,created,modified,yn)
-			VALUES (#{id},#{articalId},#{userId},#{type},#{feature},#{created},#{modified},#{yn})
+			INSERT INTO tb_like (id,artical_id,user_id,source_type,feature,created,modified,yn)
+			VALUES (#{id},#{articalId},#{userId},#{sourceType},#{feature},#{created},#{modified},#{yn})
 		]]>
 	</insert>
 	
@@ -57,7 +57,7 @@
 
 	<!-- 删除记录,主键IN(array) -->
 	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array" >
-		<![CDATA[DELETE FROM tb_artical_like WHERE id IN]]>
+		<![CDATA[DELETE FROM tb_like WHERE id IN]]>
 		<foreach collection="array" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>
 		</foreach>
@@ -65,13 +65,13 @@
 
 	<!-- 删除,通过条件 -->
 	<update id="deleteByCondtion" parameterType="articalLike" >
-		<![CDATA[DELETE FROM tb_artical_like]]>
+		<![CDATA[DELETE FROM tb_like]]>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</update>
 
 	<!-- 修改记录通过主键 -->
 	<update id="updateByKey" parameterType="articalLike" >
-		<![CDATA[UPDATE tb_artical_like]]>
+		<![CDATA[UPDATE tb_like]]>
 		<include refid="UPDATE_COLUMN_SET"/>
 		<![CDATA[WHERE id = #{id}]]>
 	</update>

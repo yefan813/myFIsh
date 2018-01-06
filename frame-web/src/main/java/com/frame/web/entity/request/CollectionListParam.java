@@ -6,11 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class CollectionListParam {
     @ApiModelProperty(value = "当前页",required = true)
-    private Integer currrentPage;
+    private Integer currentPage;
 
-    @ApiModelProperty(value="文章")
-    /**文章 id**/
-    private Long sourceId;
 
     @ApiModelProperty(value="用户 id")
     /****/
@@ -21,20 +18,12 @@ public class CollectionListParam {
     private Integer sourceType;
 
 
-    public Integer getCurrrentPage() {
-        return currrentPage;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
-    public void setCurrrentPage(Integer currrentPage) {
-        this.currrentPage = currrentPage;
-    }
-
-    public Long getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 
     public Integer getSourceType() {

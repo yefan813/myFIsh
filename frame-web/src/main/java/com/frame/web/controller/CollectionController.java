@@ -91,7 +91,7 @@ public class CollectionController {
 
 
             Page<Collection> page = new Page<Collection>();
-            page.setCurrentPage(listParam.getCurrrentPage());
+            page.setCurrentPage(listParam.getCurrentPage());
 
             CollectionVO articalCollectionVO = new CollectionVO();
             BeanUtils.copyProperties(articalCollectionVO, listParam);

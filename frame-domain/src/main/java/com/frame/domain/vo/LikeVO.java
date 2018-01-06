@@ -24,14 +24,14 @@ public class LikeVO {
 
     /****/
     @ApiModelProperty(value = "1,文章 2 钓点 3渔具店")
-    private Integer type;
+    private Integer sourceType;
 
-    public Integer getType() {
-        return type;
+    public Integer getSourceType() {
+        return sourceType;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
     public Long getSourceId() {

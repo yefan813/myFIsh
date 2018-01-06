@@ -51,7 +51,7 @@ public class LikeController {
     String like(HttpServletRequest request, @RequestBody LikeVO likeVO) {
         RemoteResult result = null;
         try {
-            if (null == likeVO || likeVO.getUserId() == null || likeVO.getSourceId() == null || null == likeVO.getType()) {
+            if (null == likeVO || likeVO.getUserId() == null || likeVO.getSourceId() == null || null == likeVO.getSourceType()) {
                 LOGGER.error("like artical 传入的参数错[{}]", JSON.toJSONString(likeVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
@@ -113,7 +113,7 @@ public class LikeController {
 
             Like like = new Like();
             like.setSourceId(likeVO.getSourceId());
-            like.setType(likeVO.getType());
+            like.setSourceType(likeVO.getSourceType());
             like.setYn(YnEnum.Normal.getKey());
 
             int count = likeService.selectEntryListCount(like);

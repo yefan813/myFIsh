@@ -58,13 +58,13 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 
         Like query = new Like();
         query.setSourceId(fish.getId().longValue());
-        query.setType(CommentTypeEnum.ARTICAL.getKey());
+        query.setSourceType(CommentTypeEnum.ARTICAL.getKey());
         query.setYn(YnEnum.Normal.getKey());
 
         List<Like> res = likeService.selectEntryList(query);
         if (CollectionUtils.isNotEmpty(res)) {
             Like like = res.get(0);
-            fish.setLiked(like.getType().longValue());
+            fish.setLiked(like.getSourceType().longValue());
         }
         return fish;
     }
