@@ -19,6 +19,7 @@ import com.frame.web.entity.request.CollecttionId;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -159,27 +161,29 @@ public class CollectionController {
     @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.POST})
     @ApiOperation(value = "cancel artical collection", httpMethod = "POST", response = String.class, notes = "cancle artical collection")
     public @ResponseBody
-    String cancelArticalCollection(HttpServletRequest request, @RequestBody CollecttionId id) {
+    String cancelArticalCollection(HttpServletRequest request, @RequestBody CollectionVO param) {
         RemoteResult result = null;
 
-        if (null == id || id.getCollectionId() == null) {
-            LOGGER.error("cancleArticlCollection 传入参数错误，传入的参数为:collectionId:[{}]", JSON.toJSONString(id));
+        if (null == param || param.getSourceId() == null || param.getSourceType() == null) {
+            LOGGER.error("cancleArticlCollection 传入参数错误，传入的参数为:collectionId:[{}]", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
         try {
-
+            Collection query = new Collection();
+            BeanUtils.copyProperties(query,param);
+            query.setYn(YnEnum.Normal.getKey());
             //valid user is valid
-            Collection collection = articalCollectionService.selectEntry(id.getCollectionId());
-            if (null == collection) {
+            List<Collection> resList = articalCollectionService.selectEntryList(query);
+            if (CollectionUtils.isEmpty(resList)) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此收藏不存在");
                 return JSON.toJSONString(result);
             }
 
             Collection condition = new Collection();
-            condition.setId(id.getCollectionId().intValue());
+            condition.setId(resList.get(0).getId().intValue());
             condition.setYn(YnEnum.Deleted.getKey());
             int res = articalCollectionService.updateByKey(condition);
             if (res <= 0) {
