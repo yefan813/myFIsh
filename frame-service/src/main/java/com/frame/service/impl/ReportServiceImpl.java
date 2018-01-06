@@ -1,14 +1,14 @@
 package com.frame.service.impl;
 
-import com.frame.dao.CollectionDao;
+import com.frame.dao.ReportDao;
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.ArticalFish;
-import com.frame.domain.Collection;
+import com.frame.domain.Report;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
-import com.frame.domain.vo.CollectionVO;
+import com.frame.domain.vo.ReportVO;
 import com.frame.service.ArticalFishService;
-import com.frame.service.CollectionService;
+import com.frame.service.ReportService;
 import com.frame.service.base.BaseServiceImpl;
 import com.google.common.collect.Lists;
 import org.apache.commons.beanutils.BeanUtils;
@@ -20,50 +20,48 @@ import java.util.List;
 
 
 /**
- * ArticalCollectionServiceImpl业务层实现类
+ * ArticalReportServiceImpl业务层实现类
  *
  * @author yefan
  * @date 2017-11-29 17:02:57
  **/
 
-@Service("collectionService")
-public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> implements CollectionService {
+@Service("reportService")
+public class ReportServiceImpl extends BaseServiceImpl<Report, Long> implements ReportService {
     @Resource
-    private CollectionDao collectionDao;
-
+    private ReportDao reportDao;
     @Resource
     private ArticalFishService articalFishService;
 
-    public BaseDao<Collection, Long> getDao() {
-        return collectionDao;
+    public BaseDao<Report, Long> getDao() {
+        return reportDao;
     }
 
     @Override
-    public Page<ArticalFish> getArticalCollectionById(CollectionVO articalCollectionVO, Page<Collection> page) {
-
+    public Page<ArticalFish> getArticalReportById(ReportVO articalReportVO, Page<Report> page) {
         Page<ArticalFish> articalFishPage = new Page<>();
         articalFishPage.setCurrentPage(page.getCurrentPage());
         articalFishPage.setPageSize(page.getPageSize());
 
         try {
 
-            Collection collection = new Collection();
-            BeanUtils.copyProperties(collection, articalCollectionVO);
-            collection.setYn(YnEnum.Normal.getKey());
-            collection.setOrderField("modified");
-            collection.setOrderFieldType("DESC");
+            Report articalReport = new Report();
+            BeanUtils.copyProperties(articalReport, articalReportVO);
+            articalReport.setYn(YnEnum.Normal.getKey());
+            articalReport.setOrderField("modified");
+            articalReport.setOrderFieldType("DESC");
 
-            page = selectPage(collection, page);
+            page = selectPage(articalReport, page);
 
-            List<Collection> list = page.getResult();
+            List<Report> list = page.getResult();
             if (CollectionUtils.isEmpty(list)) {
                 articalFishPage.setResult(Lists.<ArticalFish>newArrayList());
                 return articalFishPage;
             }
 
-            Long[] articalIds = new Long[]{};
+            Long[] articalIds = new Long[list.size()];
             int index = 0;
-            for (Collection item : list) {
+            for (Report item : list) {
                 articalIds[index] = item.getSourceId();
                 index++;
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.frame.dao.ArticalReportDao">
+<mapper namespace="com.frame.dao.ReportDao">
 
 
 	<!-- 通用查询结果列-->
@@ -20,7 +20,7 @@
 	</sql>
 
 	<!-- 查询列来源表 -->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical_report]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_report]]></sql>
 
 
 
@@ -57,12 +57,12 @@
 		</set>
 	</sql>
 	<!-- 插入记录 -->
-	<insert id="insertArticalReport" parameterType="articalReport" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="articalReport" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical_report
+			INSERT INTO tb_report
  			(artical_id,user_id,report_type,feature,modified,created,yn) 
 			 VALUES 
- 			(#{articalId},#{userId},#{reportType},#{feature},#{modified},#{created},#{yn}) 
+ 			(#{articalId},#{userId},#{reportType},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 
@@ -71,7 +71,7 @@
 
 	<!-- 删除记录,主键IN(array)  -->
 	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
-		 <![CDATA[DELETE FROM tb_artical_report  WHERE id IN]]>
+		 <![CDATA[DELETE FROM tb_report  WHERE id IN]]>
 		 <foreach collection="array" item="id" open="(" separator="," close=")">
 			 <![CDATA[#{id}]]>
 		</foreach>
@@ -79,13 +79,13 @@
 
 	<!--删除,通过条件-->
 	<delete id="deleteByCondtion" parameterType="articalReport">
-		<![CDATA[DELETE FROM tb_artical_report]]>
+		<![CDATA[DELETE FROM tb_report]]>
 			<include refid="QUERY_WHERE_CLAUSE"/>
 	</delete>
 
 	<!--修改记录通过主键-->
 	<update id="updateByKey" parameterType="articalReport">
-		<![CDATA[UPDATE tb_artical_report]]>
+		<![CDATA[UPDATE tb_report]]>
 			<include refid="UPDATE_COLUMN_SET"/>
 			<![CDATA[WHERE id = #{id}]]>
 	</update>

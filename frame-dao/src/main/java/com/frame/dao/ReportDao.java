@@ -6,14 +6,15 @@ package com.frame.dao;
 
 
 import com.frame.dao.base.BaseDao;
-import com.frame.domain.ArticalReport;
+import com.frame.domain.Report;
 
 /**
  * TbArticalReportDao 接口
+ *
  * @author Evan
  * @since 2017-12-07
  */
-public interface ArticalReportDao extends BaseDao<ArticalReport,Long> {
-	//自定义扩展
-	
+public interface ReportDao extends BaseDao<Report, Long> {
+    //自定义扩展
+
 }

@@ -13,23 +13,44 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @date 2017-11-29 16:41:12
  **/
 @ApiModel
-public class ArticalReportVO{
+public class ReportVO{
 
 	@ApiModelProperty(value = "文章 id")
-	private Long articalId;
+	private Long sourceId;
 
 	/****/
 	@ApiModelProperty(value = "用户 id")
 	private Long userId;
 
+	@ApiModelProperty(value = "类型 id")
+	private Integer reportType;
 
 
-	public void setArticalId(Long articalId){
-		this.articalId = articalId;
+	@ApiModelProperty(value = "资源类型")
+	private Integer sourceType;
+
+	public Long getSourceId() {
+		return sourceId;
 	}
 
-	public Long getArticalId(){
-		return this.articalId;
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public Integer getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(Integer reportType) {
+		this.reportType = reportType;
+	}
+
+	public Integer getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public void setUserId(Long userId){
