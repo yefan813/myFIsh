@@ -35,6 +35,9 @@
 		<typeAlias type="com.frame.domain.CommentLike" alias="commentLike"/>
 		<typeAlias type="com.frame.domain.ShopSiteComment" alias="shopSiteComment"/>
 		<typeAlias type="com.frame.domain.SiteCollection" alias="siteCollection"/>
+		<typeAlias type="com.frame.domain.vo.Response.ArticalFishListResponse" alias="articalFishListResponse"/>
+
+
 	</typeAliases>
 
 	<!-- 映射文件路径 -->

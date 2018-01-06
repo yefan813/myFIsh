@@ -10,7 +10,7 @@ import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.img.ImageValidate;
 import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
-import com.frame.domain.vo.ArticalFishVO;
+import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
@@ -57,18 +57,18 @@ public class ArticalFishController extends BaseController {
     @RequestMapping(value = "/articalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获列表", httpMethod = "POST", response = String.class, notes = "渔获列表")
     @ResponseBody
-    public String getArticalFishList(HttpServletRequest request, @RequestBody ArtivalFishListParam artivalFishListParam) {
+    public RemoteResult getArticalFishList(HttpServletRequest request, @RequestBody ArtivalFishListParam artivalFishListParam) {
         RemoteResult result = null;
         try {
             if (null == artivalFishListParam) {
                 LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSON(artivalFishListParam));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
-                return JSON.toJSONString(result);
+                return result;
             }
 
 
-            Page<ArticalFish> page = new Page<ArticalFish>();
+            Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
             page.setCurrentPage(artivalFishListParam.getCurrrentPage());
 
 
@@ -78,15 +78,15 @@ public class ArticalFishController extends BaseController {
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
 
-            Page<ArticalFishVO> res = articalFishService.selectList(articalFish, page);
+            Page<ArticalFishListResponse> res = articalFishService.selectBaseEntryList(articalFish, page);
 
             result = RemoteResult.success(res);
-            return JSON.toJSONString(result);
+            return result;
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
         }
-        return JSON.toJSONString(result);
+        return result;
     }
 
 
@@ -106,8 +106,8 @@ public class ArticalFishController extends BaseController {
         ArticalFish articalFish = articalFishService.selectEntryDetail(param.getArticalId());
         if (null == articalFish) {
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", param.getArticalId());
-            result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(),
-                    BusinessCode.SUCCESS.getValue());
+            result = RemoteResult.failure(BusinessCode.FAILED.getCode(),
+                    BusinessCode.FAILED.getValue());
             return JSON.toJSONString(result);
         }
         result = RemoteResult.success(articalFish);

@@ -191,7 +191,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectBaseEntryList" parameterType="articalFish" resultType="articalFish">
+	<select id="selectBaseEntryList" parameterType="articalFish" resultType="articalFishListResponse">
 		<![CDATA[select
 			af.id,
 			af.user_id as userId,
@@ -211,19 +211,20 @@
 			af.feature,
 			af.created,
 			af.modified,
-			af.yn  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
+			af.yn,
+			u.nick_name AS nickName,
+			u.avatar_url AS avatarUrl,
+			u.address AS address
+			 FROM tb_artical_fish af
+			LEFT  join tb_artical_like al on af.id = al.artical_id
+			LEFT join tb_user u on af.user_id = u.id
+			]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
 			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
-			<if test="bait != null"><![CDATA[AND af.bait = #{bait}]]></if>
-			<if test="fishType != null"><![CDATA[AND af.fish_type = #{fishType}]]></if>
-			<if test="fishingFunc != null"><![CDATA[AND af.fishing_func = #{fishingFunc}]]></if>
-			<if test="fishLines != null"><![CDATA[AND af.fish_lines = #{fishLines}]]></if>
-			<if test="fishPoleLength != null"><![CDATA[AND af.fish_pole_length = #{fishPoleLength}]]></if>
-			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
 			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
 			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
@@ -236,7 +237,10 @@
 
 	<!-- 查询,通过条件 -->
 	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="int">
-		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_artical_fish af LEFT  join tb_artical_like al on af.id = al.artical_id ]]>
+		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_artical_fish af
+		LEFT  join tb_artical_like al on af.id = al.artical_id
+		LEFT join tb_user u on af.user_id = u.id
+		  ]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
 			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>

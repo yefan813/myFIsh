@@ -7,7 +7,7 @@ import com.frame.domain.ArticalFish;
 import com.frame.domain.ArticalLike;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
-import com.frame.domain.vo.ArticalFishVO;
+import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.ArticalLikeService;
 import com.frame.service.UserService;
@@ -68,14 +68,9 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 		return fish;
 	}
 
+
 	@Override
-	public Page<ArticalFishVO> selectList(ArticalFish condtion, Page<ArticalFish> page) {
-
-
-		return null;
-	}
-
-	public Page<ArticalFish> selectBaseEntryList(ArticalFish condition, Page<ArticalFish> page) {
+	public Page<ArticalFishListResponse> selectBaseEntryList(ArticalFish condition, Page<ArticalFishListResponse> page) {
 		try {
 			Class<?> clz = condition.getClass();
 			clz.getMethod("setStartIndex", Integer.class).invoke(condition, page.getStartIndex());

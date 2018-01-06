@@ -3,7 +3,7 @@ package com.frame.dao.impl;
 import com.frame.dao.ArticalFishDao;
 import com.frame.dao.base.BaseDaoImpl;
 import com.frame.domain.ArticalFish;
-import com.frame.domain.common.Page;
+import com.frame.domain.vo.Response.ArticalFishListResponse;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 	}
 
 	@Override
-	public List<ArticalFish> selectBaseEntryList(ArticalFish condition) {
+	public List<ArticalFishListResponse> selectBaseEntryList(ArticalFish condition) {
 		return selectList(getNameSpace(selectBaseEntryList),condition);
 	}
 

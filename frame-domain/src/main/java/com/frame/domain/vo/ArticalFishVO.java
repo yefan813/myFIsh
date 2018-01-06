@@ -41,13 +41,9 @@ public class ArticalFishVO{
 
 
     @ApiModelProperty(hidden = true)
-    private Long liked;  //点赞数量
-    @ApiModelProperty(hidden = true)
-    private Long unliked;
-    @ApiModelProperty(hidden = true)
-    private Boolean isMineLiked; //是否已经点赞
-    @ApiModelProperty(hidden = true)
     private String recommends;
+
+
 
     public String getRecommends() {
         return recommends;
@@ -162,29 +158,6 @@ public class ArticalFishVO{
         this.locationAddress = locationAddress;
     }
 
-    public Long getLiked() {
-        return liked;
-    }
-
-    public void setLiked(Long liked) {
-        this.liked = liked;
-    }
-
-    public Long getUnliked() {
-        return unliked;
-    }
-
-    public void setUnliked(Long unliked) {
-        this.unliked = unliked;
-    }
-
-    public Boolean getMineLiked() {
-        return isMineLiked;
-    }
-
-    public void setMineLiked(Boolean mineLiked) {
-        isMineLiked = mineLiked;
-    }
 
     public Date getCreated() {
         return created;
