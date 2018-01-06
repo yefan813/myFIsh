@@ -9,7 +9,8 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[
 			id,
-			artical_id AS articalId,
+			source_id AS sourceId,
+			source_type as sourceType,
 			user_id AS userId,
 			report_type AS reportType,
 			feature,
@@ -28,7 +29,8 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 			<if test="id!=null and id!=''"><![CDATA[AND id = #{id}]]></if>
-			<if test="articalId!=null and articalId!=''"><![CDATA[AND artical_id = #{articalId}]]></if>
+			<if test="sourceId != null and sourceId != ''"><![CDATA[AND source_id = #{sourceId}]]></if>
+			<if test="sourceType != null and sourceType != ''"><![CDATA[AND source_type = #{sourceType}]]></if>
 			<if test="userId!=null and userId!=''"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="reportType!=null and reportType!=''"><![CDATA[AND report_type = #{reportType}]]></if>
 			<if test="feature!=null and feature!=''"><![CDATA[AND feature = #{feature}]]></if>
@@ -47,7 +49,8 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-			<if test="articalId!=null and articalId!=''"><![CDATA[artical_id = #{articalId},]]></if>
+			<if test="sourceId!=null and sourceId!=''"><![CDATA[source_id = #{sourceId},]]></if>
+			<if test="sourceType != null"><![CDATA[source_type = #{sourceType},]]></if>
 			<if test="userId!=null and userId!=''"><![CDATA[user_id = #{userId},]]></if>
 			<if test="reportType!=null and reportType!=''"><![CDATA[report_type = #{reportType},]]></if>
 			<if test="feature!=null and feature!=''"><![CDATA[feature = #{feature},]]></if>
@@ -60,9 +63,9 @@
 	<insert id="insertEntry" parameterType="articalReport" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_report
- 			(artical_id,user_id,report_type,feature,modified,created,yn) 
+ 			(source_id,source_type,user_id,report_type,feature,modified,created,yn)
 			 VALUES 
- 			(#{articalId},#{userId},#{reportType},#{feature},now(),now(),#{yn})
+ 			(#{sourceId},#{sourceType},#{userId},#{reportType},#{feature},now(),now(),#{yn})
 		]]>
 	</insert>
 
