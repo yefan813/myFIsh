@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class ArtivalFishListParam {
     @ApiModelProperty(value="当前页",required = true)
-    private Integer currrentPage;
+    private Integer currentPage;
 
     @ApiModelProperty(value="文章")
     /**文章 id**/
@@ -16,12 +16,12 @@ public class ArtivalFishListParam {
     /****/
     private Long userId;
 
-    public Integer getCurrrentPage() {
-        return currrentPage;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
-    public void setCurrrentPage(Integer currrentPage) {
-        this.currrentPage = currrentPage;
+    public void setCurrentPage(Integer currrentPage) {
+        this.currentPage = currrentPage;
     }
 
     public Long getArticalId() {

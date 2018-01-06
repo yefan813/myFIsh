@@ -9,22 +9,30 @@ import com.frame.domain.base.BaseDomain;
  * @author yefan
  * @date 2017-11-29 16:41:12
  **/
-public class ArticalCollection  extends BaseDomain  {
+public class Collection  extends BaseDomain  {
 
 	/****/
-	private Long articalId;
+	private Long sourceId;
 	/****/
 	private Long userId;
 
+	private Integer sourceType;
 
 
-
-	public void setArticalId(Long articalId){
-		this.articalId = articalId;
+	public Long getSourceId() {
+		return sourceId;
 	}
 
-	public Long getArticalId(){
-		return this.articalId;
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public Integer getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public void setUserId(Long userId){

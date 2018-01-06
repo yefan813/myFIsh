@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.frame.dao.ArticalFishDao">
+	
+	<resultMap id="articalFishBaseListMap" type="ArticalFishListResponse">
+		<association property="user" javaType="com.frame.domain.vo.UserBaseVO">
+			<result property="nickName" column="nickName"/>
+			<result property="avatarUrl" column="avatarUrl"/>
+			<result property="address" column="address"/>
+		</association>
+	</resultMap>
 
 	<!-- groupon 所有查询列 -->
 	<sql id="QUERY_BASE_COLUMN_LIST">
@@ -122,7 +130,7 @@
 	</sql>
 
 	<!-- 插入team记录 -->
-	<insert id="insertEntry" parameterType="artical" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="articalFish" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_artical_fish (user_id,title,recommends,fish_time,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
 			VALUES (#{userId},#{title},#{recommends},#{fishTime},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
@@ -191,7 +199,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectBaseEntryList" parameterType="articalFish" resultType="articalFishListResponse">
+	<select id="selectBaseEntryList" parameterType="articalFish" resultMap="articalFishBaseListMap">
 		<![CDATA[select
 			af.id,
 			af.user_id as userId,
@@ -214,9 +222,12 @@
 			af.yn,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
-			u.address AS address
-			 FROM tb_artical_fish af
-			LEFT  join tb_artical_like al on af.id = al.artical_id
+			u.address AS address,
+			tal.likeCount,
+			tc.commentCount
+ 			FROM tb_artical_fish af
+ 			LEFT join (select artical_id, 'type',count(*) as likeCount from tb_artical_like GROUP BY artical_id) tal on   tal.artical_id = af.id and tal.type=1
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
 			]]>
 		<where>
@@ -238,8 +249,9 @@
 	<!-- 查询,通过条件 -->
 	<select id="selectBaseEntryListCount" parameterType="articalFish" resultType="int">
 		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_artical_fish af
-		LEFT  join tb_artical_like al on af.id = al.artical_id
-		LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select artical_id, 'type',count(*) as likeCount from tb_artical_like GROUP BY artical_id) tal on   tal.artical_id = af.id and tal.type=1
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
+			LEFT join tb_user u on af.user_id = u.id
 		  ]]>
 		<where>
 			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>

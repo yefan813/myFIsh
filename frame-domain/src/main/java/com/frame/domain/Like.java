@@ -10,10 +10,10 @@ import com.frame.domain.base.BaseDomain;
  * @author yefan
  * @date 2017-11-29 16:41:12
  **/
-public class ArticalLike  extends BaseDomain  {
+public class Like  extends BaseDomain  {
 
 	/****/
-	private Long articalId;
+	private Long sourceId;
 
 	private Long userId;
 	/****/
@@ -25,12 +25,12 @@ public class ArticalLike  extends BaseDomain  {
 
 
 
-	public void setArticalId(Long articalId){
-		this.articalId = articalId;
+	public void setSourceId(Long articalId){
+		this.sourceId = articalId;
 	}
 
-	public Long getArticalId(){
-		return this.articalId;
+	public Long getSourceId(){
+		return this.sourceId;
 	}
 
 	public Integer getType() {

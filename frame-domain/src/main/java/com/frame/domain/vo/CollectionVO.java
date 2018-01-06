@@ -13,24 +13,33 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @date 2017-11-29 16:41:12
  **/
 @ApiModel
-public class ArticalCollectionVO{
+public class CollectionVO{
 
 	@ApiModelProperty(value="文章")
 	/**文章 id**/
-	private Long articalId;
+	private Long sourceId;
 
 	@ApiModelProperty(value="用户 id")
 	/****/
 	private Long userId;
 
+	private Integer sourceType;
 
 
-	public void setArticalId(Long articalId){
-		this.articalId = articalId;
+	public Long getSourceId() {
+		return sourceId;
 	}
 
-	public Long getArticalId(){
-		return this.articalId;
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public Integer getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	public void setUserId(Long userId){

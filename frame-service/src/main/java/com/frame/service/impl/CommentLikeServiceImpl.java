@@ -1,10 +1,8 @@
 package com.frame.service.impl;
 
 import com.frame.dao.CommentLikeDao;
-import com.frame.domain.ArticalLike;
 import com.frame.domain.CommentLike;
 import com.frame.domain.base.YnEnum;
-import com.frame.domain.vo.ArticalLikeVO;
 import com.frame.domain.vo.CommentLikeVO;
 import com.frame.service.CommentLikeService;
 import com.frame.dao.base.BaseDao;

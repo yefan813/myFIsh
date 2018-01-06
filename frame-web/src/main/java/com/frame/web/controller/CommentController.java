@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * 文章评论相关接口
+ * 评论相关接口
  */
 
 @Controller
@@ -76,6 +76,7 @@ public class CommentController extends  BaseController {
 
             Comment comment = new Comment();
             comment.setTopicId(param.getTopicId());
+            comment.setTopicType(param.getType());
             comment.setYn(YnEnum.Normal.getKey());
             comment.setOrderField("created");
             comment.setOrderFieldType("ASC");
@@ -133,6 +134,7 @@ public class CommentController extends  BaseController {
 
             comment.setFromUserName(fromUser.getNickName());
             comment.setFromUserAvtor(fromUser.getAvatarUrl());
+            comment.setTopicType(commentVO.getTopicType());
             comment.setYn(YnEnum.Normal.getKey());
             comment.setReView(false);                            //default is false;
 

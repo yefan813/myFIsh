@@ -6,14 +6,15 @@ package com.frame.dao;
 
 
 import com.frame.dao.base.BaseDao;
-import com.frame.domain.SiteCollection;
+import com.frame.domain.Like;
 
 /**
- * TbSiteCollectionDao 接口
+ * TbArticalLikeDao 接口
+ *
  * @author Evan
  * @since 2017-12-07
  */
-public interface SiteCollectionDao extends BaseDao<SiteCollection,Long> {
-	//自定义扩展
-	
+public interface LikeDao extends BaseDao<Like, Long> {
+    //自定义扩展
+
 }

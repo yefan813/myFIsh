@@ -69,7 +69,7 @@ public class ArticalFishController extends BaseController {
 
 
             Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
-            page.setCurrentPage(artivalFishListParam.getCurrrentPage());
+            page.setCurrentPage(artivalFishListParam.getCurrentPage());
 
 
             ArticalFish articalFish = new ArticalFish();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.frame.dao.ArticalCollectionDao">
+<mapper namespace="com.frame.dao.CollectionDao">
 
 
 	<!-- 通用查询结果列-->
@@ -9,8 +9,9 @@
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[
 			id,
-			artical_id AS articalId,
+			source_id AS sourceId,
 			user_id AS userId,
+			source_type AS sourceType,
 			feature,
 			modified,
 			created,
@@ -19,7 +20,7 @@
 	</sql>
 
 	<!-- 查询列来源表 -->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_artical_collection]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_collection]]></sql>
 
 
 
@@ -27,7 +28,8 @@
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
 			<if test="id!=null and id!=''"><![CDATA[AND id = #{id}]]></if>
-			<if test="articalId!=null and articalId!=''"><![CDATA[AND artical_id = #{articalId}]]></if>
+			<if test="sourceId!=null and sourceId!=''"><![CDATA[AND source_id = #{sourceId}]]></if>
+			<if test="sourceType!=null and sourceType!=''"><![CDATA[AND source_type = #{sourceType}]]></if>
 			<if test="userId!=null and userId!=''"><![CDATA[AND user_id = #{userId}]]></if>
 			<if test="feature!=null and feature!=''"><![CDATA[AND feature = #{feature}]]></if>
 			<if test="modified!=null and modified!=''"><![CDATA[AND modified = #{modified}]]></if>
@@ -45,7 +47,8 @@
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
-			<if test="articalId!=null and articalId!=''"><![CDATA[artical_id = #{articalId},]]></if>
+			<if test="sourceId!=null and sourceId!=''"><![CDATA[source_id = #{sourceId},]]></if>
+			<if test="sourceType!=null and sourceType!=''"><![CDATA[source_type = #{sourceType},]]></if>
 			<if test="userId!=null and userId!=''"><![CDATA[user_id = #{userId},]]></if>
 			<if test="feature!=null and feature!=''"><![CDATA[feature = #{feature},]]></if>
 			<if test="modified!=null"><![CDATA[modified = #{modified},]]></if>
@@ -56,10 +59,10 @@
 	<!-- 插入记录 -->
 	<insert id="insertArticalCollection" parameterType="articalCollection" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical_collection
- 			(artical_id,user_id,feature,modified,created,yn) 
+			INSERT INTO tb_collection
+ 			(source_id,source_type,user_id,feature,modified,created,yn)
 			 VALUES 
- 			(#{articalId},#{userId},#{feature},#{modified},#{created},#{yn}) 
+ 			(#{sourceId},#{sourceType},#{userId},#{feature},#{modified},#{created},#{yn})
 		]]>
 	</insert>
 
@@ -68,27 +71,27 @@
 
 	<!-- 删除记录,主键IN(array)  -->
 	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
-		 <![CDATA[DELETE FROM tb_artical_collection  WHERE id IN]]>
+		 <![CDATA[DELETE FROM tb_collection  WHERE id IN]]>
 		 <foreach collection="array" item="id" open="(" separator="," close=")">
 			 <![CDATA[#{id}]]>
 		</foreach>
 	</delete>
 
 	<!--删除,通过条件-->
-	<delete id="deleteByCondtion" parameterType="articalCollection">
-		<![CDATA[DELETE FROM tb_artical_collection]]>
+	<delete id="deleteByCondtion" parameterType="collection">
+		<![CDATA[DELETE FROM tb_collection]]>
 			<include refid="QUERY_WHERE_CLAUSE"/>
 	</delete>
 
 	<!--修改记录通过主键-->
-	<update id="updateByKey" parameterType="articalCollection">
-		<![CDATA[UPDATE tb_artical_collection]]>
+	<update id="updateByKey" parameterType="collection">
+		<![CDATA[UPDATE tb_collection]]>
 			<include refid="UPDATE_COLUMN_SET"/>
 			<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="articalCollection">
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="collection">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -99,7 +102,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectEntryList" parameterType="articalCollection" resultType="articalCollection">
+	<select id="selectEntryList" parameterType="collection" resultType="collection">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -108,7 +111,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件-->
-	<select id="selectEntryListCount" parameterType="articalCollection" resultType="int">
+	<select id="selectEntryListCount" parameterType="collection" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>

@@ -34,6 +34,7 @@ public class ArticalFishVO{
     @ApiModelProperty(hidden = true)
     private  String locationAddress;
     @ApiModelProperty(value = "文章内容")
+    private String content;
     private  Integer articleType;
 
     @ApiModelProperty(value = "文章穿件时间")
@@ -43,7 +44,13 @@ public class ArticalFishVO{
     @ApiModelProperty(hidden = true)
     private String recommends;
 
+    public String getContent() {
+        return content;
+    }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getRecommends() {
         return recommends;
