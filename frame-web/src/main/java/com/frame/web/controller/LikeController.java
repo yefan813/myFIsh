@@ -128,8 +128,8 @@ public class LikeController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/del", method = {RequestMethod.DELETE})
-    @ApiOperation(value = "取消点赞", httpMethod = "DELETE", response = String.class, notes = "取消点赞")
+    @RequestMapping(value = "/del", method = {RequestMethod.POST})
+    @ApiOperation(value = "取消点赞", httpMethod = "POST", response = String.class, notes = "取消点赞")
     public  @ResponseBody String del(HttpServletRequest request, @RequestBody LikeVO param) {
         RemoteResult result = null;
         try {

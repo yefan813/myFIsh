@@ -30,7 +30,6 @@
 		<typeAlias type="com.frame.domain.Report" alias="articalReport"/>
 		<typeAlias type="com.frame.domain.Collection" alias="articalCollection"/>
 		<typeAlias type="com.frame.domain.Like" alias="articalLike"/>
-		<typeAlias type="com.frame.domain.ShopSiteComment" alias="shopSiteComment"/>
 		<typeAlias type="com.frame.domain.vo.Response.ArticalFishListResponse" alias="articalFishListResponse"/>
 
 
@@ -46,7 +45,6 @@
 		<mapper resource="sqlmap/Comment.xml" />
 		<mapper resource="sqlmap/FishShop.xml" />
 		<mapper resource="sqlmap/FishSite.xml" />
-		<mapper resource="sqlmap/ShopSiteComment.xml" />
 		<mapper resource="sqlmap/User.xml" />
 		<mapper resource="sqlmap/UserAuths.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />

@@ -15,7 +15,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @ApiModel
 public class CollectionVO{
 
-	@ApiModelProperty(value="文章")
+	@ApiModelProperty(value="来源id")
 	/**文章 id**/
 	private Long sourceId;
 

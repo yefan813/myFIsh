@@ -57,7 +57,7 @@
 		</set>
 	</sql>
 	<!-- 插入记录 -->
-	<insert id="insertArticalCollection" parameterType="articalCollection" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertEntry" parameterType="articalCollection" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO tb_collection
  			(source_id,source_type,user_id,feature,modified,created,yn)
@@ -78,20 +78,20 @@
 	</delete>
 
 	<!--删除,通过条件-->
-	<delete id="deleteByCondtion" parameterType="collection">
+	<delete id="deleteByCondtion" parameterType="articalCollection">
 		<![CDATA[DELETE FROM tb_collection]]>
 			<include refid="QUERY_WHERE_CLAUSE"/>
 	</delete>
 
 	<!--修改记录通过主键-->
-	<update id="updateByKey" parameterType="collection">
+	<update id="updateByKey" parameterType="articalCollection">
 		<![CDATA[UPDATE tb_collection]]>
 			<include refid="UPDATE_COLUMN_SET"/>
 			<![CDATA[WHERE id = #{id}]]>
 	</update>
 
 	<!-- 查询,通过主键IN(array) -->
-	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="collection">
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="articalCollection">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -102,7 +102,7 @@
 	</select>
 
 	<!-- 查询,通过条件 -->
-	<select id="selectEntryList" parameterType="collection" resultType="collection">
+	<select id="selectEntryList" parameterType="articalCollection" resultType="articalCollection">
 		<![CDATA[SELECT]]>
 		<include refid="QUERY_COLUMN_LIST"/>
 		<include refid="QUERY_FROM_TABLE"/>
@@ -111,7 +111,7 @@
 	</select>
 
 	<!-- 总数查询,通过条件-->
-	<select id="selectEntryListCount" parameterType="collection" resultType="int">
+	<select id="selectEntryListCount" parameterType="articalCollection" resultType="int">
 		<![CDATA[SELECT COUNT(id) AS dataCount]]>
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
