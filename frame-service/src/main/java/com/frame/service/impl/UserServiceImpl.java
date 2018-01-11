@@ -298,6 +298,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		if(StringUtils.isNotEmpty(user.getNickName())){
 			if(dBUser == null || StringUtils.isEmpty(dBUser.getTel())){
 				result =  RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
+				return result;
 			}
 		}
 		
