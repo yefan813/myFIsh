@@ -307,7 +307,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			if (null != user.getAvatarUrl()) {
 				user.setAvatarUrl(IMAGEPREFIX + user.getAvatarUrl());
 			}
-			result.setData(user);
+			result.setData(selectEntry(user.getId().longValue()));
 		} else {
 			LOGGER.info("用户编辑失败,传入的参数为：[{}]", JSON.toJSONString(user));
 			result = RemoteResult.failure("0001", "用户编辑失败,传入的参数为无效");

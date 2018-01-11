@@ -67,50 +67,22 @@ public class UserController extends BaseController {
 	/**
 	 * 编辑用户信息接口
 	 * 
-	 * @param imgFile
 	 * @return
 	 */
 	@RequestMapping(value = "/editUserInfo", method = {RequestMethod.POST})
 	@ApiOperation(value = "编辑用户信息接口", httpMethod = "POST", response = String.class, notes = "编辑用户信息接口")
 
-	public @ResponseBody String editUserInfo(HttpServletRequest request ,@RequestBody UserInfoParam userInfoParam,
-											 @ApiParam(value = "imgFile", required = false) MultipartFile imgFile) {
+	public @ResponseBody String editUserInfo(HttpServletRequest request ,@RequestBody UserInfoParam userInfoParam) {
 		RemoteResult result = null;
 		try{
-			String imgUrl = null;
 			if (null == userInfoParam || userInfoParam.getId() == null) {
 				LOGGER.info("调用editUserInfo 传入的参数错误,参数[{}]" , JSON.toJSONString(userInfoParam));
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
-			if (imgFile != null && imgFile.getSize() > 0) {
-				try {
-					if (imgFile.getBytes() != null && imgFile.getBytes().length > 0) {
-						Result r = ImageValidate.validate4Upload(imgFile);
-						if (r.isSuccess()) {
-							ImgDealMsg re = imgSysService.uploadByteImg(imgFile.getBytes(), "fish");
-							if (re != null && re.isSuccess()) {
-								// 上传成功
-								imgUrl = (String) re.getMsg();
-								// 上传成功设置template 图片路径
-							} else {
-								// 上传文件失败，在页面提示
-								result = RemoteResult.failure("0001", "头像上传失败！");
-								return dealJosnP("", result);
-							}
-						} else {
-							result = RemoteResult.failure("0001", r.getResultCode());
-							return dealJosnP("", result);
-						}
-					}
-				} catch (Exception e) {
-					LOGGER.error("失败:" + e.getMessage(), e);
-					result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-				}
-			}
 			User user = new User();
 			user.setId(userInfoParam.getId());
-			user.setAvatarUrl(imgUrl);
+			user.setAvatarUrl(userInfoParam.getAvatarUrl());
 			user.setNickName(userInfoParam.getNikeName());
 			user.setSex(userInfoParam.getSex());
 			if(null != userInfoParam.getBirthday()){
