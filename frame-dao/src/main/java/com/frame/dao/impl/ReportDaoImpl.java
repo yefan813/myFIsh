@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("reportDao")
 public class ReportDaoImpl extends BaseDaoImpl<Report, Long> implements ReportDao {
-    private final static String NAMESPACE = "com.frame.dao.ArticalReportDao.";
+    private final static String NAMESPACE = "com.frame.dao.ReportDao.";
 
 
     @Override

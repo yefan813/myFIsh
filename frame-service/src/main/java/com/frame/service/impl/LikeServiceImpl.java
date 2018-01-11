@@ -27,8 +27,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  **/
 
 @Service("likeService")
-public class ArticalLikeServiceImpl extends BaseServiceImpl<Like, Long> implements LikeService {
-    private static final Logger LOGGER = getLogger(ArticalLikeServiceImpl.class);
+public class LikeServiceImpl extends BaseServiceImpl<Like, Long> implements LikeService {
+    private static final Logger LOGGER = getLogger(LikeServiceImpl.class);
 
     @Resource
     private LikeDao likeDao;

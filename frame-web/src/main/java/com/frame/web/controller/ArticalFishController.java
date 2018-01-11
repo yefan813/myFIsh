@@ -192,6 +192,7 @@ public class ArticalFishController extends BaseController {
            if (null != fishSaveParam.getFishTime()) {
                articalFish.setFishTime(fishSaveParam.getFishTime());
            }
+           articalFish.setIsPublish(0);
            articalFish.setYn(YnEnum.Normal.getKey());
            int res = articalFishService.insertEntry(articalFish);
            if (res <= 0) {

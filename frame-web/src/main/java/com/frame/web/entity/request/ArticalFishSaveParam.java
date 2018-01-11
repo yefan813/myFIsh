@@ -26,8 +26,6 @@ public class ArticalFishSaveParam {
     @ApiModelProperty(required = true)
     private  Integer articleType;
     @ApiModelProperty(required = true)
-    private Integer isPublish;
-    @ApiModelProperty(required = true)
     private String content;
     @ApiModelProperty(required = true)
     private String recommends;
@@ -144,14 +142,6 @@ public class ArticalFishSaveParam {
 
     public void setArticleType(Integer articleType) {
         this.articleType = articleType;
-    }
-
-    public Integer getIsPublish() {
-        return isPublish;
-    }
-
-    public void setIsPublish(Integer isPublish) {
-        this.isPublish = isPublish;
     }
 
     public String getContent() {
