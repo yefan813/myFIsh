@@ -4,18 +4,19 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
-public class ActivityIdParam {
-    @ApiModelProperty(value = "文章 id")
-    private Long articalId;
-    @ApiModelProperty(value = "user id")
+public class SiteSearchParam {
+    @ApiModelProperty(value = "钓点 id")
+    private Long siteId;
+
+    @ApiModelProperty(value = "用户 ID")
     private Long userId;
 
-    public Long getArticalId() {
-        return articalId;
+    public Long getSiteId() {
+        return siteId;
     }
 
-    public void setArticalId(Long articalId) {
-        this.articalId = articalId;
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
     }
 
     public Long getUserId() {

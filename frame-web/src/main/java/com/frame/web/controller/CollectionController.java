@@ -48,7 +48,7 @@ public class CollectionController {
     private ArticalFishService articalFishService;
 
     @Resource
-    private CollectionService articalCollectionService;
+    private CollectionService collectionService;
 
     @Resource
     private UserService userService;
@@ -96,7 +96,7 @@ public class CollectionController {
             CollectionVO articalCollectionVO = new CollectionVO();
             BeanUtils.copyProperties(articalCollectionVO, listParam);
 
-            Page<ArticalFish> res = articalCollectionService.getArticalCollectionById(articalCollectionVO, page);
+            Page<ArticalFish> res = collectionService.getArticalCollectionById(articalCollectionVO, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         } catch (Exception e) {
@@ -135,14 +135,8 @@ public class CollectionController {
                 return JSON.toJSONString(result);
             }
 
-            Collection articalCollection = new Collection();
-            BeanUtils.copyProperties(articalCollection, collectionVO);
 
-            articalCollection.setYn(YnEnum.Normal.getKey());
-            articalCollection.setSourceType(collectionVO.getSourceType());
-            articalCollection.setCreated(new Date());
-            articalCollection.setModified(new Date());
-            int res = articalCollectionService.insertEntry(articalCollection);
+            int res = collectionService.saveOrUpdate(collectionVO);
             if (res <= 0) {
                 result = RemoteResult.failure("0002", "artical collection is failed,server internal error");
             } else {
@@ -158,7 +152,7 @@ public class CollectionController {
     }
 
 
-    @RequestMapping(value = "/cancelArticalCollection", method = {RequestMethod.POST})
+    @RequestMapping(value = "/cancelCollection", method = {RequestMethod.POST})
     @ApiOperation(value = "cancel artical collection", httpMethod = "POST", response = String.class, notes = "cancle artical collection")
     public @ResponseBody
     String cancelArticalCollection(HttpServletRequest request, @RequestBody CollectionVO param) {
@@ -175,17 +169,14 @@ public class CollectionController {
             BeanUtils.copyProperties(query,param);
             query.setYn(YnEnum.Normal.getKey());
             //valid user is valid
-            List<Collection> resList = articalCollectionService.selectEntryList(query);
+            List<Collection> resList = collectionService.selectEntryList(query);
             if (CollectionUtils.isEmpty(resList)) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         "此收藏不存在");
                 return JSON.toJSONString(result);
             }
 
-            Collection condition = new Collection();
-            condition.setId(resList.get(0).getId().intValue());
-            condition.setYn(YnEnum.Deleted.getKey());
-            int res = articalCollectionService.updateByKey(condition);
+            int res = collectionService.deleteByKey(resList.get(0).getId().longValue());
             if (res <= 0) {
                 result = RemoteResult.failure("0002", "artical collection cancel is failed,server internal error");
             } else {

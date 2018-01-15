@@ -4,6 +4,7 @@ import com.frame.domain.ArticalFish;
 import com.frame.domain.Collection;
 import com.frame.domain.common.Page;
 import com.frame.domain.vo.CollectionVO;
+import com.frame.domain.vo.LikeVO;
 import com.frame.service.base.BaseService;
 
 
@@ -17,6 +18,10 @@ import com.frame.service.base.BaseService;
 public interface CollectionService extends BaseService<Collection, Long> {
 
     Page<ArticalFish> getArticalCollectionById(CollectionVO articalCollectionVO, Page<Collection> page);
+
+
+    int saveOrUpdate(CollectionVO collectionVO);
+
 
 
 }

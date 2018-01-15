@@ -42,6 +42,7 @@ public class LikeServiceImpl extends BaseServiceImpl<Like, Long> implements Like
         try {
             Like query = new Like();
             query.setSourceId(likeVO.getSourceId());
+            query.setSourceType(likeVO.getSourceType());
             query.setUserId(likeVO.getUserId());
 
             List<Like> list = likeDao.selectEntryList(query);

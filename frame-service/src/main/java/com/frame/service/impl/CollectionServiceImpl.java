@@ -12,10 +12,11 @@ import com.frame.service.CollectionService;
 import com.frame.service.base.BaseServiceImpl;
 import com.google.common.collect.Lists;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,6 +37,38 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
 
     public BaseDao<Collection, Long> getDao() {
         return collectionDao;
+    }
+
+
+    @Override
+    public int saveOrUpdate(CollectionVO collectionVO) {
+        try {
+            Collection query = new Collection();
+            query.setSourceId(collectionVO.getSourceId());
+            query.setSourceType(collectionVO.getSourceType());
+            query.setUserId(collectionVO.getUserId());
+
+            List<Collection> list = collectionDao.selectEntryList(query);
+            Collection collection = null;
+            if (CollectionUtils.isEmpty(list)) {
+                collection = new Collection();
+                BeanUtils.copyProperties(collection, collectionVO);
+                collection.setYn(YnEnum.Normal.getKey());
+                collection.setCreated(new Date());
+                collection.setModified(new Date());
+            } else {
+                Collection exist = list.get(0);
+
+                collection = new Collection();
+                BeanUtils.copyProperties(collection, collectionVO);
+                collection.setId(exist.getId());
+                collection.setModified(new Date());
+            }
+            return saveOrUpdate(collection);
+        } catch (Exception e) {
+            LOGGER.error("异常", e);
+            return 0;
+        }
     }
 
     @Override
@@ -78,4 +111,6 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
 
         return articalFishPage;
     }
+
+
 }

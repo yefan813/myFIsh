@@ -66,8 +66,6 @@ public class ArticalFishController extends BaseController {
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return result;
             }
-
-
             Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
             page.setCurrentPage(artivalFishListParam.getCurrentPage());
 
@@ -103,7 +101,7 @@ public class ArticalFishController extends BaseController {
             return JSON.toJSONString(result);
         }
 
-        ArticalFishListResponse articalFish = articalFishService.selectEntryDetail(param.getArticalId());
+        ArticalFishListResponse articalFish = articalFishService.selectEntryDetail(param.getArticalId(),param.getUserId());
         if (null == articalFish) {
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", param.getArticalId());
             result = RemoteResult.failure(BusinessCode.FAILED.getCode(),

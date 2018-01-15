@@ -11,8 +11,10 @@ public class ArticalFishListResponse extends ArticalFishVO {
 
     private UserBaseVO user;
 
-    private Long likeCount;
-    private Long commentCount;
+    private Long likeCount = 0l;
+    private Long commentCount = 0l;
+    private Boolean isCollectioned = false;
+    private Boolean isLiked = false;
 
 
     public UserBaseVO getUser() {
@@ -37,5 +39,21 @@ public class ArticalFishListResponse extends ArticalFishVO {
 
     public void setCommentCount(Long commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public Boolean isCollectioned() {
+        return isCollectioned;
+    }
+
+    public void setCollectioned(Boolean collectioned) {
+        isCollectioned = collectioned;
+    }
+
+    public Boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(Boolean liked) {
+        isLiked = liked;
     }
 }

@@ -6,7 +6,9 @@ import com.frame.domain.ArticalFish;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository("articalFishDao")
 public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implements ArticalFishDao {
@@ -27,8 +29,11 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 
 
 	@Override
-	public ArticalFishListResponse selectEntryDetail(Long articalFishId) {
-		return select(getNameSpace(SELECT_ENTRY_DETAIL),articalFishId);
+	public ArticalFishListResponse selectEntryDetail(Long articalFishId,Long userId) {
+		Map<String,Long> param = new HashMap<>();
+		param.put("articalFishId",articalFishId);
+		param.put("userId",userId);
+		return select(getNameSpace(SELECT_ENTRY_DETAIL),param);
 	}
 
 	@Override

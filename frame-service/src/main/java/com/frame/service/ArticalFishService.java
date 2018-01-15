@@ -9,7 +9,7 @@ import com.frame.service.base.BaseService;
 public interface ArticalFishService extends BaseService<ArticalFish, Long> {
 
 
-    ArticalFishListResponse selectEntryDetail(Long articalFishId);
+    ArticalFishListResponse selectEntryDetail(Long articalFishId,Long userId);
 
 
     Page<ArticalFishListResponse> selectBaseEntryList(ArticalFish condtion, Page<ArticalFishListResponse> page);

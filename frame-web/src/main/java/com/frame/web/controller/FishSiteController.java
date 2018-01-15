@@ -1,7 +1,6 @@
 package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.frame.domain.FishShop;
 import com.frame.domain.FishSite;
 import com.frame.domain.User;
 import com.frame.domain.base.YnEnum;
@@ -13,10 +12,8 @@ import com.frame.service.FishSiteService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.FishSiteListParam;
-import com.frame.web.entity.request.SiteIdParam;
+import com.frame.web.entity.request.SiteSearchParam;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -79,7 +76,7 @@ public class FishSiteController extends BaseController {
     @RequestMapping(value = "/fishSiteDetail", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "钓点详细", httpMethod = "POST", response = String.class, notes = "钓点详细")
     @ResponseBody
-    public String getFishSiteDetail(HttpServletRequest request, @RequestBody SiteIdParam param){
+    public String getFishSiteDetail(HttpServletRequest request, @RequestBody SiteSearchParam param){
 
         RemoteResult result = null;
         if (null == param || param.getSiteId() == null) {

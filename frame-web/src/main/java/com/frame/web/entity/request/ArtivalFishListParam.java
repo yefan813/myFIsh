@@ -16,6 +16,9 @@ public class ArtivalFishListParam {
     /****/
     private Long userId;
 
+    @ApiModelProperty(value="文章类型")
+    private Integer articleType;
+
     public Integer getCurrentPage() {
         return currentPage;
     }
@@ -38,5 +41,13 @@ public class ArtivalFishListParam {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Integer getArticleType() {
+        return articleType;
+    }
+
+    public void setArticleType(Integer articleType) {
+        this.articleType = articleType;
     }
 }

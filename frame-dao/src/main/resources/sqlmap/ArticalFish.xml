@@ -14,6 +14,8 @@
 		<result property="waterType" column="waterType"/>
 		<result property="content" column="content"/>
 		<result property="userId" column="userId"/>
+		<result property="isCollectioned" column="isCollectioned"/>
+		<result property="isLiked" column="isLiked"/>
 		<association property="user" resultMap="userBaseVO" />
 	</resultMap>
 
@@ -100,7 +102,7 @@
 			<if test="lat != null"><![CDATA[AND lat = #{lat}]]></if>
 			<if test="lng != null and lng != ''"><![CDATA[AND lng = #{lng}]]></if>
 			<if test="locationAddress != null and locationAddress != ''"><![CDATA[AND location_address = #{locationAddress}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND articleType = #{articleType}]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[AND article_type = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND is_publish = #{isPublish}]]></if>
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
@@ -132,7 +134,7 @@
 			<if test="lat != null"><![CDATA[lat = #{lat},]]></if>
 			<if test="lng != null and lng != ''"><![CDATA[ lng = #{lng},]]></if>
 			<if test="locationAddress != null and locationAddress != ''"><![CDATA[location_address = #{locationAddress},]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[ articleType = #{articleType},]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[ article_type = #{articleType},]]></if>
 			<if test="isPublish != null"><![CDATA[is_publish = #{isPublish},]]></if>
 			<if test="content != null and content != ''"><![CDATA[content = #{content},]]></if>
 
@@ -227,11 +229,15 @@
 			u.avatar_url AS avatarUrl,
 			u.address AS address,
 			tal.likeCount AS likeCount,
-			tc.commentCount as commentCount
+			tc.commentCount as commentCount,
+			tcoll.id as isCollectioned,
+			tlike.id as isLiked
  			FROM tb_artical_fish af
  			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
  			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select id,user_id,source_type,source_id from tb_collection GROUP BY id) tcoll on tcoll.user_id = #{userId} and tcoll.source_id = af.id  and tcoll.source_type = 1
+			left join (select id,user_id,source_type,source_id from tb_like  GROUP BY id ) tlike on tlike.user_id = #{userId} and tlike.source_id = af.id  and tlike.source_type = 1
 			]]>
 		<![CDATA[ where  af.id  = #{articalFishId}]]>
 	</select>
@@ -251,19 +257,21 @@
 			u.avatar_url AS avatarUrl,
 			u.address AS address,
 			tal.likeCount AS likeCount,
-			tc.commentCount as commentCount
+			tc.commentCount as commentCount,
+			tcoll.user_id as isCollectioned,
+			tlike.user_id as isLiked
  			FROM tb_artical_fish af
  			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
  			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select id,user_id,source_type,source_id from tb_collection GROUP BY id) tcoll on tcoll.user_id = #{userId} and tcoll.source_id = af.id  and tcoll.source_type = 1
+			left join (select id,user_id,source_type,source_id from tb_like  GROUP BY id ) tlike on tlike.user_id = #{userId} and tlike.source_id = af.id  and tlike.source_type = 1
 			]]>
 		<where>
-			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
-			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
 			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[AND af.article_type = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
 			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>
@@ -279,10 +287,8 @@
 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
  			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
 			LEFT join tb_user u on af.user_id = u.id
-		  ]]>
+			]]>
 		<where>
-			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
-			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
 			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
 			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
@@ -292,7 +298,7 @@
 			<if test="fishLines != null"><![CDATA[AND af.fish_lines = #{fishLines}]]></if>
 			<if test="fishPoleLength != null"><![CDATA[AND af.fish_pole_length = #{fishPoleLength}]]></if>
 			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND af.articleType = #{articleType}]]></if>
+			<if test="articleType != null and articleType != ''"><![CDATA[AND af.article_type = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
 			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>

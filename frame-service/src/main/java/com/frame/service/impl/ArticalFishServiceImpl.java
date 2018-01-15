@@ -50,9 +50,9 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
 
 
     @Override
-    public ArticalFishListResponse selectEntryDetail(Long articalFishId) {
+    public ArticalFishListResponse selectEntryDetail(Long articalFishId,Long userId) {
 
-        ArticalFishListResponse fish = articalFishDao.selectEntryDetail(articalFishId);
+        ArticalFishListResponse fish = articalFishDao.selectEntryDetail(articalFishId,userId);
         if (null == fish) {
             return null;
         }
