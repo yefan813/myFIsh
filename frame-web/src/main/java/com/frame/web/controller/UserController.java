@@ -277,7 +277,7 @@ public class UserController extends BaseController {
 	 * @param param
 	 * @return
 	 */
-	@RequestLimit
+//	@RequestLimit
 	@RequestMapping(value = "/getValidCode", method = {RequestMethod.POST})
 	@ApiOperation(value = "注册获取验证		码", httpMethod = "POST", response = String.class, notes = "注册获取验证码")
 	public @ResponseBody String getValidCode(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
@@ -316,7 +316,7 @@ public class UserController extends BaseController {
 	 * @param param
 	 * @return
 	 */
-	@RequestLimit
+//	@RequestLimit
 	@RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
 	@ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
 	public @ResponseBody String getValidCodeforgetPassword(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
