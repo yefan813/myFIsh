@@ -103,7 +103,7 @@ public class TaoBaoSmsServiceImpl implements TaoBaoSmsService {
 					msg = RemoteResult.result(BusinessCode.SUCCESS);
 				}else{
 					LOGGER.info("调用阿里大鱼发送短息失败:", sendSmsResponse.getMessage());
-					msg = RemoteResult.failure("0001","触发业务级流控限制");
+					msg = RemoteResult.failure("0001",sendSmsResponse.getMessage());
 				}
 			} else {
 				LOGGER.info("生成验证码 存入数据库 失败");

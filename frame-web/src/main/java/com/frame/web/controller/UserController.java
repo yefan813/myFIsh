@@ -103,7 +103,7 @@ public class UserController extends BaseController {
 	 * 忘记密码
 	 * @return
 	 */
-	@RequestLimit
+//	@RequestLimit
 	@RequestMapping(value = "/forgetPwd", method = {RequestMethod.POST})
 	@ApiOperation(value = "忘记密码", httpMethod = "POST", response = String.class, notes = "忘记密码")
 	public @ResponseBody String forgetPwd(HttpServletRequest request , @RequestBody ForgetPWDParam param) {
@@ -180,7 +180,7 @@ public class UserController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestLimit
+//	@RequestLimit
 	@RequestMapping(value = "/regist", method = {RequestMethod.POST})
 	@ApiOperation(value = "注册用户", httpMethod = "POST", response = String.class, notes = "注册用户")
 	public @ResponseBody String registUser(HttpServletRequest request , @RequestBody UserRegistParam param) {
@@ -371,7 +371,7 @@ public class UserController extends BaseController {
 		return result;
 	}
 
-	@RequestLimit
+//	@RequestLimit
 	@RequestMapping(value = "/validTelIsExist", method = {RequestMethod.POST})
 	@ApiOperation(value = "验证手机是否注册", httpMethod = "POST", response = String.class, notes = "验证手机是否注册")
 	public @ResponseBody String validTelIsExist(HttpServletRequest request ,@RequestBody ValidCodeParam param) {
