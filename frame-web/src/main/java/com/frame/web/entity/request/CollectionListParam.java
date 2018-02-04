@@ -9,9 +9,6 @@ public class CollectionListParam {
     private Integer currentPage;
 
 
-    @ApiModelProperty(value="用户 id")
-    /****/
-    private Long userId;
 
     @ApiModelProperty(value="远类型")
     /****/
@@ -32,13 +29,5 @@ public class CollectionListParam {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

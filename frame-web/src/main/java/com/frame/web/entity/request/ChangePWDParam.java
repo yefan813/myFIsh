@@ -6,20 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class ChangePWDParam {
 
-    @ApiModelProperty(value = "id", required = true)
-    Integer id;
     @ApiModelProperty(value = "oldPwd", required = true)
     String oldPwd;
     @ApiModelProperty(value = "newPwd", required = true)
     String newPwd;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getOldPwd() {
         return oldPwd;

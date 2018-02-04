@@ -19,9 +19,6 @@ public class CollectionVO{
 	/**文章 id**/
 	private Long sourceId;
 
-	@ApiModelProperty(value="用户 id")
-	/****/
-	private Long userId;
 
 	private Integer sourceType;
 
@@ -42,13 +39,6 @@ public class CollectionVO{
 		this.sourceType = sourceType;
 	}
 
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
-
-	public Long getUserId(){
-		return this.userId;
-	}
 
 
 	public String toString(){

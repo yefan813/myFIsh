@@ -41,12 +41,12 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
 
 
     @Override
-    public int saveOrUpdate(CollectionVO collectionVO) {
+    public int saveOrUpdate(CollectionVO collectionVO,Long userId) {
         try {
             Collection query = new Collection();
             query.setSourceId(collectionVO.getSourceId());
             query.setSourceType(collectionVO.getSourceType());
-            query.setUserId(collectionVO.getUserId());
+            query.setUserId(userId);
 
             List<Collection> list = collectionDao.selectEntryList(query);
             Collection collection = null;
@@ -72,7 +72,7 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
     }
 
     @Override
-    public Page<ArticalFish> getArticalCollectionById(CollectionVO articalCollectionVO, Page<Collection> page) {
+    public Page<ArticalFish> getArticalCollectionById(Long userId,CollectionVO articalCollectionVO, Page<Collection> page) {
 
         Page<ArticalFish> articalFishPage = new Page<>();
         articalFishPage.setCurrentPage(page.getCurrentPage());
@@ -85,6 +85,7 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
             collection.setYn(YnEnum.Normal.getKey());
             collection.setOrderField("modified");
             collection.setOrderFieldType("DESC");
+            collection.setUserId(userId);
 
             page = selectPage(collection, page);
 

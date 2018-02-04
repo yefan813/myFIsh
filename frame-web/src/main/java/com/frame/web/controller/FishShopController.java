@@ -117,16 +117,17 @@ public class FishShopController extends BaseController {
                 return JSON.toJSONString(result);
             }
 
-            //valid user is valid
-            User user = userService.selectEntry(fishShopVO.getUserId());
-            if(null == user){
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
+
             FishShop fishShop = new FishShop();
             BeanUtils.copyProperties(fishShop,fishShopVO);
+            fishShop.setUserId(userId);
             fishShop.setYn(YnEnum.Normal.getKey());
            int res = fishShopService.insertEntry(fishShop);
             if(res <= 0 ){
@@ -149,7 +150,6 @@ public class FishShopController extends BaseController {
     @ApiOperation(value = "delete", httpMethod = "DELETE", response = String.class, notes = "delete commentVO")
     public  @ResponseBody String del(HttpServletRequest request, @RequestBody IdParam id) {
         RemoteResult result = null;
-
         if(null == id || id.getId() == null){
             LOGGER.error("delete 传入参数错误，传入的参数为:id:[{}]", id );
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),

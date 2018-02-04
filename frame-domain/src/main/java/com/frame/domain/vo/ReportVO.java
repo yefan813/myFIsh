@@ -18,9 +18,6 @@ public class ReportVO{
 	@ApiModelProperty(value = "文章 id")
 	private Long sourceId;
 
-	/****/
-	@ApiModelProperty(value = "用户 id")
-	private Long userId;
 
 	@ApiModelProperty(value = "类型 id")
 	private Integer reportType;
@@ -51,14 +48,6 @@ public class ReportVO{
 
 	public void setSourceType(Integer sourceType) {
 		this.sourceType = sourceType;
-	}
-
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
-
-	public Long getUserId(){
-		return this.userId;
 	}
 
 	public String toString(){

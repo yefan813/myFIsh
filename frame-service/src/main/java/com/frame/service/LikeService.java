@@ -14,6 +14,6 @@ import com.frame.service.base.BaseService;
 
 public interface LikeService extends BaseService<Like, Long> {
 
-    int saveOrUpdate(LikeVO likeVO);
+    int saveOrUpdate(Long userId,LikeVO likeVO);
 
 }

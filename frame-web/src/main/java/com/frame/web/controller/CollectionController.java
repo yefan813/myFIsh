@@ -38,7 +38,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Controller
 @RequestMapping(value = "/collection")
 @Api(value = "collection", description = "收藏接口")
-public class CollectionController {
+public class CollectionController extends  BaseController{
     private static final Logger LOGGER = getLogger(CollectionController.class);
 
     @Resource
@@ -76,19 +76,14 @@ public class CollectionController {
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
+
+        Long userId = getLoginId();
+        if(userId == null){
+            LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+            result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+            return JSON.toJSONString(result);
+        }
         try {
-
-            //检查用户是否存在
-            if (null != listParam.getUserId()) {
-                User user = userService.selectEntry(listParam.getUserId());
-                if (null == user) {
-                    LOGGER.warn("用户不存在", listParam);
-                    result = RemoteResult.failure(BusinessCode.IS_EXIST_NO.getCode(),
-                            "用户不存在");
-                    return JSON.toJSONString(result);
-                }
-            }
-
 
             Page<Collection> page = new Page<Collection>();
             page.setCurrentPage(listParam.getCurrentPage());
@@ -96,7 +91,7 @@ public class CollectionController {
             CollectionVO articalCollectionVO = new CollectionVO();
             BeanUtils.copyProperties(articalCollectionVO, listParam);
 
-            Page<ArticalFish> res = collectionService.getArticalCollectionById(articalCollectionVO, page);
+            Page<ArticalFish> res = collectionService.getArticalCollectionById(userId,articalCollectionVO, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         } catch (Exception e) {
@@ -127,16 +122,16 @@ public class CollectionController {
                 return JSON.toJSONString(result);
             }
 
-            //valid user is valid
-            User user = userService.selectEntry(collectionVO.getUserId());
-            if (null == user) {
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
 
-            int res = collectionService.saveOrUpdate(collectionVO);
+
+            int res = collectionService.saveOrUpdate(collectionVO,userId);
             if (res <= 0) {
                 result = RemoteResult.failure("0002", "artical collection is failed,server internal error");
             } else {
@@ -164,11 +159,19 @@ public class CollectionController {
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
+
+        Long userId = getLoginId();
+        if(userId == null){
+            LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+            result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+            return JSON.toJSONString(result);
+        }
         try {
             Collection query = new Collection();
             BeanUtils.copyProperties(query,param);
             query.setYn(YnEnum.Normal.getKey());
             //valid user is valid
+            query.setUserId(userId);
             List<Collection> resList = collectionService.selectEntryList(query);
             if (CollectionUtils.isEmpty(resList)) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),

@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.frame.domain.UserLogin;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.RemoteResult;
+import com.frame.domain.enums.BusinessCode;
 import com.frame.service.UserLoginService;
 import com.frame.service.impl.APNSService;
 import com.frame.web.entity.request.RegistDeviceParam;
 import com.frame.web.entity.request.SendNotiParam;
+import com.frame.web.entity.request.UserLoginDetailParam;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,21 +44,30 @@ public class UserLoginController extends BaseController {
 	@RequestMapping(value = "/saveUserLoginInfo", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
 	@ApiOperation(value = "用户登录上创登陆信息", httpMethod = "POST", response = String.class, notes = "用户登录上创登陆信息")
 	public @ResponseBody
-	String saveUserLoginInfo(HttpServletRequest request, @RequestBody UserLogin userLogin) {
+	String saveUserLoginInfo(HttpServletRequest request, @RequestBody UserLoginDetailParam param) {
 		RemoteResult result = null;
 		try {
-			if (userLogin == null || userLogin.getUserId() == null
-					|| (userLogin.getLocation() == null || !userLogin.getLocation().contains(","))
-					|| userLogin.getLoginTime() == null) {
+			if (param == null
+					|| (param.getLocation() == null || !param.getLocation().contains(","))
+					|| param.getLoginTime() == null) {
 				LOGGER.info("调用saveUsetLoginInfo 传入的参数错误");
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
-			String[] loArr = userLogin.getLocation().split(",");
+			String[] loArr = param.getLocation().split(",");
 			if (null != loArr && loArr.length > 0) {
-				userLogin.setLatitude(Double.valueOf(loArr[0]));
-				userLogin.setLongitude(Double.valueOf(loArr[0]));
+				param.setLatitude(Double.valueOf(loArr[0]));
+				param.setLongitude(Double.valueOf(loArr[0]));
 			}
+			Long userId = getLoginId();
+			if(userId == null){
+				LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+				result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+				return JSON.toJSONString(result);
+			}
+
+			UserLogin userLogin = new UserLogin();
+			userLogin.setUserId(userId.intValue());
 			userLogin.setYn(YnEnum.Normal.getKey());
 			if (userLoginService.insertEntry(userLogin) > 0) {
 				LOGGER.info("用户定位保存成功,传入的参数为：[{}]", JSON.toJSONString(userLogin));
@@ -88,8 +99,15 @@ public class UserLoginController extends BaseController {
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
 			}
+			Long userId = getLoginId();
+			if(userId == null){
+				LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+				result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+				return JSON.toJSONString(result);
+			}
+
 			UserLogin login = new UserLogin();
-			login.setUserId(param.getUserId());
+			login.setUserId(userId.intValue());
 			login.setDeviceToken(param.getDeviceToken());
 
 			if (userLoginService.registDeviceToken(login) > 0) {

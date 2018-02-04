@@ -97,14 +97,21 @@ public class CommentController extends  BaseController {
     public  @ResponseBody String publish(HttpServletRequest request, @RequestBody CommentVO commentVO) {
         RemoteResult result = null;
         try{
-            if(null == commentVO || StringUtils.isBlank(commentVO.getContent())|| commentVO.getFromUserId() == null ||
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            if(null == commentVO || StringUtils.isBlank(commentVO.getContent())||
                     commentVO.getTopicId() == null){
                 LOGGER.error("publish commentVO is error , param is error[{}]",JSON.toJSONString(commentVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
 
-            if(commentVO.getToUserId() != null && commentVO.getFromUserId().longValue() == commentVO.getToUserId()){
+            if(commentVO.getToUserId() != null && userId == commentVO.getToUserId()){
                 LOGGER.error("不能回复自己的评论 , param is error[{}]",JSON.toJSONString(commentVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"不能回复自己的评论");
                 return JSON.toJSONString(result);
@@ -120,9 +127,9 @@ public class CommentController extends  BaseController {
             Comment comment = new Comment();
             BeanUtils.copyProperties(comment,commentVO);
 
-            User fromUser = userService.selectEntry(commentVO.getFromUserId());
+            User fromUser = userService.selectEntry(userId);
             if(commentVO.getToUserId() != null ){
-                User toUser = userService.selectEntry(commentVO.getFromUserId());
+                User toUser = userService.selectEntry(userId);
                 if(toUser == null){
                     LOGGER.error("publish to userId  is not exist , param is error[{}]",JSON.toJSONString(commentVO));
                     result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),"回复评论用户不存在");

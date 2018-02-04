@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
  */
 @ApiModel
 public class FishSiteVO{
-    private Long userId;
     private String title;
     private  String introduce;
     private String content;
@@ -28,13 +27,6 @@ public class FishSiteVO{
     private Boolean canEat;
     private Boolean canHotel;
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

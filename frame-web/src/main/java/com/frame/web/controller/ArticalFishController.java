@@ -176,20 +176,19 @@ public class ArticalFishController extends BaseController {
                return JSON.toJSONString(result);
            }
 
-           //valid user is valid
-           User user = userService.selectEntry(fishSaveParam.getUserId());
-           if (null == user) {
-               result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                       "此用户不存在");
+           Long userId = getLoginId();
+           if(userId == null){
+               LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+               result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                return JSON.toJSONString(result);
            }
-
 
            ArticalFish articalFish = new ArticalFish();
            BeanUtils.copyProperties(articalFish, fishSaveParam);
            if (null != fishSaveParam.getFishTime()) {
                articalFish.setFishTime(fishSaveParam.getFishTime());
            }
+           articalFish.setUserId(userId);
            articalFish.setIsPublish(0);
            articalFish.setYn(YnEnum.Normal.getKey());
            int res = articalFishService.insertEntry(articalFish);

@@ -6,20 +6,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @ApiModel
 public class UserInfoParam {
-    @ApiModelProperty(value = "id", required = true) Integer id;
     @ApiModelProperty(value = "nikeName", required = false) String nikeName;
     @ApiModelProperty(value = "sex", required = false) Integer sex;
     @ApiModelProperty(value = "avatarUrl", required = false) String avatarUrl;
     @ApiModelProperty(value = "address", required = false) String address;
     @ApiModelProperty(value = "birthday", required = false) Long birthday;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getNikeName() {
         return nikeName;

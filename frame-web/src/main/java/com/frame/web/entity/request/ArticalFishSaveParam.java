@@ -9,8 +9,6 @@ import java.util.Date;
 public class ArticalFishSaveParam {
 
     @ApiModelProperty(required = true)
-    private Long userId;
-    @ApiModelProperty(required = true)
     private String title;
     private Date time;
     private  String waterType;
@@ -32,13 +30,6 @@ public class ArticalFishSaveParam {
     private Date fishTime;
 
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

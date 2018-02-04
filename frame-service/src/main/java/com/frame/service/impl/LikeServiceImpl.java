@@ -38,12 +38,12 @@ public class LikeServiceImpl extends BaseServiceImpl<Like, Long> implements Like
     }
 
     @Override
-    public int saveOrUpdate(LikeVO likeVO) {
+    public int saveOrUpdate(Long userId,LikeVO likeVO) {
         try {
             Like query = new Like();
             query.setSourceId(likeVO.getSourceId());
             query.setSourceType(likeVO.getSourceType());
-            query.setUserId(likeVO.getUserId());
+            query.setUserId(userId);
 
             List<Like> list = likeDao.selectEntryList(query);
             Like articalLike = null;

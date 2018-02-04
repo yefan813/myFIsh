@@ -2,6 +2,7 @@ package com.frame.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.frame.web.CustomDateEditor;
+import com.frame.web.interceptor.LoginContext;
 import com.frame.web.interceptor.WeixinPassport;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -29,6 +30,15 @@ public class BaseController {
 	protected HttpServletRequest getRequest() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		return request;
+	}
+
+	protected LoginContext getLoginContext() {
+		LoginContext loginContext = LoginContext.getLoginContext();
+		return loginContext == null ? new LoginContext() : loginContext;
+	}
+
+	protected Long getLoginId() {
+		return getLoginContext().getLongId();
 	}
 
 	protected String getRemoteIp() {

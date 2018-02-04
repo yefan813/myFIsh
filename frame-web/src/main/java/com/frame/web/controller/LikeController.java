@@ -34,7 +34,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Controller
 @RequestMapping(value = "/like")
 @Api(value = "Like", description = "点赞接口")
-public class LikeController {
+public class LikeController extends  BaseController{
     private static final Logger LOGGER = getLogger(LikeController.class);
 
 
@@ -53,10 +53,17 @@ public class LikeController {
     String like(HttpServletRequest request, @RequestBody LikeVO likeVO) {
         RemoteResult result = null;
         try {
-            if (null == likeVO || likeVO.getUserId() == null || likeVO.getSourceId() == null || null == likeVO.getSourceType()) {
+            if (null == likeVO  || likeVO.getSourceId() == null || null == likeVO.getSourceType()) {
                 LOGGER.error("like artical 传入的参数错[{}]", JSON.toJSONString(likeVO));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
                         BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
@@ -69,15 +76,7 @@ public class LikeController {
                 return JSON.toJSONString(result);
             }
 
-            //valid user is valid
-            User user = userService.selectEntry(likeVO.getUserId());
-            if (null == user) {
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此user不存在");
-                return JSON.toJSONString(result);
-            }
-
-            int res = likeService.saveOrUpdate(likeVO);
+            int res = likeService.saveOrUpdate(userId,likeVO);
             if(res < 1){
                 LOGGER.error("点赞失败");
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
@@ -106,6 +105,7 @@ public class LikeController {
                 return JSON.toJSONString(result);
             }
 
+
             ArticalFish articalFish = articalFishService.selectEntry(likeVO.getSourceId());
             if (null == articalFish) {
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
@@ -133,15 +133,22 @@ public class LikeController {
     public  @ResponseBody String del(HttpServletRequest request, @RequestBody LikeVO param) {
         RemoteResult result = null;
         try {
-            if (null == param || param.getSourceId() == null || param.getSourceType() == null || param.getUserId() == null) {
+            if (null == param || param.getSourceId() == null || param.getSourceType() == null ) {
                 LOGGER.error("取消点赞  传入的参数错误 id【{}】", JSON.toJSONString(param));
                 result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(), BusinessCode.PARAMETERS_ERROR.getValue());
+                return JSON.toJSONString(result);
+            }
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
             Like query = new Like();
             BeanUtils.copyProperties(query,param);
             query.setYn(YnEnum.Normal.getKey());
+            query.setUserId(userId);
             int res = likeService.deleteByCondtion(query);
             if (res > 0) {
                 result = RemoteResult.success("删除点赞成功");

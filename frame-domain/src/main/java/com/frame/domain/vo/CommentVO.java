@@ -11,8 +11,6 @@ public class CommentVO{
     private Long topicId;
     private Integer topicType;
     private String content;
-    private Long fromUserId;
-    private String fromUserName;
     private String fromUserAvtor;
 
     private Long toUserId;
@@ -47,21 +45,6 @@ public class CommentVO{
         this.content = content;
     }
 
-    public Long getFromUserId() {
-        return fromUserId;
-    }
-
-    public void setFromUserId(Long fromUserId) {
-        this.fromUserId = fromUserId;
-    }
-
-    public String getFromUserName() {
-        return fromUserName;
-    }
-
-    public void setFromUserName(String fromUserName) {
-        this.fromUserName = fromUserName;
-    }
 
     public String getFromUserAvtor() {
         return fromUserAvtor;

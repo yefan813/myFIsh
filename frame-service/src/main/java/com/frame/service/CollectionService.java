@@ -17,10 +17,10 @@ import com.frame.service.base.BaseService;
 
 public interface CollectionService extends BaseService<Collection, Long> {
 
-    Page<ArticalFish> getArticalCollectionById(CollectionVO articalCollectionVO, Page<Collection> page);
+    Page<ArticalFish> getArticalCollectionById(Long userId,CollectionVO articalCollectionVO, Page<Collection> page);
 
 
-    int saveOrUpdate(CollectionVO collectionVO);
+    int saveOrUpdate(CollectionVO collectionVO,Long userId);
 
 
 

@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiModel;
 public class FishShopVO{
 
 
-    private Long userId;
     private String title;
     private  String introduce;
     private String content;
@@ -22,14 +21,6 @@ public class FishShopVO{
     private String address;
     private String sitePhone;
     private Integer publishType;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

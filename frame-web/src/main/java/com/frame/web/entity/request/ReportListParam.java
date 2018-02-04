@@ -9,7 +9,6 @@ public class ReportListParam {
 
     private Long sourceId;
 
-    private Long userId;
 
     private Integer reportType;
 
@@ -56,11 +55,4 @@ public class ReportListParam {
     }
 
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }

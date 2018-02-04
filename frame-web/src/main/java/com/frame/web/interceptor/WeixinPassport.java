@@ -2,7 +2,6 @@ package com.frame.web.interceptor;
 
 /**
  * 微信用户基础数据，包含userId, unionId、openId。微信唯一标记使用unionId
- * @author qingrong.hou@dmall.com
  * @date 2015/12/03
  */
 public class WeixinPassport {

@@ -34,7 +34,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Controller
 @RequestMapping(value = "/report")
 @Api(value = "report", description = "报接口")
-public class ReportController {
+public class ReportController extends BaseController{
     private static final Logger LOGGER = getLogger(ReportController.class);
 
     @Resource
@@ -77,7 +77,7 @@ public class ReportController {
     }
 
     @RequestMapping(value = "/report", method = {RequestMethod.POST})
-    @ApiOperation(value = "收藏文章", httpMethod = "POST", response = String.class, notes = "收藏文章")
+    @ApiOperation(value = "举报文章", httpMethod = "POST", response = String.class, notes = "举报文章")
     public @ResponseBody
     String report(HttpServletRequest request, @RequestBody ReportVO articalReportVO) {
         RemoteResult result = null;
@@ -88,16 +88,14 @@ public class ReportController {
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
-
-            //valid user is valid
-            User user = userService.selectEntry(articalReportVO.getUserId());
-            if (null == user) {
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
-            //valid artical is valid
+
 
             ArticalFish articalFish = articalFishService.selectEntry(articalReportVO.getSourceId());
             if (null == articalFish) {
@@ -108,7 +106,7 @@ public class ReportController {
 
             Report articalReport = new Report();
             BeanUtils.copyProperties(articalReport, articalReportVO);
-
+            articalReport.setUserId(userId);
             articalReport.setYn(YnEnum.Normal.getKey());
             articalReport.setCreated(new Date());
             articalReport.setModified(new Date());

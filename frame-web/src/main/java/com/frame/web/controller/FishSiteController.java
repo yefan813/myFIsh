@@ -103,25 +103,24 @@ public class FishSiteController extends BaseController {
     @ApiOperation(value = "发布钓点", httpMethod = "POST", response = String.class, notes = "发布钓点")
     public  @ResponseBody String publish(HttpServletRequest request,@RequestBody FishSiteVO fishSiteVO) {
         RemoteResult result = null;
+        if (null == fishSiteVO) {
+            LOGGER.error("publish artical 传入的参数错");
+            result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                    BusinessCode.PARAMETERS_ERROR.getValue());
+            return JSON.toJSONString(result);
+        }
         try{
-            if (null == fishSiteVO) {
-                LOGGER.error("publish artical 传入的参数错");
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        BusinessCode.PARAMETERS_ERROR.getValue());
-                return JSON.toJSONString(result);
-            }
-
-            //valid user is valid
-            User user = userService.selectEntry(fishSiteVO.getUserId());
-            if(null == user){
-                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
-                        "此用户不存在");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
 
             FishSite fishSite = new FishSite();
             BeanUtils.copyProperties(fishSite,fishSiteVO);
 
+            fishSite.setUserId(userId);
             fishSite.setYn(YnEnum.Normal.getKey());
             fishSite.setCreated(new Date());
             fishSite.setModified(new Date());

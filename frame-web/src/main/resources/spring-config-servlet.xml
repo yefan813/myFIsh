@@ -39,6 +39,58 @@
 		</property>
 	</bean>
 
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/articalFish/uploadImgFile" />
+			<mvc:mapping path="/articalFish/publish" />
+			<mvc:mapping path="/collection/del" />
+			<mvc:mapping path="/collection/collection" />
+			<mvc:mapping path="/collection/list" />
+			<mvc:mapping path="/articalFish/cancelCollection" />
+			<mvc:mapping path="/comment/publish" />
+			<mvc:mapping path="/comment/del" />
+			<mvc:mapping path="/fishShop/publish" />
+			<mvc:mapping path="/fishShop/del" />
+			<mvc:mapping path="/fishSite/publish" />
+			<mvc:mapping path="/fishSite/del" />
+			<mvc:mapping path="/like/like" />
+			<mvc:mapping path="/like/del" />
+			<mvc:mapping path="/report/list" />
+			<mvc:mapping path="/report/report" />
+			<mvc:mapping path="/user/editUserInfo" />
+			<mvc:mapping path="/user/changePwd" />
+			<mvc:mapping path="/user/bindTel" />
+			<mvc:mapping path="/user/applyFriend" />
+			<mvc:mapping path="/user/getFriendsList" />
+			<mvc:mapping path="/user/queryFriends" />
+			<mvc:mapping path="/user/deleteFriends" />
+			<mvc:mapping path="/user/agreeApplyFriends" />
+			<mvc:mapping path="/user/refuseInvitation" />
+			<mvc:mapping path="/user/isFriend" />
+			<mvc:mapping path="/user/getUserInfo" />
+			<mvc:mapping path="/user/getPendingFriends" />
+			<mvc:mapping path="/userLogin/userLogin" />
+			<mvc:mapping path="/userLogin/saveUserLoginInfo" />
+			<mvc:mapping path="/userLogin/registDeviceToken" />
+			<mvc:mapping path="/userLogin/sendNotifi" />
+			<mvc:mapping path="/userLogin/getPendingFriends" />
+			<mvc:mapping path="/userLogin/getPendingFriends" />
+
+
+			<mvc:exclude-mapping path="/assets/**" />
+			<mvc:exclude-mapping path="/img/**" />
+
+
+			<bean class="com.frame.web.interceptor.LoginInterceptor">
+				<property name="aesKey" ref="aesKey" />
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<bean id="aesKey" class="com.frame.domain.common.AesKey">
+		<property name="key" value="${cookie.aes.key}" />
+	</bean>
+
  <!--	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/user/**" />

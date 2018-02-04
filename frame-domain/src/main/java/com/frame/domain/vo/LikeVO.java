@@ -16,9 +16,6 @@ public class LikeVO {
     @ApiModelProperty(value = "sourceId")
     private Long sourceId;
 
-    /****/
-    @ApiModelProperty(value = " 用户 ID")
-    private Long userId;
 
     /****/
 
@@ -42,13 +39,6 @@ public class LikeVO {
         this.sourceId = sourceId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
