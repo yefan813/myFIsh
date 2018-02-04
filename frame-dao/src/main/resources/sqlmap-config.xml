@@ -49,5 +49,7 @@
 		<mapper resource="sqlmap/UserAuths.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />
 		<mapper resource="sqlmap/UserValid.xml" />
+		<mapper resource="sqlmap/UserFriends.xml" />
+
 	</mappers>
 </configuration>

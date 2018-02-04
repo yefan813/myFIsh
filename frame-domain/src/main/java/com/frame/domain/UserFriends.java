@@ -20,11 +20,11 @@ public class UserFriends extends BaseDomain {
 
 	private Long fromUserId; // 用户id
 
-	private Long toUserId; // 登陆类型
+	private Long toUserId; // 用户id
 
-	private Integer status; // 第三放登录唯一标识
+	private Integer status; // 状态
 
-	private Long actionUserId; // 密码
+	private Long actionUserId; // 发起用户 id
 
 	
 	

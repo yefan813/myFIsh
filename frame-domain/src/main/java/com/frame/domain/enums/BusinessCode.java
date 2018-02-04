@@ -14,7 +14,12 @@ public enum BusinessCode {
 	IS_EXIST_NO("1004", 0, "记录不存在", null),
 
 	IS_WRITE_YES("1005", 1, "写入成功", null),
-	IS_WRITE_NO("1006", 0, "写入失败", null);
+	IS_WRITE_NO("1006", 0, "写入失败", null),
+
+	IS_FRIEND("1006", 1, "已经是好友", null),
+	NO_FRIEND("1007", 0, "还不是好友", null),
+	;
+
 
 	private String code;
 	private int key;

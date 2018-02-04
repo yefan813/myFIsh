@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.frame.domain.User;
 import com.frame.domain.UserAuths;
+import com.frame.domain.UserFriends;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
+import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.cusAnnotion.RequestLimit;
 import com.frame.domain.enums.BusinessCode;
@@ -16,6 +18,7 @@ import com.frame.domain.img.Result;
 import com.frame.service.*;
 import com.frame.web.entity.request.*;
 import io.swagger.annotations.*;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -537,7 +540,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}
 
-	/*@RequestMapping(value = "/bindTel", method = {RequestMethod.POST})
+	@RequestMapping(value = "/bindTel", method = {RequestMethod.POST})
 	public @ResponseBody String bindTel(User user) {
 		RemoteResult result = null;
 		if(null == user || user.getId() == null || user.getTel() == null){
@@ -547,8 +550,196 @@ public class UserController extends BaseController {
 		}
 		result = userService.bindTel(user);
 		return JSON.toJSONString(result);
-	}*/
-	
+	}
+
+	@RequestMapping(value = "/applyFriend", method = {RequestMethod.POST})
+	public @ResponseBody String applyFriend(@RequestBody UserFriendParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param || param.getFromUserId() == null || param.getToUserId() == null) {
+				LOGGER.info("调用applyFriend 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			UserFriends userFriends = new UserFriends();
+			BeanUtils.copyProperties(userFriends,param);
+
+			result = userFriendsService.applyFriend(userFriends);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/getFriendsList", method = {RequestMethod.POST})
+	public @ResponseBody String getFriendsList(@RequestBody UserFriendsListParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param || param.getUserId() < 0) {
+				LOGGER.info("调用getFriendsList 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			Page<User> page = new Page<>();
+			page.setCurrentPage(param.getCurrentPage());
+			page.setPageSize(param.getPageSize());
+
+			result = userFriendsService.getFriendsList(page, param.getUserId());
+
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/queryFriends", method = {RequestMethod.POST})
+	public @ResponseBody String queryFriends(@RequestBody QueryFriendsParam param) {
+		RemoteResult result = null;
+		try {
+			if (param ==null || StringUtils.isEmpty(param.getNickName())) {
+				LOGGER.info("调用queryFriends 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			Page<User> page = new Page<>();
+			page.setCurrentPage(param.getCurrentPage());
+			page.setPageSize(param.getPageSize());
+
+			result = userFriendsService.queryFriends(page, param.getUserId(), param.getNickName());
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/deleteFriends", method = {RequestMethod.POST})
+	public @ResponseBody String deleteFriends(@RequestBody UserFriendParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
+				LOGGER.info("调用deleteFriends 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			UserFriends userFriends = new UserFriends();
+			BeanUtils.copyProperties(userFriends,param);
+			result = userFriendsService.deleteFriends(userFriends);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/agreeApplyFriends", method = {RequestMethod.POST})
+	public @ResponseBody String agreeApplyFriends(@RequestBody UserFriendParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
+				LOGGER.info("调用agreeApplyFriends 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			UserFriends userFriends = new UserFriends();
+			BeanUtils.copyProperties(userFriends,param);
+			result = userFriendsService.agreeApplyFriends(userFriends);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/refuseInvitation", method = { RequestMethod.POST })
+	public @ResponseBody String refuseInvitation(@RequestBody UserFriendParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
+				LOGGER.info("调用refuseInvitation 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			UserFriends userFriends = new UserFriends();
+			BeanUtils.copyProperties(userFriends,param);
+			result = userFriendsService.refuseInvitation(userFriends);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/isFriend", method = {  RequestMethod.POST })
+	public @ResponseBody String isFriend(@RequestBody UserFriendParam param) {
+		RemoteResult result = null;
+		try {
+			if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
+				LOGGER.info("调用isFriend 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			UserFriends userFriends = new UserFriends();
+			BeanUtils.copyProperties(userFriends,param);
+
+
+			int res = userFriendsService.check2PIsFriend(userFriends);
+			if(res > 0){
+				result = RemoteResult.result(BusinessCode.IS_FRIEND,null);
+			}else {
+				result = RemoteResult.result(BusinessCode.NO_FRIEND,null);
+			}
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/getUserInfo", method = {  RequestMethod.POST })
+	public @ResponseBody String getUserInfoById(@RequestBody User user) {
+		RemoteResult result = null;
+		try {
+			if (null == user.getId() && StringUtils.isEmpty(user.getTel()) ) {
+				LOGGER.info("调用getUserInfo 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			List<User> users = userService.selectEntryList(user);
+			if(CollectionUtils.isNotEmpty(users)){
+				User us = users.get(0);
+				us.setAvatarUrl(IMAGEPREFIX + us.getAvatarUrl());
+				result = RemoteResult.success(us);
+			}else {
+				result = RemoteResult.result(BusinessCode.IS_EXIST_NO,null);
+			}
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+	@RequestMapping(value = "/getPendingFriends", method = {RequestMethod.POST})
+	public @ResponseBody String getPendingFriends(Page<User> page, Long userId) {
+		RemoteResult result = null;
+		try {
+			if (null == userId || userId < 0) {
+				LOGGER.info("调用getPendingFriends 传入的参数错误");
+				result = RemoteResult.failure("0001", "传入参数错误");
+				return JSON.toJSONString(result);
+			}
+			result = userFriendsService.getPendingFriendList(page, userId);
+		} catch (Exception e) {
+			LOGGER.error("失败:" + e.getMessage(), e);
+			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+
+
 	/*@RequestMapping(value = "/logout", method = {RequestMethod.POST})
 	public @ResponseBody String logout(User user) {
 		RemoteResult result = null;
@@ -575,22 +766,7 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}*/
 	
-	/*@RequestMapping(value = "/applyFriend", method = {RequestMethod.POST})
-	public @ResponseBody String applyFriend(UserFriends userFriends) {
-		RemoteResult result = null;
-		try {
-			if (null == userFriends || userFriends.getFromUserId() == null || userFriends.getToUserId() == null) {
-				LOGGER.info("调用applyFriend 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			result = userFriendsService.applyFriend(userFriends);
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}*/
+
 	
 	/*@RequestMapping(value = "/getPendingFriends", method = {RequestMethod.POST})
 	public @ResponseBody String getPendingFriends(Page<User> page, Long userId) {
@@ -610,23 +786,7 @@ public class UserController extends BaseController {
 	}*/
 	
 	
-	/*@RequestMapping(value = "/getFriendsList", method = {RequestMethod.POST})
-	public @ResponseBody String getFriendsList(Page<User> page, Long userId) {
-		RemoteResult result = null;
-		try {
-			if (null == userId || userId < 0) {
-				LOGGER.info("调用getFriendsList 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			result = userFriendsService.getFriendsList(page, userId);
-			
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}*/
+
 	
 	/*@RequestMapping(value = "/queryFriends", method = {RequestMethod.POST})
 	public @ResponseBody String queryFriends(Page<User> page, Long userId, String query) {
@@ -645,83 +805,10 @@ public class UserController extends BaseController {
 		return JSON.toJSONString(result);
 	}*/
 	
-	/*@RequestMapping(value = "/deleteFriends", method = {RequestMethod.POST})
-	public @ResponseBody String deleteFriends(UserFriends userFriends) {
-		RemoteResult result = null;
-		try {
-			if (null == userFriends.getFromUserId() || userFriends.getFromUserId() < 0 || null == userFriends.getToUserId() || userFriends.getToUserId() < 0) {
-				LOGGER.info("调用deleteFriends 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			
-			result = userFriendsService.deleteFriends(userFriends);
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}*/
+
 	
 	
-	/*@RequestMapping(value = "/agreeApplyFriends", method = {RequestMethod.POST})
-	public @ResponseBody String agreeApplyFriends(UserFriends userFriends) {
-		RemoteResult result = null;
-		try {
-			if (null == userFriends.getFromUserId() || userFriends.getFromUserId() < 0 || null == userFriends.getToUserId() || userFriends.getToUserId() < 0) {
-				LOGGER.info("调用agreeApplyFriends 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			
-			result = userFriendsService.agreeApplyFriends(userFriends);
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}*/
-	
-	/*@RequestMapping(value = "/refuseInvitation", method = { RequestMethod.POST })
-	public @ResponseBody String refuseInvitation(UserFriends userFriends) {
-		RemoteResult result = null;
-		try {
-			if (null == userFriends.getFromUserId() || userFriends.getFromUserId() < 0 || null == userFriends.getToUserId() || userFriends.getToUserId() < 0) {
-				LOGGER.info("调用refuseInvitation 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			
-			result = userFriendsService.refuseInvitation(userFriends);
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}
-	*/
-	/*@RequestMapping(value = "/isFriend", method = {  RequestMethod.POST })
-	public @ResponseBody String isFriend(UserFriends userFriends) {
-		RemoteResult result = null;
-		try {
-			if (null == userFriends.getFromUserId() || userFriends.getFromUserId() < 0 || null == userFriends.getToUserId() || userFriends.getToUserId() < 0) {
-				LOGGER.info("调用isFriend 传入的参数错误");
-				result = RemoteResult.failure("0001", "传入参数错误");
-				return JSON.toJSONString(result);
-			}
-			
-			int res = userFriendsService.check2PIsFriend(userFriends);
-			if(res > 0){
-				result = RemoteResult.result(BusinessCode.IS_FRIEND,null);
-			}else {
-				result = RemoteResult.result(BusinessCode.NO_FRIEND,null);
-			}
-		} catch (Exception e) {
-			LOGGER.error("失败:" + e.getMessage(), e);
-			result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-		}
-		return JSON.toJSONString(result);
-	}*/
+
 	
 	
 	/*@RequestMapping(value = "/getUserInfo", method = {  RequestMethod.POST })

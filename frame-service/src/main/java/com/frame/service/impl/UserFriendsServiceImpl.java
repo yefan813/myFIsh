@@ -1,5 +1,6 @@
 package com.frame.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.frame.dao.UserFriendsDao;
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.User;
@@ -69,9 +70,9 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 			result = RemoteResult.failure("0001", "两人已经是好友");
 			return result;
 		}
-		
-		userFriends.setFromUserId(Math.min(fromId, toId));
-		userFriends.setToUserId(Math.max(fromId, toId));
+//
+//		userFriends.setFromUserId(Math.min(fromId, toId));
+//		userFriends.setToUserId(Math.max(fromId, toId));
 		userFriends.setStatus(UserFriends.STATUS_WAITING);
 		List<UserFriends> wList = userFriendsDao.selectEntryList(userFriends);
 		if(CollectionUtils.isNotEmpty(wList)){
@@ -202,6 +203,19 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 		}
 		long fromId = userFriends.getFromUserId();
 		long toId = userFriends.getToUserId();
+
+		//查询当前好友申请状态是否是等待同意
+		userFriends.setFromUserId(Math.min(fromId, toId));
+		userFriends.setToUserId(Math.max(fromId, toId));
+		userFriends.setStatus(UserFriends.STATUS_WAITING);
+		List<UserFriends> fList = userFriendsDao.selectEntryList(userFriends);
+		if(CollectionUtils.isEmpty(fList)){
+			LOGGER.info("同意加好友阶段，此时数据库不是等待阶段,data:[{}]" , JSON.toJSONString(fList));
+			result = RemoteResult.failure("0001", "两人已经是好友");
+			return result;
+		}
+
+
 		userFriends.setActionUserId(fromId);
 		userFriends.setFromUserId(Math.min(fromId, toId));
 		userFriends.setToUserId(Math.max(fromId, toId));
@@ -209,7 +223,7 @@ public class UserFriendsServiceImpl extends BaseServiceImpl<UserFriends, Long> i
 		int res = userFriendsDao.changeUserFriendStatus(userFriends);
 		
 		
-		if(res > 0 && "0000".equals(result.getCode())){
+		if(res > 0 ){
 			
 			User froUs = userService.selectEntry(fromId);
 			if(null == froUs){
