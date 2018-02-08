@@ -76,7 +76,6 @@
 			<mvc:mapping path="/userLogin/getPendingFriends" />
 			<mvc:mapping path="/userLogin/getPendingFriends" />
 
-
 			<mvc:exclude-mapping path="/assets/**" />
 			<mvc:exclude-mapping path="/img/**" />
 

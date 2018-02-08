@@ -480,6 +480,7 @@ public class UserController extends BaseController {
         }
         Cookie cookie = new Cookie(CookieEnum.TICKET.getKey(), data);
         cookie.setMaxAge(259200000);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 
