@@ -479,7 +479,6 @@ public class UserController extends BaseController {
             return;
         }
         Cookie cookie = new Cookie(CookieEnum.TICKET.getKey(), data);
-        cookie.setDomain(request.getServerName());
         cookie.setMaxAge(259200000);
         response.addCookie(cookie);
     }

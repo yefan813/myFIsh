@@ -5,4 +5,4 @@
 .class
 .iml
 /bin/
-*.impl
+.impl
