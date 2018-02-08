@@ -753,22 +753,24 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/getUserInfo", method = {RequestMethod.POST})
     public @ResponseBody
-    String getUserInfoById(@RequestBody User user) {
+    String getUserInfoById() {
         RemoteResult result = null;
         try {
-            if (null == user.getId() && StringUtils.isEmpty(user.getTel())) {
-                LOGGER.info("调用getUserInfo 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
-            List<User> users = userService.selectEntryList(user);
-            if (CollectionUtils.isNotEmpty(users)) {
-                User us = users.get(0);
-                us.setAvatarUrl(IMAGEPREFIX + us.getAvatarUrl());
-                result = RemoteResult.success(us);
-            } else {
+
+            User user = userService.selectEntry(userId);
+            if (user == null) {
                 result = RemoteResult.result(BusinessCode.IS_EXIST_NO, null);
+                return JSON.toJSONString(result);
             }
+            user.setAvatarUrl(IMAGEPREFIX + user.getAvatarUrl());
+            result = RemoteResult.success(user);
+
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -778,12 +780,13 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/getPendingFriends", method = {RequestMethod.POST})
     public @ResponseBody
-    String getPendingFriends(Page<User> page, Long userId) {
+    String getPendingFriends(Page<User> page) {
         RemoteResult result = null;
         try {
-            if (null == userId || userId < 0) {
-                LOGGER.info("调用getPendingFriends 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
             result = userFriendsService.getPendingFriendList(page, userId);
