@@ -23,7 +23,6 @@
 		<typeAlias type="com.frame.domain.UserAuths" alias="userAuths"/>
 		<typeAlias type="com.frame.domain.AppSecret" alias="appSecret"/>
 		<typeAlias type="com.frame.domain.UserLogin" alias="userLogin"/>
-		<typeAlias type="com.frame.domain.UserFriends" alias="userFriends"/>
 		<typeAlias type="com.frame.domain.FishSite" alias="fishSite"/>
 		<typeAlias type="com.frame.domain.FishShop" alias="fishShop"/>
 		<typeAlias type="com.frame.domain.Comment" alias="comment"/>
@@ -31,6 +30,7 @@
 		<typeAlias type="com.frame.domain.Collection" alias="articalCollection"/>
 		<typeAlias type="com.frame.domain.Like" alias="articalLike"/>
 		<typeAlias type="com.frame.domain.vo.Response.ArticalFishListResponse" alias="articalFishListResponse"/>
+		<typeAlias type="com.frame.domain.UserFollow" alias="userFollow"/>
 
 
 	</typeAliases>
@@ -49,7 +49,8 @@
 		<mapper resource="sqlmap/UserAuths.xml" />
 		<mapper resource="sqlmap/UserLogin.xml" />
 		<mapper resource="sqlmap/UserValid.xml" />
-		<mapper resource="sqlmap/UserFriends.xml" />
+		<mapper resource="sqlmap/UserFollow.xml" />
+
 
 	</mappers>
 </configuration>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frame.dao.UserFollowDao">
+
+	<!-- tb_user_follow 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[id,uid,fid,created,modified,yn,feature]]>
+	</sql>
+
+	<!-- tb_user_follow 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tb_user_follow]]></sql>
+	
+	<!-- 全部条件(更多功能可以通过queryData扩展实现)  -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id != null"><![CDATA[AND id = #{id}]]></if>
+			<if test="uid != null"><![CDATA[AND uid = #{uid}]]></if>
+			<if test="fid != null"><![CDATA[AND fid = #{fid}]]></if>
+			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
+			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
+			<if test="yn != null and yn != ''"><![CDATA[AND yn = #{yn}]]></if>
+			<if test="feature != null and feature != ''"><![CDATA[AND feature = #{feature}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="uid != null"><![CDATA[uid = #{uid},]]></if>
+			<if test="fid != null"><![CDATA[fid = #{fid},]]></if>
+			<if test="created != null"><![CDATA[created = #{created},]]></if>
+			<if test="modified != null"><![CDATA[modified = #{modified},]]></if>
+			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
+			<if test="feature != null"><![CDATA[feature = #{feature},]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入tb_user_follow记录 -->
+	<insert id="insertEntry" parameterType="userFollow" >
+		<![CDATA[
+			INSERT INTO tb_user_follow (id,uid,fid,created,modified,yn,feature)
+			VALUES (#{id},#{uid},#{fid},#{created},#{modified},#{yn},#{feature})
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array) -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array" >
+		<![CDATA[DELETE FROM tb_user_follow WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!-- 删除,通过条件 -->
+	<update id="deleteByCondtion" parameterType="userFollow" >
+		<![CDATA[DELETE FROM tb_user_follow]]>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</update>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateByKey" parameterType="userFollow" >
+		<![CDATA[UPDATE tb_user_follow]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="userFollow">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="userFollow" resultType="userFollow">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectEntryListCount" parameterType="userFollow" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+
+	<!-- 查询关注了哪些用户-->
+	<select id="selectFollowUsers" parameterType="Integer" resultType="user">
+		select * from tb_user where id in (select `uid` from `tb_user_follow` where `fid`=#{fId}  and yn =1 ) and yn =1
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 查询关注了哪些用户-->
+	<select id="selectFollowUsersCount" parameterType="Integer" resultType="int">
+		select COUNT(id) from tb_user where id in (select `uid` from `tb_user_follow` where `fid`=#{fId}  and yn =1 ) and yn =1
+	</select>
+	
+	<!--查询被哪些用户关注了-->
+	<select id="selectByFollowUsers" resultType="user">
+		select * from tb_user where id in (
+		select `fid` from `tb_user_follow` where `uid`= #{uId}  and yn =1
+		) and yn =1
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!--查询被哪些用户关注了-->
+	<select id="selectByFollowUsersCount" resultType="int">
+		select COUNT(id) from tb_user where id in (
+		select `fid` from `tb_user_follow` where `uid`= #{uId}  and yn =1
+		) and yn =1
+	</select>
+
+
+	<!--判断两个用户的关系-->
+	<select id="isFriend" resultType="userFollow">
+		SELECT * FROM tb_user_follow WHERE (uid = #{uId} or fid = #{uId}) AND (fid = #{fId} or uid = #{fId})  and yn =1 LIMIT 3
+	</select>
+</mapper>

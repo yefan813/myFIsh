@@ -22,6 +22,10 @@ public enum BusinessCode {
 	NO_LOGIN("1009", 1009, "用户未登录", null),
 	CRY_FAILE("1010", 1010, "cookie 解密失败", null),
 	COOKIE_INVAID("1011", 1011, "用户cookie已过期", null),
+	FOLLOWED("1012", 1012, "已经关注过了!", null),
+	NOT_FOLLOWED("1013", 1013, "未关注过了!", null),
+
+
 
 
 	;

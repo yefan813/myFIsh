@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.frame.domain.User;
 import com.frame.domain.UserAuths;
-import com.frame.domain.UserFriends;
+import com.frame.domain.UserFollow;
 import com.frame.domain.UserValid;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
@@ -16,7 +16,6 @@ import com.frame.domain.vo.UserVO;
 import com.frame.service.*;
 import com.frame.service.utils.AESUtils;
 import com.frame.web.entity.request.*;
-import com.frame.web.utils.CookieUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,6 +34,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -62,11 +62,12 @@ public class UserController extends BaseController {
     @Resource
     private ImgSysService imgSysService;
 
-    @Resource
-    private UserFriendsService userFriendsService;
 
     @Resource
     private UserAuthsService userAuthsService;
+
+    @Resource
+    private UserFollowService userFollowService;
 
 
     @Value("${img.prefix}")
@@ -599,20 +600,35 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/applyFriend", method = {RequestMethod.POST})
+    /**
+     * 关注摸个用户
+     * @param param
+     * @return
+     */
+    @RequestMapping(value = "/follow", method = {RequestMethod.POST})
+    @ApiOperation(value = "关注摸个用户", httpMethod = "POST", response = String.class, notes = "关注摸个用户")
     public @ResponseBody
-    String applyFriend(@RequestBody UserFriendParam param) {
+    String follow(@RequestBody UserFriendParam param) {
         RemoteResult result = null;
         try {
-            if (null == param || param.getFromUserId() == null || param.getToUserId() == null) {
+            if (null == param || param.getToUserId() == null) {
                 LOGGER.info("调用applyFriend 传入的参数错误");
                 result = RemoteResult.failure("0001", "传入参数错误");
                 return JSON.toJSONString(result);
             }
-            UserFriends userFriends = new UserFriends();
-            BeanUtils.copyProperties(userFriends, param);
 
-            result = userFriendsService.applyFriend(userFriends);
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            UserFollow userFollow = new UserFollow();
+            userFollow.setFid(userId);
+            userFollow.setUid(param.getToUserId());
+
+            result = userFollowService.follow(userFollow);
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -620,44 +636,34 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/getFriendsList", method = {RequestMethod.POST})
+    /**
+     * 取消关注摸个用户
+     * @param param
+     * @return
+     */
+    @RequestMapping(value = "/cancelfollow", method = {RequestMethod.POST})
+    @ApiOperation(value = "关注摸个用户", httpMethod = "POST", response = String.class, notes = "关注摸个用户")
     public @ResponseBody
-    String getFriendsList(@RequestBody UserFriendsListParam param) {
+    String cancelfollow(@RequestBody UserFriendParam param) {
         RemoteResult result = null;
         try {
-            if (null == param || param.getUserId() < 0) {
-                LOGGER.info("调用getFriendsList 传入的参数错误");
+            if (null == param || param.getToUserId() == null) {
+                LOGGER.info("调用applyFriend 传入的参数错误");
                 result = RemoteResult.failure("0001", "传入参数错误");
                 return JSON.toJSONString(result);
             }
-            Page<User> page = new Page<>();
-            page.setCurrentPage(param.getCurrentPage());
-            page.setPageSize(param.getPageSize());
-
-            result = userFriendsService.getFriendsList(page, param.getUserId());
-
-        } catch (Exception e) {
-            LOGGER.error("失败:" + e.getMessage(), e);
-            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-        }
-        return JSON.toJSONString(result);
-    }
-
-    @RequestMapping(value = "/queryFriends", method = {RequestMethod.POST})
-    public @ResponseBody
-    String queryFriends(@RequestBody QueryFriendsParam param) {
-        RemoteResult result = null;
-        try {
-            if (param == null || StringUtils.isEmpty(param.getNickName())) {
-                LOGGER.info("调用queryFriends 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
-            Page<User> page = new Page<>();
-            page.setCurrentPage(param.getCurrentPage());
-            page.setPageSize(param.getPageSize());
 
-            result = userFriendsService.queryFriends(page, param.getUserId(), param.getNickName());
+            UserFollow userFollow = new UserFollow();
+            userFollow.setFid(userId);
+            userFollow.setUid(param.getToUserId());
+
+            result = userFollowService.cancelFollow(userFollow);
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -665,19 +671,24 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/deleteFriends", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getFollowList", method = {RequestMethod.POST})
     public @ResponseBody
-    String deleteFriends(@RequestBody UserFriendParam param) {
+    String getFriendsList(@RequestBody PageParam param) {
         RemoteResult result = null;
         try {
-            if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
-                LOGGER.info("调用deleteFriends 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
+
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
-            UserFriends userFriends = new UserFriends();
-            BeanUtils.copyProperties(userFriends, param);
-            result = userFriendsService.deleteFriends(userFriends);
+            Page<User> res =  userFollowService.selectFollowUsers(userId,param.getCurrrentPage(),20);
+            if(res!=null && CollectionUtils.isNotEmpty(res.getResult())){
+                result = RemoteResult.success(res);
+            }else{
+                result = RemoteResult.success(Collections.emptyList());
+            }
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -685,19 +696,25 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/agreeApplyFriends", method = {RequestMethod.POST})
+    @RequestMapping(value = "/getFansList", method = {RequestMethod.POST})
     public @ResponseBody
-    String agreeApplyFriends(@RequestBody UserFriendParam param) {
+    String getFansList(@RequestBody PageParam param) {
         RemoteResult result = null;
         try {
-            if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
-                LOGGER.info("调用agreeApplyFriends 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
+
+            Long userId = getLoginId();
+            if(userId == null){
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
-            UserFriends userFriends = new UserFriends();
-            BeanUtils.copyProperties(userFriends, param);
-            result = userFriendsService.agreeApplyFriends(userFriends);
+
+            Page<User>  res = userFollowService.selectByollowUsers(userId,param.getCurrrentPage(),20);
+            if(CollectionUtils.isNotEmpty(res.getResult())){
+                result = RemoteResult.success(res);
+            }else{
+                result = RemoteResult.success(Collections.emptyList());
+            }
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -705,42 +722,27 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/refuseInvitation", method = {RequestMethod.POST})
-    public @ResponseBody
-    String refuseInvitation(@RequestBody UserFriendParam param) {
-        RemoteResult result = null;
-        try {
-            if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
-                LOGGER.info("调用refuseInvitation 传入的参数错误");
-                result = RemoteResult.failure("0001", "传入参数错误");
-                return JSON.toJSONString(result);
-            }
-            UserFriends userFriends = new UserFriends();
-            BeanUtils.copyProperties(userFriends, param);
-            result = userFriendsService.refuseInvitation(userFriends);
-        } catch (Exception e) {
-            LOGGER.error("失败:" + e.getMessage(), e);
-            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-        }
-        return JSON.toJSONString(result);
-    }
 
+    /**
+     * 是否相互关注
+     * @param param
+     * @return
+     */
     @RequestMapping(value = "/isFriend", method = {RequestMethod.POST})
     public @ResponseBody
     String isFriend(@RequestBody UserFriendParam param) {
         RemoteResult result = null;
         try {
-            if (null == param.getFromUserId() || param.getFromUserId() < 0 || null == param.getToUserId() || param.getToUserId() < 0) {
+            if (param == null || null == param.getToUserId() || param.getToUserId() < 0) {
                 LOGGER.info("调用isFriend 传入的参数错误");
                 result = RemoteResult.failure("0001", "传入参数错误");
                 return JSON.toJSONString(result);
             }
-            UserFriends userFriends = new UserFriends();
-            BeanUtils.copyProperties(userFriends, param);
 
+            Long userId = getLoginId();
 
-            int res = userFriendsService.check2PIsFriend(userFriends);
-            if (res > 0) {
+            List<User> res = userFollowService.isFriend(param.getToUserId(),userId);
+            if (CollectionUtils.isNotEmpty(res) && res.size() == 2) {
                 result = RemoteResult.result(BusinessCode.IS_FRIEND, null);
             } else {
                 result = RemoteResult.result(BusinessCode.NO_FRIEND, null);
@@ -779,24 +781,6 @@ public class UserController extends BaseController {
         return JSON.toJSONString(result);
     }
 
-    @RequestMapping(value = "/getPendingFriends", method = {RequestMethod.POST})
-    public @ResponseBody
-    String getPendingFriends(Page<User> page) {
-        RemoteResult result = null;
-        try {
-            Long userId = getLoginId();
-            if(userId == null){
-                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
-                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
-                return JSON.toJSONString(result);
-            }
-            result = userFriendsService.getPendingFriendList(page, userId);
-        } catch (Exception e) {
-            LOGGER.error("失败:" + e.getMessage(), e);
-            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-        }
-        return JSON.toJSONString(result);
-    }
 
 
 	@RequestMapping(value = "/logout", method = {RequestMethod.POST})

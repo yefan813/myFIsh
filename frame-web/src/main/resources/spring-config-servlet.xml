@@ -69,6 +69,10 @@
 			<mvc:mapping path="/user/isFriend" />
 			<mvc:mapping path="/user/getUserInfo" />
 			<mvc:mapping path="/user/getPendingFriends" />
+			<mvc:mapping path="/user/follow" />
+			<mvc:mapping path="/user/cancelfollow" />
+			<mvc:mapping path="/user/getFansList" />
+			<mvc:mapping path="/user/getFollowList" />
 			<mvc:mapping path="/userLogin/userLogin" />
 			<mvc:mapping path="/userLogin/saveUserLoginInfo" />
 			<mvc:mapping path="/userLogin/registDeviceToken" />
