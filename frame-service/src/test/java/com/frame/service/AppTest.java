@@ -1,8 +1,12 @@
 package com.frame.service;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Unit test for simple App.
@@ -10,6 +14,17 @@ import junit.framework.TestSuite;
 public class AppTest 
     extends TestCase
 {
+
+    /**
+    * cehsi
+    */
+    private int haha;
+
+    /**
+    * haha
+    */
+    private String haha1;
+
     /**
      * Create the test case
      *
@@ -34,5 +49,12 @@ public class AppTest
     public void testApp()
     {
         assertTrue( true );
+        int i = 10;
+        System.out.println(i);
+        Integer aa = null;
+        if (aa != null) {
+
+        }
     }
+
 }

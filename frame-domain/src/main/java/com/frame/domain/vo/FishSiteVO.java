@@ -2,6 +2,8 @@ package com.frame.domain.vo;
 
 import io.swagger.annotations.ApiModel;
 
+import java.util.Date;
+
 /**
  * Created by yefan on 2017/7/23.
  */
@@ -26,7 +28,24 @@ public class FishSiteVO{
     private Boolean canNight;
     private Boolean canEat;
     private Boolean canHotel;
+    private Date created;
+    private Long userId;
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     public String getTitle() {
         return title;

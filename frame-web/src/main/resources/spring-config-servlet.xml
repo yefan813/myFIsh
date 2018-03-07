@@ -43,6 +43,8 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/articalFish/uploadImgFile" />
 			<mvc:mapping path="/articalFish/publish" />
+			<mvc:mapping path="/articalFish/articalFishList" />
+			<mvc:mapping path="/articalFish/articalFishDetail" />
 			<mvc:mapping path="/collection/del" />
 			<mvc:mapping path="/collection/collection" />
 			<mvc:mapping path="/collection/list" />
@@ -50,9 +52,11 @@
 			<mvc:mapping path="/comment/publish" />
 			<mvc:mapping path="/comment/del" />
 			<mvc:mapping path="/fishShop/publish" />
+			<mvc:mapping path="/fishShop/fishShopDetail" />
 			<mvc:mapping path="/fishShop/del" />
 			<mvc:mapping path="/fishSite/publish" />
 			<mvc:mapping path="/fishSite/del" />
+			<mvc:mapping path="/fishSite/fishSiteDetail" />
 			<mvc:mapping path="/like/like" />
 			<mvc:mapping path="/like/del" />
 			<mvc:mapping path="/report/list" />

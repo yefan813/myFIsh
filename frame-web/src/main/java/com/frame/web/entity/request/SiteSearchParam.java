@@ -8,8 +8,6 @@ public class SiteSearchParam {
     @ApiModelProperty(value = "钓点 id")
     private Long siteId;
 
-    @ApiModelProperty(value = "用户 ID")
-    private Long userId;
 
     public Long getSiteId() {
         return siteId;
@@ -19,11 +17,4 @@ public class SiteSearchParam {
         this.siteId = siteId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 }

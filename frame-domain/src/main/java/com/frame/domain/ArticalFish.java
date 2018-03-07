@@ -30,9 +30,18 @@ public class ArticalFish extends BaseDomain {
     private String content;
     private String recommends;
     private Date fishTime;
+    private String city;
 
     private Long liked;
     private Long unliked;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Date getFishTime() {
         return fishTime;

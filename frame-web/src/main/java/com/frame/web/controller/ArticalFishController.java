@@ -66,12 +66,15 @@ public class ArticalFishController extends BaseController {
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return result;
             }
+
+            Long userId = getLoginId();
             Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
             page.setCurrentPage(artivalFishListParam.getCurrentPage());
 
 
             ArticalFish articalFish = new ArticalFish();
             BeanUtils.copyProperties(articalFish, artivalFishListParam);
+            articalFish.setUserId(userId);
             articalFish.setYn(YnEnum.Normal.getKey());
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");
@@ -100,8 +103,8 @@ public class ArticalFishController extends BaseController {
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
-
-        ArticalFishListResponse articalFish = articalFishService.selectEntryDetail(param.getArticalId(),param.getUserId());
+        Long userId = getLoginId();
+        ArticalFishListResponse articalFish = articalFishService.selectEntryDetail(param.getArticalId(),userId);
         if (null == articalFish) {
             LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", param.getArticalId());
             result = RemoteResult.failure(BusinessCode.FAILED.getCode(),

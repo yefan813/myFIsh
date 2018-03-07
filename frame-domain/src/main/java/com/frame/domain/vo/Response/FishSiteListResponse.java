@@ -1,13 +1,13 @@
 package com.frame.domain.vo.Response;
 
 
-import com.frame.domain.vo.ArticalFishVO;
+import com.frame.domain.vo.FishSiteVO;
 import com.frame.domain.vo.UserBaseVO;
 
 /**
  * Created by yefan on 2017/7/23.
  */
-public class ArticalFishListResponse extends ArticalFishVO {
+public class FishSiteListResponse extends FishSiteVO {
 
     private UserBaseVO user;
 

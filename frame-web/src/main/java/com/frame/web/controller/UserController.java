@@ -417,11 +417,11 @@ public class UserController extends BaseController {
 
             JSONObject object = new JSONObject();
             if (CollectionUtils.isEmpty(users)) {
-                object.put("registered", BusinessCode.IS_EXIST_NO.getKey());
+                object.put("registered", false);
                 result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(), "此电话号码未注册", object);
                 return JSON.toJSONString(result);
             } else {
-                object.put("registered", BusinessCode.IS_EXIST_YES.getKey());
+                object.put("registered", true);
                 result = RemoteResult.failure(BusinessCode.SUCCESS.getCode(), "此电话号码已注册", object);
                 return JSON.toJSONString(result);
             }
@@ -785,9 +785,9 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = "/logout", method = {RequestMethod.POST})
     public @ResponseBody String logout(HttpServletRequest request, HttpServletResponse response) {
-		RemoteResult result = null;
         Cookie ck = new Cookie(CookieEnum.TICKET.getKey(), "");
         ck.setMaxAge(0);
+        ck.setPath("/");
         response.addCookie(ck);
 		return JSON.toJSONString(RemoteResult.success());
 	}

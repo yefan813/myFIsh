@@ -28,8 +28,15 @@ public class ArticalFishSaveParam {
     @ApiModelProperty(required = true)
     private String recommends;
     private Date fishTime;
+    private String city;
 
+    public String getCity() {
+        return city;
+    }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getTitle() {
         return title;

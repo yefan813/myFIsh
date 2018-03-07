@@ -30,6 +30,8 @@
 		<typeAlias type="com.frame.domain.Collection" alias="articalCollection"/>
 		<typeAlias type="com.frame.domain.Like" alias="articalLike"/>
 		<typeAlias type="com.frame.domain.vo.Response.ArticalFishListResponse" alias="articalFishListResponse"/>
+		<typeAlias type="com.frame.domain.vo.Response.FishShopListResponse" alias="fishShopListResponse"/>
+		<typeAlias type="com.frame.domain.vo.Response.FishSiteListResponse" alias="fishSiteListResponse"/>
 		<typeAlias type="com.frame.domain.UserFollow" alias="userFollow"/>
 
 

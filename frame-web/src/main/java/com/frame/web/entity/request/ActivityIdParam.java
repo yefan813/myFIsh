@@ -7,8 +7,6 @@ import io.swagger.annotations.ApiModelProperty;
 public class ActivityIdParam {
     @ApiModelProperty(value = "文章 id")
     private Long articalId;
-    @ApiModelProperty(value = "user id")
-    private Long userId;
 
     public Long getArticalId() {
         return articalId;
@@ -16,13 +14,5 @@ public class ActivityIdParam {
 
     public void setArticalId(Long articalId) {
         this.articalId = articalId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

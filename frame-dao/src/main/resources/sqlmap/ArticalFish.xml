@@ -14,8 +14,9 @@
 		<result property="waterType" column="waterType"/>
 		<result property="content" column="content"/>
 		<result property="userId" column="userId"/>
-		<result property="isCollectioned" column="isCollectioned"/>
-		<result property="isLiked" column="isLiked"/>
+		<result property="isCollectioned" column="isCollectioned" jdbcType="INTEGER" javaType="BOOLEAN"/>
+		<result property="isLiked" column="isLiked" jdbcType="INTEGER" javaType="BOOLEAN"/>
+		<result property="city" column="city"/>
 		<association property="user" resultMap="userBaseVO" />
 	</resultMap>
 
@@ -49,7 +50,8 @@
 			feature,
 			created,
 			modified,
-			yn
+			yn,
+			city
 		]]>
 	</sql>
 
@@ -78,7 +80,8 @@
 			feature,
 			created,
 			modified,
-			yn
+			yn,
+			city
 		]]>
 	</sql>
 	<!-- groupon 查询列来源表-->
@@ -107,6 +110,8 @@
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
 			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+			<if test="city != null "><![CDATA[AND city = #{city}]]></if>
+
 		</where>
 	</sql>
 	
@@ -141,14 +146,16 @@
 			<if test="created != null and created != ''"><![CDATA[created = #{created},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
+			<if test="city != null"><![CDATA[city = #{city},]]></if>
+
 		</set>
 	</sql>
 
 	<!-- 插入team记录 -->
 	<insert id="insertEntry" parameterType="articalFish" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
-			INSERT INTO tb_artical_fish (user_id,title,recommends,fish_time,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn)
-			VALUES (#{userId},#{title},#{recommends},#{fishTime},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn})
+			INSERT INTO tb_artical_fish (user_id,title,recommends,fish_time,water_type,bait,fish_type,fish_lines,fishing_func,fish_pole_length,fish_pole_brand,location_address,article_type,is_publish,content,feature,created,modified,yn,city)
+			VALUES (#{userId},#{title},#{recommends},#{fishTime},#{waterType},#{bait},#{fishType},#{fishLines},#{fishingFunc},#{fishPoleLength},#{fishPoleBrand},#{locationAddress},#{articleType},#{isPublish},#{content},#{feature},now(),now(),#{yn},#{city})
 		]]>
 	</insert>
 	
@@ -225,6 +232,7 @@
 			af.article_type as articleType,
 			af.is_publish as isPublish,
 			af.created as created,
+			af.city as city,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
 			u.address AS address,
@@ -253,6 +261,7 @@
 			af.water_type as waterType,
 			af.article_type as articleType,
 			af.created as created,
+			af.city as city,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
 			u.address AS address,

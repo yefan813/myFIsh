@@ -50,6 +50,18 @@ public class ArticalFishVO{
     private Long commentCount;
     @ApiModelProperty(hidden = true)
     private Long collectionCount;
+    /**
+     * 城市
+     */
+    private String city;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public Long getLikeCount() {
         return likeCount;

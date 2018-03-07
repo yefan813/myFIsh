@@ -3,6 +3,44 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.frame.dao.FishSiteDao">
 
+
+	<resultMap id="fishSiteBaseListMap" type="fishSiteListResponse">
+		<id property="id" column="id"/>
+		<result property="title" column="title" />
+		<result property="introduce" column="introduce" />
+		<result property="pic0" column="pic0" />
+		<result property="pic1" column="pic1" />
+		<result property="pic2" column="pic2" />
+		<result property="pic3" column="pic3" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<result property="address" column="address" />
+		<result property="publishType" column="publishType" />
+		<result property="siteType" column="siteType" />
+		<result property="siteFeeType" column="siteFeeType" />
+		<result property="siteFishType" column="siteFishType" />
+		<result property="sitePhone" column="sitePhone" />
+		<result property="canPark" column="canPark" />
+		<result property="canNight" column="canNight" />
+		<result property="canEat" column="canEat" />
+		<result property="canHotel" column="canHotel" />
+		<result property="likeCount" column="likeCount"/>
+		<result property="commentCount" column="commentCount"/>
+		<result property="created" column="created"/>
+		<result property="userId" column="userId"/>
+		<result property="isCollectioned" column="isCollectioned" jdbcType="INTEGER" javaType="BOOLEAN"/>
+		<result property="isLiked" column="isLiked" jdbcType="INTEGER" javaType="BOOLEAN"/>
+		<result property="city" column="city"/>
+		<association property="user" resultMap="userBaseVO" />
+	</resultMap>
+
+	<resultMap id="userBaseVO" type="com.frame.domain.vo.UserBaseVO" >
+		<id property="id" column="userId" />
+		<result property="nickName" column="nickName"/>
+		<result property="avatarUrl" column="avatarUrl"/>
+		<result property="address" column="address"/>
+	</resultMap>
+
 	<!-- groupon 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[
@@ -165,6 +203,118 @@
 		<include refid="QUERY_FROM_TABLE"/>
 		<include refid="QUERY_WHERE_CLAUSE"/>
 	</select>
+
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryDetail" parameterType="Long" resultMap="fishSiteBaseListMap">
+		<![CDATA[select
+			af.id,
+			af.user_id as userId,
+			af.title,
+			af.introduce,
+			af.pic0,
+			af.pic1,
+			af.pic2,
+			af.pic3,
+			af.lng,
+			af.lat,
+			af.address,
+			af.publish_type as publishType,
+			af.site_type as siteType,
+			af.site_fee_type as siteFeeType,
+			af.site_fish_type as siteFishType,
+			af.site_phone as sitePhone,
+			af.can_park as canPark,
+			af.can_night as canNight,
+			af.can_eat as canEat,
+			af.can_hotel as canHotel,
+			af.created,
+			u.nick_name AS nickName,
+			u.avatar_url AS avatarUrl,
+			u.address AS address,
+			tal.likeCount AS likeCount,
+			tc.commentCount as commentCount,
+			tcoll.id as isCollectioned,
+			tlike.id as isLiked
+ 			FROM tb_fish_site af
+ 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=2
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=2
+			LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select id,user_id,source_type,source_id from tb_collection GROUP BY id) tcoll on tcoll.user_id = #{userId} and tcoll.source_id = af.id  and tcoll.source_type = 2
+			left join (select id,user_id,source_type,source_id from tb_like  GROUP BY id ) tlike on tlike.user_id = #{userId} and tlike.source_id = af.id  and tlike.source_type = 2
+			]]>
+		<![CDATA[ where  af.id  = #{fishSiteId}]]>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectBaseEntryList" parameterType="fishSite" resultMap="fishSiteBaseListMap">
+		<![CDATA[select
+			af.user_id as userId,
+			af.title,
+			af.introduce,
+			af.pic0,
+			af.pic1,
+			af.pic2,
+			af.pic3,
+			af.lng,
+			af.lat,
+			af.address,
+			af.site_fee_type as siteFeeType,
+			af.site_fish_type as siteFishType,
+			af.site_phone as sitePhone,
+			af.created,
+			u.nick_name AS nickName,
+			u.avatar_url AS avatarUrl,
+			u.address AS address,
+			tal.likeCount AS likeCount,
+			tc.commentCount as commentCount,
+			tcoll.user_id as isCollectioned,
+			tlike.user_id as isLiked
+ 			FROM tb_fish_site af
+ 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=2
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=2
+			LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select id,user_id,source_type,source_id from tb_collection GROUP BY id) tcoll on tcoll.user_id = #{userId} and tcoll.source_id = af.id  and tcoll.source_type = 2
+			left join (select id,user_id,source_type,source_id from tb_like  GROUP BY id ) tlike on tlike.user_id = #{userId} and tlike.source_id = af.id  and tlike.source_type = 2
+			]]>
+		<where>
+			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
+			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
+			<if test="publishType != null"><![CDATA[AND af.publish_type = #{publishType}]]></if>
+			<if test="siteType != null"><![CDATA[AND af.site_type = #{siteType}]]></if>
+			<if test="siteFeeType != null"><![CDATA[AND af.site_fee_type = #{siteFeeType}]]></if>
+			<if test="siteFishType != null"><![CDATA[AND af.site_fish_type = #{siteFishType}]]></if>
+			<if test="sitePhone != null"><![CDATA[AND af.site_phone = #{sitePhone}]]></if>
+			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
+		</where>
+
+		<if test="orderField != null and orderField != '' and orderFieldType != null and orderFieldType != ''"><![CDATA[ORDER BY CONCAT('af.', '${orderField}', '') ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
+	</select>
+
+
+	<!-- 查询,通过条件 -->
+	<select id="selectBaseEntryListCount" parameterType="fishSite" resultType="int">
+		<![CDATA[SELECT COUNT(af.id) AS dataCount  FROM tb_fish_site af
+			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=2
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=2
+			LEFT join tb_user u on af.user_id = u.id
+			]]>
+		<where>
+			<if test="id != null"><![CDATA[AND af.id = #{id}]]></if>
+			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
+			<if test="publishType != null"><![CDATA[AND af.publish_type = #{publishType}]]></if>
+			<if test="siteType != null"><![CDATA[AND af.site_type = #{siteType}]]></if>
+			<if test="siteFeeType != null"><![CDATA[AND af.site_fee_type = #{siteFeeType}]]></if>
+			<if test="siteFishType != null"><![CDATA[AND af.site_fish_type = #{siteFishType}]]></if>
+			<if test="sitePhone != null"><![CDATA[AND af.site_phone = #{sitePhone}]]></if>
+			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
+		</where>
+
+	</select>
+
+
+
 
 
 </mapper>

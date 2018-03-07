@@ -8,6 +8,7 @@ import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.vo.FishSiteVO;
+import com.frame.domain.vo.Response.FishSiteListResponse;
 import com.frame.service.FishSiteService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
@@ -57,13 +58,17 @@ public class FishSiteController extends BaseController {
     public String getFishSiteList(HttpServletRequest request, @RequestBody FishSiteListParam param){
         RemoteResult result = null;
         try {
-            Page<FishSite> page = new Page<>();
+            Page<FishSiteListResponse> page = new Page<>();
             page.setCurrentPage(param.getCurrentPage());
+
+            Long userId = getLoginId();
 
             FishSite fishSite = new FishSite();
             BeanUtils.copyProperties(fishSite, param);
             fishSite.setYn(YnEnum.Normal.getKey());
-            Page<FishSite> res = fishSiteService.selectPage(fishSite, page);
+            fishSite.setUserId(userId);
+
+            Page<FishSiteListResponse> res = fishSiteService.selectBaseEntryList(fishSite, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         }catch (Exception e) {
@@ -85,8 +90,9 @@ public class FishSiteController extends BaseController {
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
+        Long userId = getLoginId();
 
-        FishSite articalFish = fishSiteService.selectEntry(param.getSiteId());
+        FishSiteListResponse articalFish = fishSiteService.selectEntryDetail(param.getSiteId(),userId);
         if(null == articalFish){
             LOGGER.error("getFishSiteDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),

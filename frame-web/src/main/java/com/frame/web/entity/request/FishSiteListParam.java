@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 public class FishSiteListParam {
     @ApiModelProperty(value = "当前页",required = true)
     private Integer currentPage;
-    private Long userId;
     private String title;
     private String address;
     private String siteType;
@@ -28,13 +27,6 @@ public class FishSiteListParam {
         this.currentPage = currentPage;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

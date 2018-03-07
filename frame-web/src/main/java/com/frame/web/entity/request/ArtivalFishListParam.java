@@ -12,9 +12,6 @@ public class ArtivalFishListParam {
     /**文章 id**/
     private Long articalId;
 
-    @ApiModelProperty(value="用户 id")
-    /****/
-    private Long userId;
 
     @ApiModelProperty(value="文章类型")
     private Integer articleType;
@@ -35,13 +32,6 @@ public class ArtivalFishListParam {
         this.articalId = articalId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public Integer getArticleType() {
         return articleType;

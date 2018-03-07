@@ -8,6 +8,7 @@ import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.vo.FishShopVO;
+import com.frame.domain.vo.Response.FishShopListResponse;
 import com.frame.service.FishShopService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
@@ -62,13 +63,17 @@ public class FishShopController extends BaseController {
                         BusinessCode.PARAMETERS_ERROR.getValue());
                 return JSON.toJSONString(result);
             }
-            Page<FishShop> page = new Page<>();
+            Page<FishShopListResponse> page = new Page<>();
             page.setCurrentPage(param.getCurrentPage());
+
+            Long userId = getLoginId();
 
             FishShop fishShop = new FishShop();
             BeanUtils.copyProperties(fishShop,param);
             fishShop.setYn(YnEnum.Normal.getKey());
-            Page<FishShop> res = fishShopService.selectPage(fishShop,page);
+            fishShop.setUserId(userId);
+
+            Page<FishShopListResponse> res = fishShopService.selectBaseEntryList(fishShop,page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         }catch (Exception e) {
@@ -90,8 +95,8 @@ public class FishShopController extends BaseController {
                     BusinessCode.PARAMETERS_ERROR.getValue());
             return JSON.toJSONString(result);
         }
-
-        FishShop fishShop = fishShopService.selectEntry(param.getSiteId());
+        Long userId = getLoginId();
+        FishShopListResponse fishShop = fishShopService.selectEntryDetail(param.getSiteId(),userId);
         if(null == fishShop){
             LOGGER.error("getFishShopDetail artical 传入的参数错误 articalId【{}】", JSON.toJSONString(param));
             result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
