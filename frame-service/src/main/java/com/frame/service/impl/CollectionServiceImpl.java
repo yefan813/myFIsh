@@ -95,7 +95,7 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
                 return articalFishPage;
             }
 
-            Long[] articalIds = new Long[]{};
+            Long[] articalIds = new Long[list.size()];
             int index = 0;
             for (Collection item : list) {
                 articalIds[index] = item.getSourceId();
