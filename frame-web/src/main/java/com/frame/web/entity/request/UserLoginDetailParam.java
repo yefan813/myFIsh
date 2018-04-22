@@ -11,7 +11,6 @@ public class UserLoginDetailParam {
     private String address;
     private Double latitude;
     private Double longitude;
-    private Date loginTime; // 用户登录ip
 
     private String location; // 用户定位坐标
 
@@ -43,13 +42,6 @@ public class UserLoginDetailParam {
         this.longitude = longitude;
     }
 
-    public Date getLoginTime() {
-        return loginTime;
-    }
-
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
-    }
 
     public String getLocation() {
         return location;

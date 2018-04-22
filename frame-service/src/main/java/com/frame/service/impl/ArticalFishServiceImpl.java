@@ -79,5 +79,8 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
         return page;
     }
 
-
+    @Override
+    public List<ArticalFishListResponse> selectBaseEntryArray(Long userId, Long[] articalIds) {
+        return articalFishDao.selectBaseEntryArray(userId,articalIds);
+    }
 }

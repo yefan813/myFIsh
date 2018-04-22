@@ -11,6 +11,7 @@ import java.util.Date;
 public class FishShopVO{
 
 
+    private Integer id;
     private String title;
     private  String introduce;
     private String content;
@@ -25,6 +26,14 @@ public class FishShopVO{
     private Integer publishType;
     private Date created;
     private Long userId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;

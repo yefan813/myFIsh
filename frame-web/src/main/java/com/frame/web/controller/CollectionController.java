@@ -10,6 +10,7 @@ import com.frame.domain.common.Page;
 import com.frame.domain.common.RemoteResult;
 import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.vo.CollectionVO;
+import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.CollectionService;
 import com.frame.service.ImgSysService;
@@ -91,7 +92,7 @@ public class CollectionController extends  BaseController{
             CollectionVO articalCollectionVO = new CollectionVO();
             BeanUtils.copyProperties(articalCollectionVO, listParam);
 
-            Page<ArticalFish> res = collectionService.getArticalCollectionById(userId,articalCollectionVO, page);
+            Page<ArticalFishListResponse> res = collectionService.getArticalCollectionById(userId,articalCollectionVO, page);
             result = RemoteResult.success(res);
             return JSON.toJSONString(result);
         } catch (Exception e) {

@@ -169,7 +169,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		int res = updateByKey(user);
 
 		if(res > 0){
+
+
+
 			User dataUser = selectEntry(user.getId().longValue());
+			result = RemoteResult.success(dataUser);
 		}else{
 			result = RemoteResult.failure("0001", "绑定失败");
 		}

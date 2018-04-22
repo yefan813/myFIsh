@@ -61,6 +61,7 @@ public class LikeServiceImpl extends BaseServiceImpl<Like, Long> implements Like
                 articalLike.setId(exist.getId());
                 articalLike.setModified(new Date());
             }
+            articalLike.setUserId(userId);
             return saveOrUpdate(articalLike);
         } catch (Exception e) {
             LOGGER.error("异常", e);

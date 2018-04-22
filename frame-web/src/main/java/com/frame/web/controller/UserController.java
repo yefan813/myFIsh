@@ -310,6 +310,10 @@ public class UserController extends BaseController {
                 result = RemoteResult.failure("0001", "传入参数错误");
                 return JSON.toJSONString(result);
             }
+            if(param.getType() == null){
+                result = RemoteResult.failure("0001", "传入参数错误,验证码类型错误");
+                return JSON.toJSONString(result);
+            }
 
             if (param.getTel().length() != 11) {
                 result = RemoteResult.failure("0001", "请传入正确的电话号码");
@@ -323,7 +327,12 @@ public class UserController extends BaseController {
                 return JSON.toJSONString(result);
             }
 
-            result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), SendSMSTypeEnum.REGIST_USER.getKey());
+            if(SendSMSTypeEnum.getTypeByKey( param.getType()) == null ){
+                result = RemoteResult.failure("0001", "传入参数错误,验证码类型不存在");
+                return JSON.toJSONString(result);
+            }
+
+            result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), param.getType());
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -332,43 +341,43 @@ public class UserController extends BaseController {
     }
 
 
-    /**
-     * 获取忘记密码验证码
-     *
-     * @param param
-     * @return
-     */
-//	@RequestLimit
-    @RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
-    @ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
-    public @ResponseBody
-    String getValidCodeforgetPassword(HttpServletRequest request, @RequestBody ValidCodeParam param) {
-        RemoteResult result = null;
-        try {
-            if (param == null || StringUtils.isEmpty(param.getTel())) {
-                result = RemoteResult.failure("0001", "传入参数错误");
-                return JSON.toJSONString(result);
-            }
-
-            if (param.getTel().length() != 11) {
-                result = RemoteResult.failure("0001", "请传入正确的电话号码");
-                return JSON.toJSONString(result);
-            }
-
-            boolean existTel = IsExistTel(param.getTel());
-            if (!existTel) {
-                LOGGER.info("该用户未注册，手机号为【{}】", param.getTel());
-                result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户未注册");
-                return JSON.toJSONString(result);
-            }
-
-            result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), SendSMSTypeEnum.FORGET_PWD.getKey());
-        } catch (Exception e) {
-            LOGGER.error("失败:" + e.getMessage(), e);
-            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
-        }
-        return JSON.toJSONString(result);
-    }
+//    /**
+//     * 获取忘记密码验证码
+//     *
+//     * @param param
+//     * @return
+//     */
+////	@RequestLimit
+//    @RequestMapping(value = "/getValidCodeforget", method = {RequestMethod.POST})
+//    @ApiOperation(value = "获取忘记密码验证码", httpMethod = "POST", response = String.class, notes = "获取忘记密码验证码")
+//    public @ResponseBody
+//    String getValidCodeforgetPassword(HttpServletRequest request, @RequestBody ValidCodeParam param) {
+//        RemoteResult result = null;
+//        try {
+//            if (param == null || StringUtils.isEmpty(param.getTel())) {
+//                result = RemoteResult.failure("0001", "传入参数错误");
+//                return JSON.toJSONString(result);
+//            }
+//
+//            if (param.getTel().length() != 11) {
+//                result = RemoteResult.failure("0001", "请传入正确的电话号码");
+//                return JSON.toJSONString(result);
+//            }
+//
+//            boolean existTel = IsExistTel(param.getTel());
+//            if (!existTel) {
+//                LOGGER.info("该用户未注册，手机号为【{}】", param.getTel());
+//                result = RemoteResult.failure(BusinessCode.FAILED.getCode(), "该用户未注册");
+//                return JSON.toJSONString(result);
+//            }
+//
+//            result = taoBaoSmsService.sendValidSMS(param.getTel(), System.currentTimeMillis(), SendSMSTypeEnum.FORGET_PWD.getKey());
+//        } catch (Exception e) {
+//            LOGGER.error("失败:" + e.getMessage(), e);
+//            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+//        }
+//        return JSON.toJSONString(result);
+//    }
 
 
     /**
@@ -494,7 +503,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/login4ThirdPart", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "第三方登录借口", httpMethod = "POST", response = String.class, notes = "第三方登录借口")
     public @ResponseBody
-    String login4ThirdPart(HttpServletRequest request, @RequestBody UserThirdPartLoginParam param) {
+    String login4ThirdPart(HttpServletRequest request, HttpServletResponse response, @RequestBody UserThirdPartLoginParam param) {
         RemoteResult result = null;
         try {
             if (null == param || null == param.getIdentityType()) {
@@ -518,6 +527,11 @@ public class UserController extends BaseController {
             }
 
             result = userService.login4ThirdPart(auths, user);
+            if ("1000".equals(result.getCode())) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(userVO,result.getData());
+                setLoginTicket(request,response,userVO);
+            }
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
@@ -589,14 +603,55 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/bindTel", method = {RequestMethod.POST})
     public @ResponseBody
-    String bindTel(User user) {
-        RemoteResult result = null;
-        if (null == user || user.getId() == null || user.getTel() == null) {
+    String bindTel( @RequestBody  BindTelParam param) {
+        RemoteResult result;
+        if (null == param || param.getTel() == null || param.getValidCode() == null) {
             LOGGER.info("调用bindTel 传入的参数错误");
             result = RemoteResult.failure("0001", "传入参数错误");
             return JSON.toJSONString(result);
         }
-        result = userService.bindTel(user);
+        try {
+
+            Long userId = getLoginId();
+            if (userId == null) {
+                LOGGER.error(BusinessCode.NO_LOGIN.getValue());
+                result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(), BusinessCode.NO_LOGIN.getValue());
+                return JSON.toJSONString(result);
+            }
+
+            User user = userService.selectEntry(userId);
+            if(user != null && StringUtils.isNotBlank(user.getTel())){
+                result = RemoteResult.failure("0001", "此用户已经绑定过手机号");
+                return JSON.toJSONString(result);
+            }
+
+            // 判断出入的validCode 是否是发送时的code
+            boolean res = isCorrectValidCode(param.getTel(), param.getValidCode(), SendSMSTypeEnum.BIND_TEL.getKey());
+            if (res) {
+                // 验证成功向数据库写入一条默认数据
+                User defaultUser = new User();
+                defaultUser.setTel(param.getTel());
+                defaultUser.setId(userId.intValue());
+                defaultUser.setPoint(0l);
+                defaultUser.setYn(YnEnum.Normal.getKey());
+
+                UserAuths userAuths = new UserAuths();
+                userAuths.setIdentityType(UserAuths.IDENTITY_RYPE_TEL);
+                userAuths.setIdentifier(param.getTel());
+                userAuths.setCredential(param.getPassword());
+                userAuths.setVerified(1);// 已验证
+                userAuths.setYn(YnEnum.Normal.getKey());
+
+                result = userService.registOrUpdateUser(defaultUser, userAuths);
+                result.setMsg("注册成功");
+            } else {
+                result = RemoteResult.failure("0002", "验证失败,验证码失效，请重新获取验证码");
+            }
+        }catch (Exception e){
+            LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+
         return JSON.toJSONString(result);
     }
 
@@ -683,7 +738,7 @@ public class UserController extends BaseController {
                 result = RemoteResult.failure(BusinessCode.NO_LOGIN.getCode(),BusinessCode.NO_LOGIN.getValue());
                 return JSON.toJSONString(result);
             }
-            Page<User> res =  userFollowService.selectFollowUsers(userId,param.getCurrrentPage(),20);
+            Page<User> res =  userFollowService.selectFollowUsers(userId,param.getCurrentPage(),20);
             if(res!=null && CollectionUtils.isNotEmpty(res.getResult())){
                 result = RemoteResult.success(res);
             }else{
@@ -709,7 +764,7 @@ public class UserController extends BaseController {
                 return JSON.toJSONString(result);
             }
 
-            Page<User>  res = userFollowService.selectByollowUsers(userId,param.getCurrrentPage(),20);
+            Page<User>  res = userFollowService.selectByollowUsers(userId,param.getCurrentPage(),20);
             if(CollectionUtils.isNotEmpty(res.getResult())){
                 result = RemoteResult.success(res);
             }else{
@@ -771,8 +826,44 @@ public class UserController extends BaseController {
                 result = RemoteResult.result(BusinessCode.IS_EXIST_NO, null);
                 return JSON.toJSONString(result);
             }
-            user.setAvatarUrl(IMAGEPREFIX + user.getAvatarUrl());
+            if (!StringUtils.isBlank(user.getAvatarUrl()) && !user.getAvatarUrl().contains("http:")) {
+                user.setAvatarUrl( IMAGEPREFIX + user.getAvatarUrl());
+            }
+
             result = RemoteResult.success(user);
+
+        } catch (Exception e) {
+            LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
+    @RequestMapping(value = "/getUserInfoById", method = {RequestMethod.POST})
+    public @ResponseBody
+    String getUserInfoById(@RequestBody UserDetailInfoParam info) {
+        RemoteResult result = null;
+        try {
+            if(info == null || StringUtils.isBlank(info.getId())){
+                LOGGER.error("调用getUserInfoById传入参数错误,param：【{}】", JSON.toJSONString(info));
+                result = RemoteResult.failure("调用getUserInfoById传入参数错误");
+                return JSON.toJSONString(result);
+            }
+
+            User user = userService.selectEntry(Long.valueOf(info.getId()));
+            if (user == null) {
+                result = RemoteResult.result(BusinessCode.IS_EXIST_NO, null);
+                return JSON.toJSONString(result);
+            }
+
+            if (!StringUtils.isBlank(user.getAvatarUrl()) && !user.getAvatarUrl().contains("http:")) {
+                user.setAvatarUrl( IMAGEPREFIX + user.getAvatarUrl());
+            }
+
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(userVO,user);
+
+            result = RemoteResult.success(userVO);
 
         } catch (Exception e) {
             LOGGER.error("失败:" + e.getMessage(), e);

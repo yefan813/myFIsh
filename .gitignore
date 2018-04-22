@@ -6,3 +6,5 @@
 .iml
 /bin/
 .impl
+.idea
+*.impl

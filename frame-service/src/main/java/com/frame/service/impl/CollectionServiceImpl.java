@@ -7,6 +7,7 @@ import com.frame.domain.Collection;
 import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
 import com.frame.domain.vo.CollectionVO;
+import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.CollectionService;
 import com.frame.service.base.BaseServiceImpl;
@@ -64,6 +65,7 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
                 collection.setId(exist.getId());
                 collection.setModified(new Date());
             }
+            collection.setUserId(userId);
             return saveOrUpdate(collection);
         } catch (Exception e) {
             LOGGER.error("异常", e);
@@ -72,9 +74,9 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
     }
 
     @Override
-    public Page<ArticalFish> getArticalCollectionById(Long userId,CollectionVO articalCollectionVO, Page<Collection> page) {
+    public Page<ArticalFishListResponse> getArticalCollectionById(Long userId,CollectionVO articalCollectionVO, Page<Collection> page) {
 
-        Page<ArticalFish> articalFishPage = new Page<>();
+        Page<ArticalFishListResponse> articalFishPage = new Page<>();
         articalFishPage.setCurrentPage(page.getCurrentPage());
         articalFishPage.setPageSize(page.getPageSize());
 
@@ -91,7 +93,7 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
 
             List<Collection> list = page.getResult();
             if (CollectionUtils.isEmpty(list)) {
-                articalFishPage.setResult(Lists.<ArticalFish>newArrayList());
+                articalFishPage.setResult(Lists.<ArticalFishListResponse>newArrayList());
                 return articalFishPage;
             }
 
@@ -102,8 +104,8 @@ public class CollectionServiceImpl extends BaseServiceImpl<Collection, Long> imp
                 index++;
             }
 
-            List<ArticalFish> articalFishList = articalFishService.selectEntryList(articalIds);
-            articalFishPage.setResult(articalFishList);
+            List<ArticalFishListResponse> articalFishListResponses = articalFishService.selectBaseEntryArray(userId,articalIds);
+            articalFishPage.setResult(articalFishListResponses);
             articalFishPage.setTotalCount(page.getTotalCount());
         } catch (Exception e) {
             LOGGER.error("getArticalReportById 异常", e);

@@ -16,6 +16,17 @@ public class ArtivalFishListParam {
     @ApiModelProperty(value="文章类型")
     private Integer articleType;
 
+    @ApiModelProperty(value="userId")
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public Integer getCurrentPage() {
         return currentPage;
     }

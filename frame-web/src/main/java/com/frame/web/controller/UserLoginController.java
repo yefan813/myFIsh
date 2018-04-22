@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -49,7 +50,7 @@ public class UserLoginController extends BaseController {
 		try {
 			if (param == null
 					|| (param.getLocation() == null || !param.getLocation().contains(","))
-					|| param.getLoginTime() == null) {
+					) {
 				LOGGER.info("调用saveUsetLoginInfo 传入的参数错误");
 				result = RemoteResult.failure("0001", "传入参数错误");
 				return JSON.toJSONString(result);
@@ -69,6 +70,7 @@ public class UserLoginController extends BaseController {
 			UserLogin userLogin = new UserLogin();
 			userLogin.setUserId(userId.intValue());
 			userLogin.setYn(YnEnum.Normal.getKey());
+			userLogin.setLoginTime(new Date());
 			if (userLoginService.insertEntry(userLogin) > 0) {
 				LOGGER.info("用户定位保存成功,传入的参数为：[{}]", JSON.toJSONString(userLogin));
 				result = RemoteResult.success();

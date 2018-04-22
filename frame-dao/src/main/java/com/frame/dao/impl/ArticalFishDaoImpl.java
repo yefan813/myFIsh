@@ -17,6 +17,7 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 
 	private final static String SELECT_ENTRY_DETAIL = "selectEntryDetail";
 	private final static String selectBaseEntryList = "selectBaseEntryList";
+	private final static String selectEntryArrayDetail = "selectEntryArrayDetail";
 	private final static String selectBaseEntryListCount = "selectBaseEntryListCount";
 
 
@@ -39,6 +40,14 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 	@Override
 	public List<ArticalFishListResponse> selectBaseEntryList(ArticalFish condition) {
 		return selectList(getNameSpace(selectBaseEntryList),condition);
+	}
+
+	@Override
+	public List<ArticalFishListResponse> selectBaseEntryArray(Long userId,Long[] articalids) {
+		Map<String,Object> param = new HashMap<>();
+		param.put("userId",userId);
+		param.put("array",articalids);
+		return selectList(getNameSpace(selectEntryArrayDetail), param);
 	}
 
 	@Override

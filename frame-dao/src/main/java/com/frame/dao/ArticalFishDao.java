@@ -12,6 +12,9 @@ public interface ArticalFishDao extends BaseDao<ArticalFish, Long> {
 
     List<ArticalFishListResponse> selectBaseEntryList(ArticalFish condition);
 
+    List<ArticalFishListResponse> selectBaseEntryArray(Long userId,Long[] articalids);
+
+
     Integer selectBaseEntryListCount(ArticalFish condition);
 
 }

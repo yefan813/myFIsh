@@ -44,6 +44,7 @@
 			<mvc:mapping path="/articalFish/uploadImgFile" />
 			<mvc:mapping path="/articalFish/publish" />
 			<mvc:mapping path="/articalFish/articalFishList" />
+			<mvc:mapping path="/articalFish/currentArticalFishList" />
 			<mvc:mapping path="/articalFish/articalFishDetail" />
 			<mvc:mapping path="/collection/del" />
 			<mvc:mapping path="/collection/collection" />
@@ -83,6 +84,7 @@
 			<mvc:mapping path="/userLogin/sendNotifi" />
 			<mvc:mapping path="/userLogin/getPendingFriends" />
 			<mvc:mapping path="/userLogin/getPendingFriends" />
+
 
 			<mvc:exclude-mapping path="/assets/**" />
 			<mvc:exclude-mapping path="/img/**" />

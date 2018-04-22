@@ -4,6 +4,7 @@
 <mapper namespace="com.frame.dao.FishShopDao">
 
 	<resultMap id="fishShopBaseListMap" type="fishShopListResponse">
+		<id property="id" column="id"/>
 		<result property="likeCount" column="likeCount"/>
 		<result property="commentCount" column="commentCount"/>
 		<result property="title" column="title"/>

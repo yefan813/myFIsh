@@ -6,6 +6,8 @@ import com.frame.domain.vo.ArticalFishVO;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.base.BaseService;
 
+import java.util.List;
+
 public interface ArticalFishService extends BaseService<ArticalFish, Long> {
 
 
@@ -13,4 +15,8 @@ public interface ArticalFishService extends BaseService<ArticalFish, Long> {
 
 
     Page<ArticalFishListResponse> selectBaseEntryList(ArticalFish condtion, Page<ArticalFishListResponse> page);
+
+    List<ArticalFishListResponse> selectBaseEntryArray(Long userId,Long[] articalIds);
+
+
 }

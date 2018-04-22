@@ -280,8 +280,9 @@
 			<if test="title != null"><![CDATA[AND af.title = #{title}]]></if>
 			<if test="fishTime != null and fishTime != ''"><![CDATA[AND af.fish_time = #{fishTime}]]></if>
 			<if test="waterType != null"><![CDATA[AND af.water_type = #{waterType}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND af.article_type = #{articleType}]]></if>
+			<if test="articleType != null"><![CDATA[AND af.article_type = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
+			<if test="userId != null"><![CDATA[AND af.user_id = #{userId}]]></if>
 			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>
 
@@ -307,12 +308,45 @@
 			<if test="fishLines != null"><![CDATA[AND af.fish_lines = #{fishLines}]]></if>
 			<if test="fishPoleLength != null"><![CDATA[AND af.fish_pole_length = #{fishPoleLength}]]></if>
 			<if test="fishPoleBrand != null"><![CDATA[AND af.fish_pole_brand = #{fishPoleBrand}]]></if>
-			<if test="articleType != null and articleType != ''"><![CDATA[AND af.article_type = #{articleType}]]></if>
+			<if test="articleType != null"><![CDATA[AND af.article_type = #{articleType}]]></if>
 			<if test="isPublish != null"><![CDATA[AND af.is_publish = #{isPublish}]]></if>
 			<if test="yn != null "><![CDATA[AND af.yn = #{yn}]]></if>
 		</where>
 
 		</select>
+
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArrayDetail" parameterType="java.lang.reflect.Array" resultMap="articalFishBaseListMap">
+		<![CDATA[select
+			af.id as id,
+			af.user_id as userId,
+			af.title as title,
+			af.recommends as recommends,
+			af.fish_time as fishTime,
+			af.water_type as waterType,
+			af.article_type as articleType,
+			af.created as created,
+			af.city as city,
+			u.nick_name AS nickName,
+			u.avatar_url AS avatarUrl,
+			u.address AS address,
+			tal.likeCount AS likeCount,
+			tc.commentCount as commentCount,
+			tcoll.user_id as isCollectioned,
+			tlike.user_id as isLiked
+ 			FROM tb_artical_fish af
+ 			LEFT join (select source_id, source_type,count(*) as likeCount from tb_like GROUP BY source_id,source_type) tal on   tal.source_id = af.id and tal.source_type=1
+ 			LEFT join (select topic_id, topic_type,count(*) as commentCount from tb_comment GROUP BY topic_id,topic_type) tc on   tc.topic_id = af.id and tc.topic_type=1
+			LEFT join tb_user u on af.user_id = u.id
+			LEFT join (select id,user_id,source_type,source_id from tb_collection GROUP BY id) tcoll on tcoll.user_id = #{userId} and tcoll.source_id = af.id  and tcoll.source_type = 1
+			left join (select id,user_id,source_type,source_id from tb_like  GROUP BY id ) tlike on tlike.user_id = #{userId} and tlike.source_id = af.id  and tlike.source_type = 1
+			]]>
+		<![CDATA[WHERE af.id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
 
 
 

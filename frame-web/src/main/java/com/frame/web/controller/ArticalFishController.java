@@ -14,12 +14,10 @@ import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
 import com.frame.service.UserService;
-import com.frame.web.entity.request.ArticalFishSaveParam;
-import com.frame.web.entity.request.ArtivalFishListParam;
-import com.frame.web.entity.request.ActivityIdParam;
-import com.frame.web.entity.request.IdParam;
+import com.frame.web.entity.request.*;
 import io.swagger.annotations.*;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +52,43 @@ public class ArticalFishController extends BaseController {
     private String IMAGEPREFIX;
 
 
+    @RequestMapping(value = "/currentUserArticalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "当前用户文章列表", httpMethod = "POST", response = String.class, notes = "当前用户文章列表")
+    @ResponseBody
+    public RemoteResult getCurrentUserArticalFishList(HttpServletRequest request, @RequestBody CurrentUserArtivalFishListParam artivalFishListParam) {
+        RemoteResult result = null;
+        try {
+            if (null == artivalFishListParam) {
+                LOGGER.error("getArticalFishDetail artical 传入的参数错误 articalId【{}】", JSON.toJSON(artivalFishListParam));
+                result = RemoteResult.failure(BusinessCode.PARAMETERS_ERROR.getCode(),
+                        BusinessCode.PARAMETERS_ERROR.getValue());
+                return result;
+            }
+            Long userId = getLoginId();
+            Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
+            page.setCurrentPage(artivalFishListParam.getCurrentPage());
+
+
+            ArticalFish articalFish = new ArticalFish();
+            BeanUtils.copyProperties(articalFish, artivalFishListParam);
+            articalFish.setUserId(userId);
+            articalFish.setYn(YnEnum.Normal.getKey());
+            articalFish.setOrderField("modified");
+            articalFish.setOrderFieldType("DESC");
+
+            Page<ArticalFishListResponse> res = articalFishService.selectBaseEntryList(articalFish, page);
+
+            result = RemoteResult.success(res);
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("失败:" + e.getMessage(), e);
+            result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return result;
+    }
+
+
+
     @RequestMapping(value = "/articalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "渔获列表", httpMethod = "POST", response = String.class, notes = "渔获列表")
     @ResponseBody
@@ -67,14 +102,15 @@ public class ArticalFishController extends BaseController {
                 return result;
             }
 
-            Long userId = getLoginId();
             Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
             page.setCurrentPage(artivalFishListParam.getCurrentPage());
 
 
             ArticalFish articalFish = new ArticalFish();
             BeanUtils.copyProperties(articalFish, artivalFishListParam);
-            articalFish.setUserId(userId);
+            if (StringUtils.isNotBlank(artivalFishListParam.getUserId())) {
+                articalFish.setUserId(Long.valueOf(artivalFishListParam.getUserId()));
+            }
             articalFish.setYn(YnEnum.Normal.getKey());
             articalFish.setOrderField("modified");
             articalFish.setOrderFieldType("DESC");

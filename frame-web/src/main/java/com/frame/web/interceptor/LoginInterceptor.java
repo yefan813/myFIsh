@@ -75,7 +75,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         long loginTime = NumberUtils.toLong(cookieValues[3]);
         long now = DateUtils.getServerTime();
         long ms = 259200000L;
-        if (now - loginTime > ms) {
+        if (now - loginTime > ms  && !whiteList.contains(uri)) {
             LOGGER.error("用户cookie已过期");
             JSONObject result = new JSONObject();
             result.put("code", BusinessCode.COOKIE_INVAID.getCode());

@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class PageParam {
     @ApiModelProperty(value = "当前页",required = true)
-    private Integer currrentPage;
+    private Integer currentPage;
 
-    public Integer getCurrrentPage() {
-        return currrentPage;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
     public void setCurrrentPage(Integer currrentPage) {
-        this.currrentPage = currrentPage;
+        this.currentPage = currentPage;
     }
 
 }

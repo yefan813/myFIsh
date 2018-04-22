@@ -9,6 +9,7 @@ import java.util.Date;
  */
 @ApiModel
 public class FishSiteVO{
+    private Integer id;
     private String title;
     private  String introduce;
     private String content;
@@ -30,6 +31,14 @@ public class FishSiteVO{
     private Boolean canHotel;
     private Date created;
     private Long userId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;
