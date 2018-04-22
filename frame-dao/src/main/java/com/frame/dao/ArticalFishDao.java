@@ -2,6 +2,7 @@ package com.frame.dao;
 
 import com.frame.dao.base.BaseDao;
 import com.frame.domain.ArticalFish;
+import com.frame.domain.vo.ArticleTypeInfo;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface ArticalFishDao extends BaseDao<ArticalFish, Long> {
 
 
     Integer selectBaseEntryListCount(ArticalFish condition);
+
+    List<ArticleTypeInfo> selectArticleTypeCount();
 
 }

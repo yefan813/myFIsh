@@ -10,6 +10,7 @@ import com.frame.domain.enums.BusinessCode;
 import com.frame.domain.img.ImageValidate;
 import com.frame.domain.img.ImgDealMsg;
 import com.frame.domain.img.Result;
+import com.frame.domain.vo.ArticleTypeInfo;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.ImgSysService;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by yefan on 2017/7/18.
@@ -277,6 +279,21 @@ public class ArticalFishController extends BaseController {
         } catch (Exception e) {
             LOGGER.error("del exception", e);
             result = RemoteResult.failure("0001", "操作失败:" + e.getMessage());
+        }
+        return JSON.toJSONString(result);
+    }
+
+    @RequestMapping(value = "/getArticleTypeInfo", method = {RequestMethod.POST})
+    @ApiOperation(value = "获取文章类型信息", httpMethod = "POST", response = String.class, notes = "获取文章类型信息")
+    public @ResponseBody
+    String getArticleTypeInfo(HttpServletRequest request) {
+        RemoteResult result = null;
+        try {
+            List<ArticleTypeInfo> articleTypeInfos = articalFishService.selectArticleTypeCount();
+            result = RemoteResult.success(articleTypeInfos);
+        }catch (Exception e){
+            LOGGER.error("调用发布文章异常", e);
+            return JSON.toJSONString(RemoteResult.failure("调用发布文章异常"));
         }
         return JSON.toJSONString(result);
     }

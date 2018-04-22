@@ -9,6 +9,7 @@ import com.frame.domain.base.YnEnum;
 import com.frame.domain.common.Page;
 import com.frame.domain.enums.CommentTypeEnum;
 import com.frame.domain.vo.ArticalFishVO;
+import com.frame.domain.vo.ArticleTypeInfo;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import com.frame.service.ArticalFishService;
 import com.frame.service.LikeService;
@@ -82,5 +83,10 @@ public class ArticalFishServiceImpl extends BaseServiceImpl<ArticalFish, Long> i
     @Override
     public List<ArticalFishListResponse> selectBaseEntryArray(Long userId, Long[] articalIds) {
         return articalFishDao.selectBaseEntryArray(userId,articalIds);
+    }
+
+    @Override
+    public List<ArticleTypeInfo> selectArticleTypeCount() {
+        return articalFishDao.selectArticleTypeCount();
     }
 }

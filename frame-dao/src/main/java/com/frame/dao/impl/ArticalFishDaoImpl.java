@@ -3,6 +3,7 @@ package com.frame.dao.impl;
 import com.frame.dao.ArticalFishDao;
 import com.frame.dao.base.BaseDaoImpl;
 import com.frame.domain.ArticalFish;
+import com.frame.domain.vo.ArticleTypeInfo;
 import com.frame.domain.vo.Response.ArticalFishListResponse;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,8 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 	private final static String selectBaseEntryList = "selectBaseEntryList";
 	private final static String selectEntryArrayDetail = "selectEntryArrayDetail";
 	private final static String selectBaseEntryListCount = "selectBaseEntryListCount";
+	private final static String selectArticleTypeCount = "selectArticleTypeCount";
+
 
 
 
@@ -55,5 +58,8 @@ public class ArticalFishDaoImpl extends BaseDaoImpl<ArticalFish, Long> implement
 		return select(getNameSpace(selectBaseEntryListCount),condition);
 	}
 
-
+	@Override
+	public List<ArticleTypeInfo> selectArticleTypeCount() {
+		return selectList(getNameSpace(selectArticleTypeCount),null);
+	}
 }

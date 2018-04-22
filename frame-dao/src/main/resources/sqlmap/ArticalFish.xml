@@ -27,6 +27,11 @@
 		<result property="address" column="address"/>
 	</resultMap>
 
+	<resultMap id="articleTypeInfo" type="com.frame.domain.vo.ArticleTypeInfo">
+		<result property="articleType"  column="articleType"/>
+		<result property="count"  column="count"/>
+	</resultMap>
+
 	<!-- groupon 所有查询列 -->
 	<sql id="QUERY_BASE_COLUMN_LIST">
 		<![CDATA[
@@ -346,6 +351,13 @@
 		<foreach collection="array" item="id" open="(" separator="," close=")">
 			<![CDATA[#{id}]]>
 		</foreach>
+	</select>
+
+
+	<select id="selectArticleTypeCount" resultMap="articleTypeInfo">
+		<![CDATA[
+				select article_type as articleType,count(*) as count from tb_artical_fish GROUP BY article_type;
+		]]>
 	</select>
 
 
