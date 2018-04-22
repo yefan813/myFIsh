@@ -67,7 +67,8 @@
 			feature,
 			created,
 			modified,
-			yn
+			yn,
+			city
 		]]>
 	</sql>
 	<!-- groupon 查询列来源表-->
@@ -100,6 +101,8 @@
 			<if test="created != null and created != ''"><![CDATA[AND created = #{created}]]></if>
 			<if test="modified != null and modified != ''"><![CDATA[AND modified = #{modified}]]></if>
 			<if test="yn != null "><![CDATA[AND yn = #{yn}]]></if>
+			<if test="city != null "><![CDATA[AND city = #{city}]]></if>
+
 		</where>
 	</sql>
 	
@@ -135,6 +138,8 @@
 			<if test="created != null lng created != ''"><![CDATA[created = #{created},]]></if>
 			<![CDATA[modified = now(),]]>
 			<if test="yn != null"><![CDATA[yn = #{yn},]]></if>
+			<if test="city != null"><![CDATA[city = #{city},]]></if>
+
 		</set>
 	</sql>
 
@@ -229,6 +234,7 @@
 			af.can_eat as canEat,
 			af.can_hotel as canHotel,
 			af.created,
+			af.city,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
 			u.address AS address,
@@ -263,6 +269,7 @@
 			af.site_fish_type as siteFishType,
 			af.site_phone as sitePhone,
 			af.created,
+			af.city,
 			u.nick_name AS nickName,
 			u.avatar_url AS avatarUrl,
 			u.address AS address,

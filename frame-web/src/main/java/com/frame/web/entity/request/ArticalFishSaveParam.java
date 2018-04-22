@@ -8,26 +8,36 @@ import java.util.Date;
 @ApiModel
 public class ArticalFishSaveParam {
 
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true,name = "标题")
     private String title;
+    @ApiModelProperty(name = "时间")
     private Date time;
+    @ApiModelProperty(name = "水源类型")
     private  String waterType;
+    @ApiModelProperty(name = "时间")
     private String bait;
+    @ApiModelProperty(name = "鱼类型")
     private  String fishType;
+    @ApiModelProperty(name = "钓鱼方式")
     private String fishingFunc;
+    @ApiModelProperty(name = "鱼线类型")
     private  String fishLines;
     private String fishPoleLength;
     private String fishPoleBrand;
+    @ApiModelProperty(name = "精度")
     private  String lat;
+    @ApiModelProperty(name = "维度")
     private String lng;
+    @ApiModelProperty(name = "坐标地址详细")
     private  String locationAddress;
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true,name = "文章类型")
     private  Integer articleType;
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true,name = "文章内容")
     private String content;
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true,name = "图片 url")
     private String recommends;
     private Date fishTime;
+    @ApiModelProperty(required = true,name = "城市")
     private String city;
 
     public String getCity() {
