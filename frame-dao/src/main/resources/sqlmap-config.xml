@@ -33,6 +33,8 @@
 		<typeAlias type="com.frame.domain.vo.Response.FishShopListResponse" alias="fishShopListResponse"/>
 		<typeAlias type="com.frame.domain.vo.Response.FishSiteListResponse" alias="fishSiteListResponse"/>
 		<typeAlias type="com.frame.domain.UserFollow" alias="userFollow"/>
+		<typeAlias type="com.frame.domain.ScanRecord" alias="scanRecord"/>
+
 
 
 	</typeAliases>
@@ -52,6 +54,8 @@
 		<mapper resource="sqlmap/UserLogin.xml" />
 		<mapper resource="sqlmap/UserValid.xml" />
 		<mapper resource="sqlmap/UserFollow.xml" />
+		<mapper resource="sqlmap/ScanRecord.xml" />
+
 
 
 	</mappers>
