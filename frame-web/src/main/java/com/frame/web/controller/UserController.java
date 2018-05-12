@@ -661,7 +661,7 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/follow", method = {RequestMethod.POST})
-    @ApiOperation(value = "关注摸个用户", httpMethod = "POST", response = String.class, notes = "关注摸个用户")
+    @ApiOperation(value = "关注某个用户", httpMethod = "POST", response = String.class, notes = "关注某个用户")
     public @ResponseBody
     String follow(@RequestBody UserFriendParam param) {
         RemoteResult result = null;
@@ -829,6 +829,21 @@ public class UserController extends BaseController {
             if (!StringUtils.isBlank(user.getAvatarUrl()) && !user.getAvatarUrl().contains("http:")) {
                 user.setAvatarUrl( IMAGEPREFIX + user.getAvatarUrl());
             }
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(userVO, user);
+            //获取粉丝数量
+            UserFollow queryOne = new UserFollow();
+            queryOne.setUid(userId);
+            queryOne.setYn(YnEnum.Normal.getKey());
+            Integer fansCount = userFollowService.selectEntryListCount(queryOne);
+            userVO.setFans(fansCount != null ? fansCount.longValue() : 0l);
+
+            //获取关注用户数量
+            UserFollow queryTwo = new UserFollow();
+            queryTwo.setFid(userId);
+            queryTwo.setYn(YnEnum.Normal.getKey());
+            Integer followCount = userFollowService.selectEntryListCount(queryTwo);
+            userVO.setFocuses(followCount != null ? followCount.longValue() : 0l);
 
             result = RemoteResult.success(user);
 

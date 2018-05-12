@@ -284,7 +284,7 @@ public class ArticalFishController extends BaseController {
     }
 
     @RequestMapping(value = "/getArticleTypeInfo", method = {RequestMethod.POST})
-    @ApiOperation(value = "获取文章类型信息", httpMethod = "POST", response = String.class, notes = "获取文章类型信息")
+    @ApiOperation(value = "获取文章类型信息,类型加数量", httpMethod = "POST", response = String.class, notes = "获取文章类型信息，类型加数量")
     public @ResponseBody
     String getArticleTypeInfo(HttpServletRequest request) {
         RemoteResult result = null;

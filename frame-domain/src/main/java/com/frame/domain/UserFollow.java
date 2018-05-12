@@ -16,7 +16,14 @@ import com.frame.domain.base.BaseDomain;
 public class UserFollow extends BaseDomain {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 被关注用户的 id
+     */
     private Long uid;
+
+    /**
+     *  用户 id
+     */
     private Long fid;
 
 

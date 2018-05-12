@@ -37,7 +37,13 @@ public class User extends BaseDomain {
 
 	private Integer source; // user from source
 
+	public Integer getSource() {
+		return source;
+	}
 
+	public void setSource(Integer source) {
+		this.source = source;
+	}
 
 	public String getNickName() {
 		return nickName;

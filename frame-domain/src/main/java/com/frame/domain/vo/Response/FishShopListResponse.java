@@ -16,6 +16,25 @@ public class FishShopListResponse extends FishShopVO {
     private boolean isCollectioned = false;
     private boolean isLiked = false;
 
+    private Long scanCount = 0l;
+    private Long collectCount = 0l;
+
+    public Long getScanCount() {
+        return scanCount;
+    }
+
+    public void setScanCount(Long scanCount) {
+        this.scanCount = scanCount;
+    }
+
+    public Long getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Long collectCount) {
+        this.collectCount = collectCount;
+    }
+
 
     public UserBaseVO getUser() {
         return user;

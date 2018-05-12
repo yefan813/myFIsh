@@ -20,6 +20,9 @@ public class CollectionVO{
 	private Long sourceId;
 
 
+	/**
+	 * 1 文章 2 钓点 3 渔具店
+	 */
 	private Integer sourceType;
 
 
