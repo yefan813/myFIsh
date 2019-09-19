@@ -66,6 +66,10 @@
 		</profile>
 	</profiles>
 	<dependencies>
+    <dependency>
+      <groupId>com.startdt.shield</groupId>
+      <artifactId>shield-sdk-service</artifactId>
+    </dependency>
 		<dependency>
 			<groupId>com.yefan.frame</groupId>
 			<artifactId>frame-service</artifactId>
@@ -126,5 +130,6 @@
 			<groupId>com.fasterxml</groupId>
 			<artifactId>classmate</artifactId>
 		</dependency>
+
 	</dependencies>
 </project>

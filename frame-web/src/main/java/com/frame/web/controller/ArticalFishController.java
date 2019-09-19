@@ -37,7 +37,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/articalFish")
-@Api(value = "articalFish", description = "渔获文章相关接口")
+//@Api(value = "articalFish", description = "渔获文章相关接口")
 public class ArticalFishController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticalFishController.class);
 
@@ -55,7 +55,7 @@ public class ArticalFishController extends BaseController {
 
 
     @RequestMapping(value = "/currentUserArticalFishList", method = {RequestMethod.POST}, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "当前用户文章列表", httpMethod = "POST", response = String.class, notes = "当前用户文章列表")
+    @ApiOperation(value = "当前用户文章列表", httpMethod = "POST", response = RemoteResult.class, notes = "当前用户文章列表")
     @ResponseBody
     public RemoteResult getCurrentUserArticalFishList(HttpServletRequest request, @RequestBody CurrentUserArtivalFishListParam artivalFishListParam) {
         RemoteResult result = null;
@@ -69,7 +69,6 @@ public class ArticalFishController extends BaseController {
             Long userId = getLoginId();
             Page<ArticalFishListResponse> page = new Page<ArticalFishListResponse>();
             page.setCurrentPage(artivalFishListParam.getCurrentPage());
-
 
             ArticalFish articalFish = new ArticalFish();
             BeanUtils.copyProperties(articalFish, artivalFishListParam);
