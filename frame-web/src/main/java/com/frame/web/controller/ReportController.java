@@ -15,6 +15,8 @@ import com.frame.service.ReportService;
 import com.frame.service.UserService;
 import com.frame.web.entity.request.ReportListParam;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -64,8 +66,6 @@ public class ReportController extends BaseController{
 
             ReportVO articalReport = new ReportVO();
             BeanUtils.copyProperties(articalReport, listParam);
-
-
             Page<ArticalFish> res = reportService.getArticalReportById(articalReport, page);
             result = RemoteResult.success(res);
             return result;
